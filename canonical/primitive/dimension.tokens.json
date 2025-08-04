@@ -587,13 +587,15 @@
         },
         "letterSpacing": {
             "$description": "Using 'em' unit diverges from W3C spec (which only allows 'px' and 'rem') but allows us to have the 5% letter spacing that we need.",
-            "$value": {
-                "value": 0.05,
-                "unit": "em"
-            },
-            "none": {
+            "default": {
                 "$value": {
                     "value": 0,
+                    "unit": "em"
+                }
+            },
+            "wide": {
+                "$value": {
+                    "value": 0.05,
                     "unit": "em"
                 }
             }
