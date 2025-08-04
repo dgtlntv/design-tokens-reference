@@ -2,7 +2,6 @@
     "color": {
         "$type": "color",
         "orange": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -75,7 +74,6 @@
             }
         },
         "teal": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -148,7 +146,6 @@
             }
         },
         "blue": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -221,7 +218,6 @@
             }
         },
         "purple": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -294,7 +290,6 @@
             }
         },
         "green": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -367,7 +362,6 @@
             }
         },
         "red": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -440,7 +434,6 @@
             }
         },
         "yellow": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",
@@ -513,7 +506,6 @@
             }
         },
         "gray": {
-            "$type": "color",
             "100": {
                 "$value": {
                     "colorSpace": "oklch",

@@ -37,6 +37,12 @@
                 "unit": "rem"
             }
         },
+        "225": {
+            "$value": {
+                "value": 1.125,
+                "unit": "rem"
+            }
+        },
         "250": {
             "$value": {
                 "value": 1.25,
@@ -97,8 +103,7 @@
                 "unit": "rem"
             }
         },
-        "stroke-thickness": {
-            "$type": "dimension",
+        "borderWidth": {
             "medium": {
                 "$value": {
                     "value": 1.5,
@@ -113,7 +118,6 @@
             }
         },
         "radius": {
-            "$type": "dimension",
             "none": {
                 "$value": {
                     "value": 0,
@@ -142,6 +146,455 @@
                 "$value": {
                     "value": 9999,
                     "unit": "rem"
+                }
+            }
+        },
+        "size": {
+            "fontSize": {
+                "200": {
+                    "$value": {
+                        "value": 0.625,
+                        "unit": "rem"
+                    }
+                },
+                "250": {
+                    "$value": {
+                        "value": 0.75,
+                        "unit": "rem"
+                    }
+                },
+                "300": {
+                    "$value": {
+                        "value": 0.875,
+                        "unit": "rem"
+                    }
+                },
+                "350": {
+                    "$value": {
+                        "value": 1,
+                        "unit": "rem"
+                    }
+                },
+                "400": {
+                    "$value": {
+                        "value": 1.125,
+                        "unit": "rem"
+                    }
+                },
+                "450": {
+                    "$value": {
+                        "value": 1.3125,
+                        "unit": "rem"
+                    }
+                },
+                "500": {
+                    "$value": {
+                        "value": 1.5,
+                        "unit": "rem"
+                    }
+                },
+                "550": {
+                    "$value": {
+                        "value": 1.75,
+                        "unit": "rem"
+                    }
+                },
+                "600": {
+                    "$value": {
+                        "value": 2,
+                        "unit": "rem"
+                    }
+                },
+                "650": {
+                    "$value": {
+                        "value": 2.25,
+                        "unit": "rem"
+                    }
+                },
+                "700": {
+                    "$value": {
+                        "value": 2.625,
+                        "unit": "rem"
+                    }
+                },
+                "750": {
+                    "$value": {
+                        "value": 3,
+                        "unit": "rem"
+                    }
+                },
+                "800": {
+                    "$value": {
+                        "value": 3.4375,
+                        "unit": "rem"
+                    }
+                },
+                "850": {
+                    "$value": {
+                        "value": 3.9375,
+                        "unit": "rem"
+                    }
+                },
+                "900": {
+                    "$value": {
+                        "value": 4.5625,
+                        "unit": "rem"
+                    }
+                },
+                "950": {
+                    "$value": {
+                        "value": 5.25,
+                        "unit": "rem"
+                    }
+                },
+                "1000": {
+                    "$value": {
+                        "value": 6,
+                        "unit": "rem"
+                    }
+                }
+            },
+            "lineHeight": {
+                "200": {
+                    "$value": {
+                        "value": 0.75,
+                        "unit": "rem"
+                    }
+                },
+                "250": {
+                    "$value": {
+                        "value": 1,
+                        "unit": "rem"
+                    }
+                },
+                "300": {
+                    "$value": {
+                        "value": 1.25,
+                        "unit": "rem"
+                    }
+                },
+                "350": {
+                    "$value": {
+                        "value": 1.5,
+                        "unit": "rem"
+                    }
+                },
+                "400": {
+                    "$value": {
+                        "value": 1.5,
+                        "unit": "rem"
+                    }
+                },
+                "450": {
+                    "$value": {
+                        "value": 1.75,
+                        "unit": "rem"
+                    }
+                },
+                "500": {
+                    "$value": {
+                        "value": 2,
+                        "unit": "rem"
+                    }
+                },
+                "550": {
+                    "$value": {
+                        "value": 2.25,
+                        "unit": "rem"
+                    }
+                },
+                "600": {
+                    "$value": {
+                        "value": 2.5,
+                        "unit": "rem"
+                    }
+                },
+                "650": {
+                    "$value": {
+                        "value": 2.75,
+                        "unit": "rem"
+                    }
+                },
+                "700": {
+                    "$value": {
+                        "value": 3,
+                        "unit": "rem"
+                    }
+                },
+                "750": {
+                    "$value": {
+                        "value": 3.5,
+                        "unit": "rem"
+                    }
+                },
+                "800": {
+                    "$value": {
+                        "value": 4,
+                        "unit": "rem"
+                    }
+                },
+                "850": {
+                    "$value": {
+                        "value": 4.5,
+                        "unit": "rem"
+                    }
+                },
+                "900": {
+                    "$value": {
+                        "value": 5,
+                        "unit": "rem"
+                    }
+                },
+                "950": {
+                    "$value": {
+                        "value": 5.75,
+                        "unit": "rem"
+                    }
+                },
+                "1000": {
+                    "$value": {
+                        "value": 6.5,
+                        "unit": "rem"
+                    }
+                }
+            },
+            "height": {
+                "baseline": {
+                    "$value": {
+                        "value": 0.5,
+                        "unit": "rem"
+                    }
+                }
+            }
+        },
+        "space": {
+            "top": {
+                "text": {
+                    "baselineNudge": {
+                        "200": {
+                            "$value": {
+                                "value": 0.4375,
+                                "unit": "rem"
+                            }
+                        },
+                        "250": {
+                            "$value": {
+                                "value": 0.25,
+                                "unit": "rem"
+                            }
+                        },
+                        "300": {
+                            "$value": {
+                                "value": 0.125,
+                                "unit": "rem"
+                            }
+                        },
+                        "350": {
+                            "$value": {
+                                "value": 0.4375,
+                                "unit": "rem"
+                            }
+                        },
+                        "400": {
+                            "$value": {
+                                "value": 0.375,
+                                "unit": "rem"
+                            }
+                        },
+                        "450": {
+                            "$value": {
+                                "value": 0.1875,
+                                "unit": "rem"
+                            }
+                        },
+                        "500": {
+                            "$value": {
+                                "value": 0,
+                                "unit": "rem"
+                            }
+                        },
+                        "550": {
+                            "$value": {
+                                "value": 0.3125,
+                                "unit": "rem"
+                            }
+                        },
+                        "600": {
+                            "$value": {
+                                "value": 0.0625,
+                                "unit": "rem"
+                            }
+                        },
+                        "650": {
+                            "$value": {
+                                "value": 0.375,
+                                "unit": "rem"
+                            }
+                        },
+                        "700": {
+                            "$value": {
+                                "value": 0.125,
+                                "unit": "rem"
+                            }
+                        },
+                        "750": {
+                            "$value": {
+                                "value": 0.25,
+                                "unit": "rem"
+                            }
+                        },
+                        "800": {
+                            "$value": {
+                                "value": 0.3125,
+                                "unit": "rem"
+                            }
+                        },
+                        "850": {
+                            "$value": {
+                                "value": 0.4375,
+                                "unit": "rem"
+                            }
+                        },
+                        "900": {
+                            "$value": {
+                                "value": 0.4375,
+                                "unit": "rem"
+                            }
+                        },
+                        "950": {
+                            "$value": {
+                                "value": 0.375,
+                                "unit": "rem"
+                            }
+                        },
+                        "1000": {
+                            "$value": {
+                                "value": 0.25,
+                                "unit": "rem"
+                            }
+                        }
+                    }
+                }
+            },
+            "bottom": {
+                "text": {
+                    "baselineNudge": {
+                        "200": {
+                            "$value": {
+                                "value": 0.3125,
+                                "unit": "rem"
+                            }
+                        },
+                        "250": {
+                            "$value": {
+                                "value": 0.25,
+                                "unit": "rem"
+                            }
+                        },
+                        "300": {
+                            "$value": {
+                                "value": 0.125,
+                                "unit": "rem"
+                            }
+                        },
+                        "350": {
+                            "$value": {
+                                "value": 0.0625,
+                                "unit": "rem"
+                            }
+                        },
+                        "400": {
+                            "$value": {
+                                "value": 0.125,
+                                "unit": "rem"
+                            }
+                        },
+                        "450": {
+                            "$value": {
+                                "value": 0.0625,
+                                "unit": "rem"
+                            }
+                        },
+                        "500": {
+                            "$value": {
+                                "value": 0,
+                                "unit": "rem"
+                            }
+                        },
+                        "550": {
+                            "$value": {
+                                "value": 0.4375,
+                                "unit": "rem"
+                            }
+                        },
+                        "600": {
+                            "$value": {
+                                "value": 0.4375,
+                                "unit": "rem"
+                            }
+                        },
+                        "650": {
+                            "$value": {
+                                "value": 0.375,
+                                "unit": "rem"
+                            }
+                        },
+                        "700": {
+                            "$value": {
+                                "value": 0.375,
+                                "unit": "rem"
+                            }
+                        },
+                        "750": {
+                            "$value": {
+                                "value": 0.25,
+                                "unit": "rem"
+                            }
+                        },
+                        "800": {
+                            "$value": {
+                                "value": 0.1875,
+                                "unit": "rem"
+                            }
+                        },
+                        "850": {
+                            "$value": {
+                                "value": 0.0625,
+                                "unit": "rem"
+                            }
+                        },
+                        "900": {
+                            "$value": {
+                                "value": 0.0625,
+                                "unit": "rem"
+                            }
+                        },
+                        "950": {
+                            "$value": {
+                                "value": 0.375,
+                                "unit": "rem"
+                            }
+                        },
+                        "1000": {
+                            "$value": {
+                                "value": 0.25,
+                                "unit": "rem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "letterSpacing": {
+            "$description": "Using 'em' unit diverges from W3C spec (which only allows 'px' and 'rem') but allows us to have the 5% letter spacing that we need.",
+            "$value": {
+                "value": 0.05,
+                "unit": "em"
+            },
+            "none": {
+                "$value": {
+                    "value": 0,
+                    "unit": "em"
                 }
             }
         }

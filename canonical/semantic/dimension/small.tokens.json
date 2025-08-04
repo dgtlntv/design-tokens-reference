@@ -1,3 +1,15 @@
 {
-    "placeholder": "placeholder"
+    "dimension": {
+        "$type": "dimension",
+        "size": {
+            "rootFontSize": {
+                "$value": "{dimension.200}"
+            },
+            "height": {
+                "baseline": {
+                    "$value": "{dimension.size.height.baseline}"
+                }
+            }
+        }
+    }
 }

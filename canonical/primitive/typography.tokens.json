@@ -1,3 +1,109 @@
 {
-    "placeholder": "placeholder"
+    "typography": {
+        "fontFamily": {
+            "$type": "fontFamily",
+            "sansSerif": {
+                "$value": [
+                    "Ubuntu Sans",
+                    "Ubuntu",
+                    "Cantarell",
+                    "Adwaita Sans",
+                    "Noto Sans",
+                    "Oxygen",
+                    "-apple-system",
+                    "BlinkMacSystemFont",
+                    "Segoe UI",
+                    "Roboto",
+                    "Noto Color Emoji",
+                    "Apple Color Emoji",
+                    "Segoe UI Emoji",
+                    "sans-serif"
+                ]
+            },
+            "monospace": {
+                "$value": [
+                    "Ubuntu Sans Mono",
+                    "Ubuntu Mono",
+                    "Noto Color Emoji",
+                    "Adwaita Mono",
+                    "Source Code Pro",
+                    "Hack",
+                    "ui-monospace",
+                    "SF Mono",
+                    "Apple Color Emoji",
+                    "Cascadia Code",
+                    "Consolas",
+                    "Segoe UI Emoji",
+                    "Roboto Mono",
+                    "monospace"
+                ]
+            }
+        },
+        "weight": {
+            "$type": "fontWeight",
+            "thin": {
+                "$value": 100
+            },
+            "extraLight": {
+                "$value": 200
+            },
+            "light": {
+                "$value": 300
+            },
+            "regular": {
+                "$value": 400
+            },
+            "medium": {
+                "$value": 500
+            },
+            "semiBold": {
+                "$value": 600
+            },
+            "bold": {
+                "$value": 700
+            },
+            "extraBold": {
+                "$value": 800
+            }
+        },
+        "fontStyle": {
+            "$description": "Not W3C compliant. Will update if more advanced typography support is added.",
+            "italic": {
+                "$value": "italic"
+            }
+        },
+        "fontPosition": {
+            "$description": "Not W3C compliant. Will update if more advanced typography support is added.",
+            "subscript": {
+                "$value": "sub"
+            },
+            "superscript": {
+                "$value": "super"
+            }
+        },
+        "figureStyle": {
+            "$description": "Not W3C compliant. Will update if more advanced typography support is added.",
+            "oldStyleFigure": {
+                "$value": "oldstyle-nums"
+            },
+            "liningFigures": {
+                "$value": "lining-nums"
+            }
+        },
+        "textDecoration": {
+            "$description": "Not W3C compliant. Will update if more advanced typography support is added.",
+            "underline": {
+                "$value": "underline solid"
+            },
+            "strikethrough": {
+                "$value": "line-through"
+            }
+        },
+        "letterCase": {
+            "$description": "Not W3C compliant. Will update if more advanced typography support is added.",
+            "smallcaps": {
+                "$value": "small-caps"
+            }
+        }
+    }
 }
