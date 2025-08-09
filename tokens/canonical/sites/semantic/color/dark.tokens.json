@@ -1,6 +1,5 @@
 {
     "color": {
-        "$type": "color",
         "dark": {
             "background": {
                 "default": {

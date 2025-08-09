@@ -1,6 +1,5 @@
 {
     "dimension": {
-        "$type": "dimension",
         "medium": {
             "size": {
                 "rootFontSize": {

@@ -1,6 +1,5 @@
 {
     "dimension": {
-        "$type": "dimension",
         "xLarge": {
             "size": {
                 "rootFontSize": {
