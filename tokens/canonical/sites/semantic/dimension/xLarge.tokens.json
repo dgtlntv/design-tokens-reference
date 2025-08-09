@@ -1,13 +1,15 @@
 {
     "dimension": {
         "$type": "dimension",
-        "size": {
-            "rootFontSize": {
-                "$value": "{dimension.225}"
-            },
-            "height": {
-                "baseline": {
-                    "$value": "{dimension.size.height.baseline}"
+        "xLarge": {
+            "size": {
+                "rootFontSize": {
+                    "$value": "{dimension.225}"
+                },
+                "height": {
+                    "baseline": {
+                        "$value": "{dimension.100}"
+                    }
                 }
             }
         }

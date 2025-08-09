@@ -1,9 +1,11 @@
 {
     "color": {
         "$type": "color",
-        "background": {
-            "default": {
-                "$value": "{color.gray.800}"
+        "dark": {
+            "background": {
+                "default": {
+                    "$value": "{color.gray.800}"
+                }
             }
         }
     }
