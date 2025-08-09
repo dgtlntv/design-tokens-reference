@@ -3,16 +3,16 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "build": "npm run build:css && npm run build:flutter && npm run build:figma",
-        "build:css": "style-dictionary build --config ./config/css.config.js",
-        "build:flutter": "style-dictionary build --config ./config/flutter.config.js",
-        "build:figma": "style-dictionary build --config ./config/figma.config.js"
+        "build:css:sites": "ts-node config/build.ts sites",
+        "build:css:docs": "ts-node config/build.ts docs",
+        "build:css:apps": "ts-node config/build.ts apps",
+        "build:css": "ts-node config/build.ts all"
     },
     "license": "ISC",
     "type": "module",
     "devDependencies": {
-        "@tokens-studio/sd-transforms": "^2.0.1",
-        "colorjs.io": "^0.5.2",
-        "style-dictionary": "^5.0.1"
+        "style-dictionary": "^5.0.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.2"
     }
 }

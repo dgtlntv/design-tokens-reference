@@ -1,14 +1,9 @@
 {
     "color": {
         "$type": "color",
-        "size": {
-            "rootFontSize": {
-                "$value": "{dimension.200}"
-            },
-            "height": {
-                "baseline": {
-                    "$value": "{dimension.size.height.baseline}"
-                }
+        "background": {
+            "default": {
+                "$value": "{color.gray.800}"
             }
         }
     }
