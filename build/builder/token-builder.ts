@@ -3,8 +3,8 @@ import type { Config } from "style-dictionary/types"
 import { registerTransforms } from "../transforms"
 import { registerFormatters } from "../formatters"
 import { createPlatformConfig, type Platform } from "../platforms"
-import { tierService } from "../services/tier.service"
-import { configFactory, getEnvironmentConfig } from "../config"
+import { tierService } from "../utils/tier.util"
+import { configFactory } from "../config"
 
 export interface BuilderOptions {
     tier: string
@@ -13,8 +13,6 @@ export interface BuilderOptions {
 
 export class TokenBuilder {
     private config = configFactory
-    private environment = getEnvironmentConfig()
-
     constructor() {
         this.registerExtensions()
     }

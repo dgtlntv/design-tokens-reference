@@ -1,7 +1,7 @@
 import type { Format } from "style-dictionary/types"
 import { generateColorModeCSS } from "./color-mode.formatter"
 import { generateDimensionBreakpointCSS } from "./dimension-breakpoint.formatter"
-import { getTokenValue } from "../../utils/token-helpers"
+import { getTokenValue } from "../../utils/token.util"
 import { configFactory } from "../../config"
 
 const FILE_HEADER =

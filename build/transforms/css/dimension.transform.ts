@@ -1,5 +1,5 @@
 import type { Transform } from "style-dictionary/types"
-import type { DimensionToken, DimensionValue } from "../types/tokens.types"
+import type { DimensionToken, DimensionValue } from "../../types/tokens.types"
 
 function isDimensionValue(value: unknown): value is DimensionValue {
     return (

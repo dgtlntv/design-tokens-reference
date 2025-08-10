@@ -1,12 +1,13 @@
 import { createCSSPlatform } from "./css.platform"
 import { configFactory } from "../config"
+import { PlatformConfig } from "style-dictionary/types"
 
 export type Platform = "css" | "figma" | "flutter"
 
 export function createPlatformConfig(
     platform: Platform,
     tier: string
-): Record<string, unknown> {
+): Record<string, PlatformConfig> {
     const platformConfig = configFactory.getPlatformConfig(platform)
 
     if (!platformConfig) {

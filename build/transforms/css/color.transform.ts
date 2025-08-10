@@ -1,5 +1,9 @@
 import type { Transform } from "style-dictionary/types"
-import type { ColorToken, ColorValue, ColorSpace } from "../types/tokens.types"
+import type {
+    ColorToken,
+    ColorValue,
+    ColorSpace,
+} from "../../types/tokens.types"
 
 function isColorValue(value: unknown): value is ColorValue {
     return (

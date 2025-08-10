@@ -2,7 +2,7 @@ import type { TransformedToken, Dictionary } from "style-dictionary/types"
 import type { FormatOptions } from "../../types/platform.types"
 import type { BreakpointSize } from "../../config/breakpoints.config"
 import { getBreakpointsInOrder } from "../../config"
-import { getTokenValue } from "../../utils/token-helpers"
+import { getTokenValue } from "../../utils/token.util"
 
 interface DimensionBreakpointResult {
     rootCSS: string

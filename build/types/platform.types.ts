@@ -30,20 +30,6 @@ export interface CSSPlatformOptions {
     generateUtilities: boolean
 }
 
-// Figma Platform specific types
-export interface FigmaPlatformOptions {
-    generateComponents: boolean
-    includeStyleGuide: boolean
-    syncMode: "manual" | "automatic"
-}
-
-// Flutter Platform specific types
-export interface FlutterPlatformOptions {
-    className: string
-    packageName: string
-    generateThemeExtensions: boolean
-}
-
 // Style Dictionary integration types
 export interface StyleDictionaryPlatformConfig {
     prefix?: string

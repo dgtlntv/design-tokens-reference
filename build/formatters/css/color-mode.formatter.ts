@@ -5,7 +5,7 @@ import {
     getTokenValue,
     stripModeFromName,
     getColorModeFromToken,
-} from "../../utils/token-helpers"
+} from "../../utils/token.util"
 
 interface ColorModeResult {
     rootCSS: string

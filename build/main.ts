@@ -1,6 +1,6 @@
 import { TokenBuilder } from "./builder/token-builder"
-import { tierService } from "./services/tier.service"
-import { configFactory, getEnvironmentConfig } from "./config"
+import { tierService } from "./utils/tier.util"
+import { configFactory } from "./config"
 import type { BuildResult } from "./types/shared.types"
 
 class CLI {
@@ -14,9 +14,7 @@ class CLI {
     async run(): Promise<void> {
         const tier = process.argv[2]
         const availableTiers = tierService.getAllTierNames()
-        const environment = getEnvironmentConfig()
 
-        console.log(`🔧 Environment: ${environment.name}`)
         console.log(
             `📦 Enabled platforms: ${configFactory.getEnabledPlatforms().join(", ")}`
         )

@@ -1,17 +1,6 @@
 import { BREAKPOINTS, type BreakpointConfig } from "./breakpoints.config"
 import { COLOR_MODES, type ColorModeConfig } from "./color-modes.config"
-import {
-    BUILD_CONFIG,
-    DEV_BUILD_CONFIG,
-    PROD_BUILD_CONFIG,
-    TEST_BUILD_CONFIG,
-    type BuildConfig,
-} from "./build.config"
-import {
-    getEnvironmentConfig,
-    type Environment,
-    type EnvironmentConfig,
-} from "./environment.config"
+import { BUILD_CONFIG, type BuildConfig } from "./build.config"
 import { platformRegistry } from "./platforms"
 import type { PlatformConfig } from "../types/platform.types"
 
@@ -20,20 +9,9 @@ export interface ComposedConfig {
     colorModes: ColorModeConfig
     build: BuildConfig
     platforms: Map<string, PlatformConfig>
-    environment: EnvironmentConfig
 }
 
 export class ConfigFactory {
-    private environment: Environment
-
-    constructor(environment?: Environment) {
-        this.environment = environment || getEnvironmentConfig().name
-    }
-
-    setEnvironment(env: Environment): void {
-        this.environment = env
-    }
-
     getBreakpoints(): BreakpointConfig {
         return BREAKPOINTS
     }
@@ -43,18 +21,7 @@ export class ConfigFactory {
     }
 
     getBuildConfig(): BuildConfig {
-        const baseConfig = { ...BUILD_CONFIG }
-
-        switch (this.environment) {
-            case "development":
-                return { ...baseConfig, ...DEV_BUILD_CONFIG }
-            case "production":
-                return { ...baseConfig, ...PROD_BUILD_CONFIG }
-            case "test":
-                return { ...baseConfig, ...TEST_BUILD_CONFIG }
-            default:
-                return baseConfig
-        }
+        return BUILD_CONFIG
     }
 
     getPlatformConfig(platformName: string): PlatformConfig | undefined {
@@ -75,7 +42,6 @@ export class ConfigFactory {
             colorModes: this.getColorModes(),
             build: this.getBuildConfig(),
             platforms: this.getAllPlatforms(),
-            environment: getEnvironmentConfig(),
         }
     }
 }

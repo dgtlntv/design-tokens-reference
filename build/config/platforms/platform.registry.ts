@@ -1,8 +1,5 @@
 import type { PlatformConfig } from "../../types/platform.types"
-import { CSS_PLATFORM_CONFIG } from "./css.config"
-import { FIGMA_PLATFORM_CONFIG } from "./figma.config"
-import { FLUTTER_PLATFORM_CONFIG } from "./flutter.config"
-
+import { CSS_PLATFORM_CONFIG } from "./css.config.ts"
 export class PlatformRegistry {
     private platforms: Map<string, PlatformConfig>
 
@@ -13,8 +10,6 @@ export class PlatformRegistry {
 
     private registerDefaults(): void {
         this.register("css", CSS_PLATFORM_CONFIG)
-        this.register("figma", FIGMA_PLATFORM_CONFIG)
-        this.register("flutter", FLUTTER_PLATFORM_CONFIG)
     }
 
     register(name: string, config: PlatformConfig): void {
