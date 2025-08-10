@@ -1,0 +1,7 @@
+export * from "./tiers.config"
+export * from "./breakpoints.config"
+export * from "./color-modes.config"
+export * from "./build.config"
+export * from "./environment.config"
+export * from "./platforms"
+export { configFactory, getConfig } from "./config.factory"
