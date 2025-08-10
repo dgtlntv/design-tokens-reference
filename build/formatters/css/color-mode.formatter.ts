@@ -150,7 +150,7 @@ function generateMediaQueryCSS(
 
 function generateDataAttributeCSS(
     tokens: TransformedToken[],
-    selector: string,
+    _selector: string,
     dictionary: Dictionary,
     usesDtcg: boolean,
     outputReferences: FormatOptions["outputReferences"]

@@ -1,9 +1,9 @@
-import type { StyleDictionaryPlatformConfig } from "../types/platform.types"
+import type { PlatformConfig } from "style-dictionary/types"
 import { configFactory } from "../config"
 
-export function createCSSPlatform(tier: string): StyleDictionaryPlatformConfig {
+export function createCSSPlatform(tier: string): PlatformConfig {
     const cssConfig = configFactory.getPlatformConfig("css")
-    const buildConfig = configFactory.getBuildConfig()
+    const _buildConfig = configFactory.getBuildConfig()
 
     if (!cssConfig) {
         throw new Error("CSS platform configuration not found")
@@ -16,8 +16,7 @@ export function createCSSPlatform(tier: string): StyleDictionaryPlatformConfig {
         files: [
             {
                 destination: `${tier}.css`,
-                format:
-                    cssConfig.fileConfig?.format || "css/variables-combined",
+                format: cssConfig.defaultFormat || "css/variables-combined",
                 options: cssConfig.options,
             },
         ],

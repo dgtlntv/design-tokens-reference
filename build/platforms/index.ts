@@ -1,6 +1,6 @@
 import { createCSSPlatform } from "./css.platform"
 import { configFactory } from "../config"
-import { PlatformConfig } from "style-dictionary/types"
+import type { PlatformConfig } from "style-dictionary/types"
 
 export type Platform = "css" | "figma" | "flutter"
 

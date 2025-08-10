@@ -15,10 +15,7 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
         "color/w3c-css",
         "fontFamily/css",
     ],
-    fileConfig: {
-        extension: ".css",
-        format: "css/variables-combined",
-    },
+    defaultFormat: "css/variables-combined",
     options: {
         defaultSelector: ":root",
         useMediaQuery: false,

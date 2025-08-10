@@ -1,4 +1,5 @@
-import type { Format } from "style-dictionary/types"
+import type { Format, Dictionary } from "style-dictionary/types"
+import type { FormatOptions, CSSPlatformOptions } from "../../types/platform.types"
 import { generateColorModeCSS } from "./color-mode.formatter"
 import { generateDimensionBreakpointCSS } from "./dimension-breakpoint.formatter"
 import { getTokenValue } from "../../utils/token.util"
@@ -9,15 +10,15 @@ const FILE_HEADER =
 
 export const cssVariablesCombinedFormat: Format = {
     name: "css/variables-combined",
-    format: ({ dictionary, options = {} }) => {
+    format: ({ dictionary, options }: { dictionary: Dictionary; options?: FormatOptions }) => {
         const cssConfig = configFactory.getPlatformConfig("css")
-        const defaultOptions = cssConfig?.options || {}
+        const defaultOptions: Partial<CSSPlatformOptions> = cssConfig?.options || {}
 
         const {
             selector = defaultOptions.defaultSelector || ":root",
             outputReferences = defaultOptions.outputReferences,
             usesDtcg = false,
-        } = options
+        } = options || {}
 
         let css = FILE_HEADER
         css += `${selector} {\n`

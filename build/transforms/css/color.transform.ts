@@ -1,6 +1,5 @@
-import type { Transform } from "style-dictionary/types"
+import type { Transform, TransformedToken } from "style-dictionary/types"
 import type {
-    ColorToken,
     ColorValue,
     ColorSpace,
 } from "../../types/tokens.types"
@@ -101,14 +100,14 @@ const colorSpaceFormatters: Record<ColorSpace, (value: ColorValue) => string> =
 export const colorW3cCssTransform: Transform = {
     name: "color/w3c-css",
     type: "value",
-    filter: (token): token is ColorToken => {
+    filter: (token: TransformedToken) => {
         return (
             token.$type === "color" &&
             token.$value !== null &&
             isColorValue(token.$value)
         )
     },
-    transform: (token: ColorToken) => {
+    transform: (token: TransformedToken) => {
         const value = token.$value as ColorValue
         const formatter = colorSpaceFormatters[value.colorSpace]
 
