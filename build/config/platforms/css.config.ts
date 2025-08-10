@@ -6,7 +6,6 @@ import type {
 export const CSS_PLATFORM_CONFIG: PlatformConfig & {
     options: CSSPlatformOptions
 } = {
-    enabled: true,
     prefix: "canonical",
     buildPath: "dist/css/",
     transforms: [
@@ -18,10 +17,10 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
     defaultFormat: "css/variables-combined",
     options: {
         defaultSelector: ":root",
-        useMediaQuery: false,
         outputReferences: true,
         preserveReferences: true,
         useCustomProperties: true,
         generateUtilities: false,
+        colorModeStrategy: "light-dark-function",
     },
 }

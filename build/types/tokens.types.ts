@@ -24,3 +24,11 @@ export interface DimensionValue {
     value: number
     unit: string
 }
+
+export interface CanonicalModesExtension {
+    mode: string
+}
+
+export interface TokenExtensions {
+    "canonical.modes"?: CanonicalModesExtension
+}

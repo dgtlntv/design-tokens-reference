@@ -1,10 +1,10 @@
-import type { TransformedToken, Dictionary } from "style-dictionary/types"
-import type { FormatOptions } from "../../types/platform.types"
+import type { TransformedToken, Dictionary, OutputReferences } from "style-dictionary/types"
+import type { ColorModeStrategy } from "../../types/platform.types"
 import { COLOR_MODES } from "../../config"
 import {
     getTokenValue,
-    stripModeFromName,
-    getColorModeFromToken,
+    stripModeFromTokenPath,
+    getModeFromTokenExtensions,
 } from "../../utils/token.util"
 
 interface ColorModeResult {
@@ -28,7 +28,7 @@ function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
 
     tokens.forEach((token) => {
         if (token.$type === "color") {
-            const mode = getColorModeFromToken(token.name)
+            const mode = getModeFromTokenExtensions(token)
 
             if (mode === modes.light) {
                 groups.light.push(token)
@@ -47,7 +47,7 @@ function generateLightDarkFunctionCSS(
     tokens: TransformedToken[],
     dictionary: Dictionary,
     usesDtcg: boolean,
-    outputReferences: FormatOptions["outputReferences"]
+    outputReferences: OutputReferences
 ): string {
     const { modes } = COLOR_MODES
     const { light, dark, regular } = categorizeColorTokens(tokens)
@@ -64,12 +64,12 @@ function generateLightDarkFunctionCSS(
     const darkTokenMap = new Map<string, TransformedToken>()
 
     light.forEach((token) => {
-        const strippedName = stripModeFromName(token.name, modes.light)
+        const strippedName = stripModeFromTokenPath(token, modes.light)
         lightTokenMap.set(strippedName, token)
     })
 
     dark.forEach((token) => {
-        const strippedName = stripModeFromName(token.name, modes.dark)
+        const strippedName = stripModeFromTokenPath(token, modes.dark)
         darkTokenMap.set(strippedName, token)
     })
 
@@ -114,7 +114,7 @@ function generateMediaQueryCSS(
     selector: string,
     dictionary: Dictionary,
     usesDtcg: boolean,
-    outputReferences: FormatOptions["outputReferences"]
+    outputReferences: OutputReferences
 ): ColorModeResult {
     const { modes } = COLOR_MODES
     const { light, dark, regular } = categorizeColorTokens(tokens)
@@ -129,7 +129,7 @@ function generateMediaQueryCSS(
 
     // Add light tokens to root
     light.forEach((token) => {
-        const strippedName = stripModeFromName(token.name, modes.light)
+        const strippedName = stripModeFromTokenPath(token, modes.light)
         rootCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
     })
 
@@ -138,47 +138,10 @@ function generateMediaQueryCSS(
         mediaQueryCSS += "@media (prefers-color-scheme: dark) {\n"
         mediaQueryCSS += `  ${selector} {\n`
         dark.forEach((token) => {
-            const strippedName = stripModeFromName(token.name, modes.dark)
+            const strippedName = stripModeFromTokenPath(token, modes.dark)
             mediaQueryCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
         })
         mediaQueryCSS += "  }\n"
-        mediaQueryCSS += "}\n\n"
-    }
-
-    return { rootCSS, mediaQueryCSS }
-}
-
-function generateDataAttributeCSS(
-    tokens: TransformedToken[],
-    _selector: string,
-    dictionary: Dictionary,
-    usesDtcg: boolean,
-    outputReferences: FormatOptions["outputReferences"]
-): ColorModeResult {
-    const { modes, dataAttributeName = "data-theme" } = COLOR_MODES
-    const { light, dark, regular } = categorizeColorTokens(tokens)
-
-    let rootCSS = ""
-    let mediaQueryCSS = "" // Reusing this for data attribute CSS
-
-    // Add regular color tokens
-    regular.forEach((token) => {
-        rootCSS += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
-    })
-
-    // Add light tokens to root
-    light.forEach((token) => {
-        const strippedName = stripModeFromName(token.name, modes.light)
-        rootCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
-    })
-
-    // Add dark tokens with data attribute
-    if (dark.length > 0) {
-        mediaQueryCSS += `[${dataAttributeName}="dark"] {\n`
-        dark.forEach((token) => {
-            const strippedName = stripModeFromName(token.name, modes.dark)
-            mediaQueryCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
-        })
         mediaQueryCSS += "}\n\n"
     }
 
@@ -190,22 +153,13 @@ export function generateColorModeCSS(
     selector: string,
     dictionary: Dictionary,
     usesDtcg: boolean,
-    outputReferences: FormatOptions["outputReferences"]
+    outputReferences: OutputReferences,
+    strategy: ColorModeStrategy
 ): ColorModeResult {
-    const { strategy } = COLOR_MODES
 
     switch (strategy) {
         case "media-query":
             return generateMediaQueryCSS(
-                tokens,
-                selector,
-                dictionary,
-                usesDtcg,
-                outputReferences
-            )
-
-        case "data-attribute":
-            return generateDataAttributeCSS(
                 tokens,
                 selector,
                 dictionary,

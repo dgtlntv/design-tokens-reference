@@ -1,9 +1,9 @@
 import type { PlatformConfig } from "style-dictionary/types"
-import { configFactory } from "../config"
+import { getPlatform, BUILD_CONFIG } from "../config"
 
 export function createCSSPlatform(tier: string): PlatformConfig {
-    const cssConfig = configFactory.getPlatformConfig("css")
-    const _buildConfig = configFactory.getBuildConfig()
+    const cssConfig = getPlatform("css")
+    const _buildConfig = BUILD_CONFIG
 
     if (!cssConfig) {
         throw new Error("CSS platform configuration not found")

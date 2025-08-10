@@ -1,6 +1,11 @@
 {
     "dimension": {
         "large": {
+            "$extensions": {
+                "canonical.modes": {
+                    "mode": "large"
+                }
+            },
             "size": {
                 "rootFontSize": {
                     "$value": "{dimension.200}"

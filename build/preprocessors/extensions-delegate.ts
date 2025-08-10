@@ -1,0 +1,47 @@
+import type { PreprocessedTokens, DesignTokens, DesignToken } from "style-dictionary/types"
+
+function isPlainObject(obj: any): obj is Record<string, any> {
+    return obj !== null && typeof obj === 'object' && obj.constructor === Object
+}
+
+/**
+ * Delegates group-level $extensions to individual tokens, similar to how $type works.
+ * Based on Style Dictionary's typeDtcgDelegate utility.
+ */
+export function extensionsDelegate(tokens: DesignTokens): PreprocessedTokens {
+    const clone = structuredClone(tokens) as PreprocessedTokens
+
+    const recurse = (slice: DesignTokens | DesignToken, extensions?: any) => {
+        let currentExtensions = extensions // keep track of extensions through the stack
+        const keys = Object.keys(slice)
+        
+        // If we don't have $extensions on this level but we have inherited extensions,
+        // and this is a token level (has $value), apply the inherited extensions
+        if (!keys.includes('$extensions') && currentExtensions && keys.includes('$value')) {
+            slice.$extensions = currentExtensions
+        }
+
+        // If this level has $extensions, update our current extensions
+        if (slice.$extensions) {
+            // Merge with parent extensions (child extensions override parent)
+            currentExtensions = currentExtensions 
+                ? { ...currentExtensions, ...slice.$extensions }
+                : slice.$extensions
+            
+            // Remove group level $extensions (keep only on token level)
+            if (slice.$value === undefined) {
+                delete slice.$extensions
+            }
+        }
+
+        // Recurse into child objects
+        Object.values(slice).forEach((val) => {
+            if (isPlainObject(val)) {
+                recurse(val, currentExtensions)
+            }
+        })
+    }
+
+    recurse(clone)
+    return clone
+}

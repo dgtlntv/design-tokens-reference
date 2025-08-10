@@ -1,13 +1,12 @@
 import { usesReferences, getReferences } from "style-dictionary/utils"
-import type { TransformedToken, Dictionary } from "style-dictionary/types"
-import type { FormatOptions } from "../types/platform.types"
-import { COLOR_MODES } from "../config"
+import type { TransformedToken, Dictionary, OutputReferences } from "style-dictionary/types"
+import type { TokenExtensions } from "../types/tokens.types"
 
 export function getTokenValue(
     token: TransformedToken,
     dictionary: Dictionary,
     usesDtcg: boolean,
-    outputReferences: FormatOptions["outputReferences"]
+    outputReferences: OutputReferences
 ): string {
     const originalValue = usesDtcg
         ? token.original.$value
@@ -36,19 +35,29 @@ export function getTokenValue(
     return String(usesDtcg ? token.$value : token.value)
 }
 
-export function stripModeFromName(name: string, mode: string): string {
-    const pattern = new RegExp(`-${mode}-`, "g")
-    return name.replace(pattern, "-")
+export function stripModeFromTokenPath(token: TransformedToken, mode: string): string {
+    const path = token.path || []
+    
+    // Find the index of the mode in the path
+    const modeIndex = path.indexOf(mode)
+    
+    if (modeIndex === -1) {
+        // Mode not found in path, return original name
+        return token.name
+    }
+    
+    // Create a new path without the mode segment
+    const pathWithoutMode = [...path.slice(0, modeIndex), ...path.slice(modeIndex + 1)]
+    
+    // Join the path back together with dashes
+    return pathWithoutMode.join('-')
 }
 
-export function getColorModeFromToken(tokenName: string): string | null {
-    const { modes } = COLOR_MODES
-
-    if (tokenName.includes(`-${modes.light}-`)) {
-        return modes.light
-    }
-    if (tokenName.includes(`-${modes.dark}-`)) {
-        return modes.dark
+export function getModeFromTokenExtensions(token: TransformedToken): string | null {
+    const extensions = token.$extensions as TokenExtensions | undefined
+    if (extensions && extensions["canonical.modes"]) {
+        return extensions["canonical.modes"].mode || null
     }
     return null
 }
+
