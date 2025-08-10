@@ -3,16 +3,16 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "build:css:sites": "ts-node config/build.ts sites",
-        "build:css:docs": "ts-node config/build.ts docs",
-        "build:css:apps": "ts-node config/build.ts apps",
-        "build:css": "ts-node config/build.ts all"
+        "build:css:sites": "tsx build/build.ts sites",
+        "build:css:docs": "tsx build/build.ts docs",
+        "build:css:apps": "tsx build/build.ts apps",
+        "build:css": "tsx build/build.ts all"
     },
     "license": "ISC",
     "type": "module",
     "devDependencies": {
         "style-dictionary": "^5.0.1",
-        "ts-node": "^10.9.2",
+        "tsx": "^4.20.3",
         "typescript": "^5.9.2"
     }
 }

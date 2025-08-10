@@ -1,10 +1,6 @@
 import StyleDictionary from "style-dictionary"
 import type { Config } from "style-dictionary/types"
-import {
-    formattedVariables,
-    usesReferences,
-    getReferences,
-} from "style-dictionary/utils"
+import { usesReferences, getReferences } from "style-dictionary/utils"
 import { getAllTierNames, getTokenPathsForTier } from "./tiers.utils.ts"
 
 StyleDictionary.registerTransform({
