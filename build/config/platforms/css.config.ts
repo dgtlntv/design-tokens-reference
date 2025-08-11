@@ -18,10 +18,7 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
     options: {
         defaultSelector: ":root",
         outputReferences: true,
-        preserveReferences: true,
-        useCustomProperties: true,
-        generateUtilities: false,
-        colorModeStrategy: "light-dark-function",
+        colorModeStrategy: "media-query",
         tokenConfig: {
             referenceFormat: "var(--{name})",
         },

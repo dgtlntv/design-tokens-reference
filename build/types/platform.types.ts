@@ -17,9 +17,6 @@ export interface PlatformTokenConfig {
 export interface CSSPlatformOptions {
     defaultSelector: string
     outputReferences: OutputReferences
-    preserveReferences: boolean
-    useCustomProperties: boolean
-    generateUtilities: boolean
     colorModeStrategy: ColorModeStrategy
     tokenConfig: PlatformTokenConfig
 }
