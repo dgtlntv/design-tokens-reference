@@ -4,12 +4,13 @@ export const DIMENSION_MODES: ModeConfig<{
     small: string
     medium: string
     large: string
-    "x-large": string
+    xLarge: string
 }> = {
     modes: {
-        small: "small",
-        medium: "medium",
-        large: "large",
-        "x-large": "x-large",
+        small: "460px",
+        medium: "620px",
+        large: "1036px",
+        xLarge: "1681px",
     },
+    defaultMode: "small",
 }

@@ -80,7 +80,7 @@ function printUsage(): void {
     console.log("  NODE_ENV=development|production|test")
 }
 
-async function run(): Promise<void> {
+async function main(): Promise<void> {
     const tier = process.argv[2]
 
     if (!tier) {
@@ -113,11 +113,8 @@ async function run(): Promise<void> {
 }
 
 // Main execution
-if (require.main === module) {
-    run().catch((error: Error) => {
-        console.error("❌ Build failed:", error)
-        process.exit(1)
-    })
-}
+main().catch((error: Error) => {
+    console.error("❌ Build failed:", error)
+    process.exit(1)
+})
 
-export { buildTokens, createConfig }

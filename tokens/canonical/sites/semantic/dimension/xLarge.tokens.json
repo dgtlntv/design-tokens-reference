@@ -3,7 +3,7 @@
         "xLarge": {
             "$extensions": {
                 "canonical.modes": {
-                    "mode": "x-large"
+                    "mode": "xLarge"
                 }
             },
             "size": {
