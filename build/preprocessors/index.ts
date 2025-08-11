@@ -1,2 +1,11 @@
+import StyleDictionary from "style-dictionary"
+import { extensionsDelegate } from "./extensions-delegate"
+
+export function registerPreprocessors(): void {
+    StyleDictionary.registerPreprocessor({
+        name: "extensions-delegate",
+        preprocessor: (dictionary) => extensionsDelegate(dictionary.tokens)
+    })
+}
+
 export { extensionsDelegate } from "./extensions-delegate"
-export { registerPreprocessors } from "./register"

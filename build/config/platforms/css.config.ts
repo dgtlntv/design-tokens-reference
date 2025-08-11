@@ -1,6 +1,6 @@
 import type {
-    PlatformConfig,
     CSSPlatformOptions,
+    PlatformConfig,
 } from "../../types/platform.types"
 
 export const CSS_PLATFORM_CONFIG: PlatformConfig & {
@@ -22,5 +22,8 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
         useCustomProperties: true,
         generateUtilities: false,
         colorModeStrategy: "light-dark-function",
+        tokenConfig: {
+            referenceFormat: "var(--{name})",
+        },
     },
 }

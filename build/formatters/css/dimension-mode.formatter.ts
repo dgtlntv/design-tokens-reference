@@ -1,6 +1,16 @@
-import type { TransformedToken, Dictionary, OutputReferences } from "style-dictionary/types"
+import type {
+    Dictionary,
+    OutputReferences,
+    TransformedToken,
+} from "style-dictionary/types"
+import { kebabCase } from "change-case"
 import { DIMENSION_MODES } from "../../config/dimension-modes.config"
-import { getTokenValue, getModeFromTokenExtensions, stripModeFromTokenPath } from "../../utils/token.util"
+import { getPlatform } from "../../config"
+import {
+    getModeFromTokenExtensions,
+    getTokenValue,
+    stripModeFromTokenPath,
+} from "../../utils/token.util"
 
 interface DimensionModeResult {
     rootCSS: string
@@ -10,7 +20,6 @@ interface DimensionModeResult {
 interface DimensionTokensBySize {
     [key: string]: TransformedToken[]
 }
-
 
 function categorizeDimensionTokens(tokens: TransformedToken[]): {
     bySize: DimensionTokensBySize
@@ -27,7 +36,7 @@ function categorizeDimensionTokens(tokens: TransformedToken[]): {
     tokens.forEach((token) => {
         if (token.$type === "dimension") {
             const mode = getModeFromTokenExtensions(token)
-            
+
             if (mode && mode in bySize) {
                 bySize[mode as keyof typeof bySize].push(token)
             } else {
@@ -39,6 +48,7 @@ function categorizeDimensionTokens(tokens: TransformedToken[]): {
     return { bySize, regular }
 }
 
+
 export function generateDimensionModeCSS(
     tokens: TransformedToken[],
     selector: string,
@@ -47,11 +57,14 @@ export function generateDimensionModeCSS(
     outputReferences: OutputReferences
 ): DimensionModeResult {
     const { bySize, regular } = categorizeDimensionTokens(tokens)
-    const dimensionModeEntries = Object.entries(DIMENSION_MODES) as Array<[keyof typeof DIMENSION_MODES, string]>
+    const dimensionModeEntries = Object.entries(DIMENSION_MODES) as Array<
+        [keyof typeof DIMENSION_MODES, string]
+    >
 
     let rootCSS = ""
+    const tokenConfig = getPlatform("css")?.options?.tokenConfig
     regular.forEach((token) => {
-        rootCSS += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+        rootCSS += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
     let mediaQueriesCSS = ""
@@ -62,8 +75,10 @@ export function generateDimensionModeCSS(
             mediaQueriesCSS += `  ${selector} {\n`
             tokensForSize.forEach((token) => {
                 const mode = getModeFromTokenExtensions(token)
-                const strippedName = mode ? stripModeFromTokenPath(token, mode) : token.name
-                mediaQueriesCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+                const strippedName = mode
+                    ? kebabCase(stripModeFromTokenPath(token, mode).join(' '))
+                    : token.name
+                mediaQueriesCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
             })
             mediaQueriesCSS += "  }\n"
             mediaQueriesCSS += "}\n\n"

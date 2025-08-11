@@ -14,5 +14,8 @@
         "style-dictionary": "^5.0.1",
         "tsx": "^4.20.3",
         "typescript": "^5.9.2"
+    },
+    "dependencies": {
+        "change-case": "^5.4.4"
     }
 }

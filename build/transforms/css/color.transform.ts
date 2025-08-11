@@ -1,8 +1,5 @@
 import type { Transform, TransformedToken } from "style-dictionary/types"
-import type {
-    ColorValue,
-    ColorSpace,
-} from "../../types/tokens.types"
+import type { ColorSpace, ColorValue } from "../../types/tokens.types"
 
 function isColorValue(value: unknown): value is ColorValue {
     return (
@@ -80,12 +77,16 @@ const colorSpaceFormatters: Record<ColorSpace, (value: ColorValue) => string> =
         },
 
         oklab: ({ components, alpha = 1 }) => {
-            const [l, a, b] = components.map((c) => (c === "none" ? "none" : c))
+            const [l, a, b] = components.map((c) =>
+                c === "none" ? "none" : c
+            )
             return `oklab(${l} ${a} ${b}${createAlphaString(alpha)})`
         },
 
         oklch: ({ components, alpha = 1 }) => {
-            const [l, c, h] = components.map((c) => (c === "none" ? "none" : c))
+            const [l, c, h] = components.map((c) =>
+                c === "none" ? "none" : c
+            )
             return `oklch(${l} ${c} ${h}${createAlphaString(alpha)})`
         },
 

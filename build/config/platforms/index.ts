@@ -1,5 +1,5 @@
-import { CSS_PLATFORM_CONFIG } from "./css.config.ts"
 import type { PlatformConfig } from "../../types/platform.types"
+import { CSS_PLATFORM_CONFIG } from "./css.config.ts"
 
 export const PLATFORMS = {
     css: CSS_PLATFORM_CONFIG,
@@ -16,6 +16,6 @@ export const getAllPlatforms = (): Record<string, PlatformConfig> => {
 export type Platform = keyof typeof PLATFORMS
 
 export type {
-    PlatformConfig,
     CSSPlatformOptions,
+    PlatformConfig,
 } from "../../types/platform.types"

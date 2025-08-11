@@ -1,10 +1,10 @@
 import StyleDictionary from "style-dictionary"
 import type { Config } from "style-dictionary/types"
-import { registerTransforms } from "./transforms"
-import { registerFormatters } from "./formatters"
-import { registerPreprocessors } from "./preprocessors"
-import { createPlatformConfig, type Platform } from "./platforms"
 import { BUILD_CONFIG, getPlatform, TIERS_CONFIG } from "./config"
+import { registerFormatters } from "./formatters"
+import { createPlatformConfig, type Platform } from "./platforms"
+import { registerPreprocessors } from "./preprocessors"
+import { registerTransforms } from "./transforms"
 import type { ResolvedTokenPaths } from "./types/shared.types"
 
 interface BuildOptions {

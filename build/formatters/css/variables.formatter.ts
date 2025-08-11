@@ -1,35 +1,43 @@
-import type { Format, Dictionary } from "style-dictionary/types"
-import type { LocalOptions } from "style-dictionary/types"
+import type { Dictionary, Format, LocalOptions } from "style-dictionary/types"
+import { getPlatform } from "../../config"
 import type { CSSPlatformOptions } from "../../types/platform.types"
+import { getTokenValue } from "../../utils/token.util"
 import { generateColorModeCSS } from "./color-mode.formatter"
 import { generateDimensionModeCSS } from "./dimension-mode.formatter"
-import { getTokenValue } from "../../utils/token.util"
-import { getPlatform } from "../../config"
 
 const FILE_HEADER =
     "/**\n * Do not edit directly, this file was auto-generated.\n */\n\n"
 
 export const cssVariablesCombinedFormat: Format = {
     name: "css/variables-combined",
-    format: ({ dictionary, options }: { dictionary: Dictionary; options?: LocalOptions }) => {
+    format: ({
+        dictionary,
+        options,
+    }: {
+        dictionary: Dictionary
+        options?: LocalOptions
+    }) => {
         const cssConfig = getPlatform("css")
-        const defaultOptions: Partial<CSSPlatformOptions> = cssConfig?.options || {}
+        const defaultOptions: Partial<CSSPlatformOptions> =
+            cssConfig?.options || {}
 
         const {
             selector = defaultOptions.defaultSelector || ":root",
             outputReferences = defaultOptions.outputReferences || false,
             usesDtcg = false,
         } = options || {}
-        
-        const colorModeStrategy = defaultOptions.colorModeStrategy || "light-dark-function"
+
+        const colorModeStrategy =
+            defaultOptions.colorModeStrategy || "light-dark-function"
 
         let css = FILE_HEADER
         css += `${selector} {\n`
 
         // Add non-color, non-dimension tokens
+        const tokenConfig = cssConfig?.options?.tokenConfig
         dictionary.allTokens.forEach((token) => {
             if (token.$type !== "color" && token.$type !== "dimension") {
-                css += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+                css += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
             }
         })
 

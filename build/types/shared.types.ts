@@ -9,3 +9,9 @@ export interface BuildResult {
     error?: Error
     duration?: number
 }
+
+export interface ModeConfig<Modes extends Record<string, string>> {
+    modes: Modes
+    defaultMode?: keyof Modes
+}
+

@@ -1,14 +1,9 @@
-export type ColorMode = "light" | "dark"
+import { ModeConfig } from "../types/shared.types"
 
-export interface ColorModeConfig {
-    modes: {
-        light: ColorMode
-        dark: ColorMode
-    }
-    defaultMode: ColorMode
-}
-
-export const COLOR_MODES: ColorModeConfig = {
+export const COLOR_MODES: ModeConfig<{
+    light: string
+    dark: string
+}> = {
     modes: {
         light: "light",
         dark: "dark",

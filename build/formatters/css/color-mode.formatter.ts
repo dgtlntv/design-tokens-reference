@@ -1,10 +1,16 @@
-import type { TransformedToken, Dictionary, OutputReferences } from "style-dictionary/types"
-import type { ColorModeStrategy } from "../../types/platform.types"
+import type {
+    Dictionary,
+    OutputReferences,
+    TransformedToken,
+} from "style-dictionary/types"
+import { kebabCase } from "change-case"
 import { COLOR_MODES } from "../../config"
+import { getPlatform } from "../../config"
+import type { ColorModeStrategy } from "../../types/platform.types"
 import {
+    getModeFromTokenExtensions,
     getTokenValue,
     stripModeFromTokenPath,
-    getModeFromTokenExtensions,
 } from "../../utils/token.util"
 
 interface ColorModeResult {
@@ -17,6 +23,7 @@ interface TokenGroups {
     dark: TransformedToken[]
     regular: TransformedToken[]
 }
+
 
 function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
     const { modes } = COLOR_MODES
@@ -55,8 +62,9 @@ function generateLightDarkFunctionCSS(
     let css = ""
 
     // Add regular color tokens
+    const tokenConfig = getPlatform("css")?.options?.tokenConfig
     regular.forEach((token) => {
-        css += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+        css += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
     // Create maps for easier lookup
@@ -64,12 +72,14 @@ function generateLightDarkFunctionCSS(
     const darkTokenMap = new Map<string, TransformedToken>()
 
     light.forEach((token) => {
-        const strippedName = stripModeFromTokenPath(token, modes.light)
+        const pathArray = stripModeFromTokenPath(token, modes.light)
+        const strippedName = kebabCase(pathArray.join(' '))
         lightTokenMap.set(strippedName, token)
     })
 
     dark.forEach((token) => {
-        const strippedName = stripModeFromTokenPath(token, modes.dark)
+        const pathArray = stripModeFromTokenPath(token, modes.dark)
+        const strippedName = kebabCase(pathArray.join(' '))
         darkTokenMap.set(strippedName, token)
     })
 
@@ -84,17 +94,19 @@ function generateLightDarkFunctionCSS(
                 lightToken,
                 dictionary,
                 usesDtcg,
-                outputReferences
+                outputReferences,
+                tokenConfig
             )
             const darkValue = getTokenValue(
                 darkToken,
                 dictionary,
                 usesDtcg,
-                outputReferences
+                outputReferences,
+                tokenConfig
             )
             css += `  --${strippedName}: light-dark(${lightValue}, ${darkValue});\n`
         } else {
-            css += `  --${strippedName}: ${getTokenValue(lightToken, dictionary, usesDtcg, outputReferences)};\n`
+            css += `  --${strippedName}: ${getTokenValue(lightToken, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
         }
         processedTokens.add(strippedName)
     })
@@ -102,7 +114,7 @@ function generateLightDarkFunctionCSS(
     // Add dark tokens without light counterparts
     darkTokenMap.forEach((darkToken, strippedName) => {
         if (!processedTokens.has(strippedName)) {
-            css += `  --${strippedName}: ${getTokenValue(darkToken, dictionary, usesDtcg, outputReferences)};\n`
+            css += `  --${strippedName}: ${getTokenValue(darkToken, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
         }
     })
 
@@ -123,14 +135,16 @@ function generateMediaQueryCSS(
     let mediaQueryCSS = ""
 
     // Add regular color tokens
+    const tokenConfig = getPlatform("css")?.options?.tokenConfig
     regular.forEach((token) => {
-        rootCSS += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+        rootCSS += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
     // Add light tokens to root
     light.forEach((token) => {
-        const strippedName = stripModeFromTokenPath(token, modes.light)
-        rootCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+        const pathArray = stripModeFromTokenPath(token, modes.light)
+        const strippedName = kebabCase(pathArray.join(' '))
+        rootCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
     // Add dark tokens to media query
@@ -138,8 +152,9 @@ function generateMediaQueryCSS(
         mediaQueryCSS += "@media (prefers-color-scheme: dark) {\n"
         mediaQueryCSS += `  ${selector} {\n`
         dark.forEach((token) => {
-            const strippedName = stripModeFromTokenPath(token, modes.dark)
-            mediaQueryCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences)};\n`
+            const pathArray = stripModeFromTokenPath(token, modes.dark)
+            const strippedName = kebabCase(pathArray.join(' '))
+            mediaQueryCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
         })
         mediaQueryCSS += "  }\n"
         mediaQueryCSS += "}\n\n"
@@ -156,7 +171,6 @@ export function generateColorModeCSS(
     outputReferences: OutputReferences,
     strategy: ColorModeStrategy
 ): ColorModeResult {
-
     switch (strategy) {
         case "media-query":
             return generateMediaQueryCSS(
