@@ -43,13 +43,13 @@ export const TIERS_CONFIG: TiersConfiguration = {
         docs: {
             name: "docs",
             description: "Documentation site tokens",
-            include: ["sites.primitive"],
+            include: ["sites.primitive", "sites.semantic"],
             source: ["docs.semantic"],
         },
         apps: {
             name: "apps",
             description: "Application tokens",
-            include: ["sites.primitive"],
+            include: ["sites.primitive", "sites.semantic"],
             source: ["apps.semantic"],
         },
     },
