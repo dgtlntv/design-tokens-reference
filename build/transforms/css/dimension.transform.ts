@@ -11,7 +11,7 @@ function isDimensionValue(value: unknown): value is DimensionValue {
 }
 
 export const dimensionW3cCssTransform: Transform = {
-    name: "dimension/w3c-css",
+    name: "dimension/w3c",
     type: "value",
     filter: (token: TransformedToken) => {
         return (

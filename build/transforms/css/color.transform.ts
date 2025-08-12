@@ -99,7 +99,7 @@ const colorSpaceFormatters: Record<ColorSpace, (value: ColorValue) => string> =
     }
 
 export const colorW3cCssTransform: Transform = {
-    name: "color/w3c-css",
+    name: "color/w3c",
     type: "value",
     filter: (token: TransformedToken) => {
         return (

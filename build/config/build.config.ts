@@ -4,6 +4,6 @@ export interface BuildConfig {
 }
 
 export const BUILD_CONFIG: BuildConfig = {
-    logLevel: "default",
+    logLevel: "verbose",
     useDtcg: true,
 }

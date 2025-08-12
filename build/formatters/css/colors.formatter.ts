@@ -1,5 +1,7 @@
 import type {
     Dictionary,
+    Format,
+    LocalOptions,
     OutputReferences,
     TransformedToken,
 } from "style-dictionary/types"
@@ -191,4 +193,59 @@ export function generateColorModeCSS(
             )
             return { rootCSS, mediaQueryCSS: "" }
     }
+}
+
+const FILE_HEADER =
+    "/**\n * Color tokens\n * Do not edit directly, this file was auto-generated.\n */\n\n"
+
+export const cssColorsFormat: Format = {
+    name: "css/colors",
+    format: ({
+        dictionary,
+        options,
+    }: {
+        dictionary: Dictionary
+        options?: LocalOptions
+    }) => {
+        const cssConfig = getPlatform("css")
+        const defaultOptions = cssConfig?.options || {}
+
+        const {
+            selector = defaultOptions.defaultSelector || ":root",
+            outputReferences = defaultOptions.outputReferences || false,
+            usesDtcg = false,
+        } = options || {}
+
+        const colorModeStrategy =
+            defaultOptions.colorModeStrategy || "light-dark-function"
+
+        // Get category filter from options
+        const categoryFilter = (options as any)?.categoryFilter
+        const colorTokens = categoryFilter ? 
+            dictionary.allTokens.filter(categoryFilter) : 
+            dictionary.allTokens.filter(token => token.$type === "color" || token.type === "color")
+
+        if (colorTokens.length === 0) {
+            return FILE_HEADER + `/* No color tokens found */\n`
+        }
+
+        let css = FILE_HEADER
+
+        const { rootCSS, mediaQueryCSS } = generateColorModeCSS(
+            colorTokens,
+            selector,
+            dictionary,
+            usesDtcg,
+            outputReferences,
+            colorModeStrategy
+        )
+
+        css += `${selector} {\n${rootCSS}}\n\n`
+
+        if (mediaQueryCSS) {
+            css += mediaQueryCSS
+        }
+
+        return css
+    },
 }
