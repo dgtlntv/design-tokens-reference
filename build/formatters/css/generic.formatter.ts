@@ -4,9 +4,17 @@ import type { CSSPlatformOptions } from "../../types/platform.types"
 import type { ExtendedLocalOptions } from "../../types/shared.types"
 import { getTokenValue } from "../../utils/token.util"
 
+/**
+ * Standard file header for generated generic CSS files.
+ */
 const FILE_HEADER =
     "/**\n * Do not edit directly, this file was auto-generated.\n */\n\n"
 
+/**
+ * This is a simple, general-purpose formatter that outputs CSS custom properties
+ * for any token type. It's used for token categories that don't require special
+ * formatting logic (like assets, grid, motion, shadows, etc.).
+ */
 export const cssGenericFormat: Format = {
     name: "css/generic",
     format: ({
@@ -26,11 +34,11 @@ export const cssGenericFormat: Format = {
             usesDtcg = false,
         } = options || {}
 
-        // Get category filter from options  
+        // Get category filter from options
         const categoryFilter = options?.categoryFilter
-        const categoryTokens = categoryFilter ? 
-            dictionary.allTokens.filter(categoryFilter) : 
-            dictionary.allTokens
+        const categoryTokens = categoryFilter
+            ? dictionary.allTokens.filter(categoryFilter)
+            : dictionary.allTokens
 
         if (categoryTokens.length === 0) {
             return FILE_HEADER + `/* No tokens found for this category */\n`

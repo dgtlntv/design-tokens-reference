@@ -7,6 +7,16 @@ import { getReferences, usesReferences } from "style-dictionary/utils"
 import type { PlatformTokenConfig } from "../types/platform.types"
 import type { TokenExtensions } from "../types/tokens.types"
 
+/**
+ * Extracts the final value from a token, handling references and DTCG format.
+ * 
+ * @param token - The transformed token to extract value from
+ * @param dictionary - Style Dictionary instance containing all tokens
+ * @param usesDtcg - Whether to use DTCG format ($value vs value)
+ * @param outputReferences - Configuration for outputting token references
+ * @param platformConfig - Optional platform-specific token configuration
+ * @returns The final string value for the token
+ */
 export function getTokenValue(
     token: TransformedToken,
     dictionary: Dictionary,
@@ -44,6 +54,14 @@ export function getTokenValue(
     return String(usesDtcg ? token.$value : token.value)
 }
 
+/**
+ * Removes a mode segment from a token's path array.
+ * Used to normalize token names by removing mode-specific path segments.
+ * 
+ * @param token - The transformed token containing the path
+ * @param mode - The mode string to remove from the path
+ * @returns A new path array with the mode segment removed
+ */
 export function stripModeFromTokenPath(
     token: TransformedToken,
     mode: string
@@ -62,6 +80,13 @@ export function stripModeFromTokenPath(
     return [...path.slice(0, modeIndex), ...path.slice(modeIndex + 1)]
 }
 
+/**
+ * Extracts the mode information from a token's extensions.
+ * Looks for canonical.modes extension data.
+ * 
+ * @param token - The transformed token to extract mode from
+ * @returns The mode string if found, null otherwise
+ */
 export function getModeFromTokenExtensions(
     token: TransformedToken
 ): string | null {

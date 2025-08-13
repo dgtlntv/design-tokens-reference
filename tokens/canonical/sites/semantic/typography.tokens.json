@@ -66,12 +66,7 @@
             },
             "primary-bold": {
                 "$value": {
-                    "fontFamily": "{typography.text.primary.fontFamily}",
-                    "fontSize": "{typography.text.primary.fontSize}",
-                    "fontWeight": "{typography.weight.semiBold}",
-                    "lineHeight": "{typography.text.primary.lineHeight}",
-                    "letterSpacing": "{typography.text.primary.letterSpacing}",
-                    "figureStyle": "{typography.text.primary.figureStyle}"
+                    "fontWeight": "{typography.weight.semiBold}"
                 }
             },
             "secondary": {
@@ -86,12 +81,7 @@
             },
             "secondary-bold": {
                 "$value": {
-                    "fontFamily": "{typography.text.secondary.fontFamily}",
-                    "fontSize": "{typography.text.secondary.fontSize}",
-                    "fontWeight": "{typography.weight.semiBold}",
-                    "lineHeight": "{typography.text.secondary.lineHeight}",
-                    "letterSpacing": "{typography.text.secondary.letterSpacing}",
-                    "figureStyle": "{typography.text.secondary.figureStyle}"
+                    "fontWeight": "{typography.weight.semiBold}"
                 }
             },
             "tertiary": {
@@ -106,12 +96,7 @@
             },
             "tertiary-bold": {
                 "$value": {
-                    "fontFamily": "{typography.text.tertiary.fontFamily}",
-                    "fontSize": "{typography.text.tertiary.fontSize}",
-                    "fontWeight": "{typography.weight.semiBold}",
-                    "lineHeight": "{typography.text.tertiary.lineHeight}",
-                    "letterSpacing": "{typography.text.tertiary.letterSpacing}",
-                    "figureStyle": "{typography.text.tertiary.figureStyle}"
+                    "fontWeight": "{typography.weight.semiBold}"
                 }
             }
         },
@@ -130,12 +115,7 @@
             },
             "display-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.display.fontFamily}",
-                    "fontSize": "{typography.heading.display.fontSize}",
-                    "fontWeight": "{typography.weight.regular}",
-                    "lineHeight": "{typography.heading.display.lineHeight}",
-                    "letterSpacing": "{typography.heading.display.letterSpacing}",
-                    "figureStyle": "{typography.heading.display.figureStyle}"
+                    "fontWeight": "{typography.weight.regular}"
                 }
             },
             "1": {
@@ -150,12 +130,7 @@
             },
             "1-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.1.fontFamily}",
-                    "fontSize": "{typography.heading.1.fontSize}",
-                    "fontWeight": "{typography.weight.bold}",
-                    "lineHeight": "{typography.heading.1.lineHeight}",
-                    "letterSpacing": "{typography.heading.1.letterSpacing}",
-                    "figureStyle": "{typography.heading.1.figureStyle}"
+                    "fontWeight": "{typography.weight.bold}"
                 }
             },
             "2": {
@@ -170,12 +145,7 @@
             },
             "2-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.2.fontFamily}",
-                    "fontSize": "{typography.heading.2.fontSize}",
-                    "fontWeight": "{typography.weight.medium}",
-                    "lineHeight": "{typography.heading.2.lineHeight}",
-                    "letterSpacing": "{typography.heading.2.letterSpacing}",
-                    "figureStyle": "{typography.heading.2.figureStyle}"
+                    "fontWeight": "{typography.weight.medium}"
                 }
             },
             "3": {
@@ -190,12 +160,7 @@
             },
             "3-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.3.fontFamily}",
-                    "fontSize": "{typography.heading.3.fontSize}",
-                    "fontWeight": "{typography.weight.bold}",
-                    "lineHeight": "{typography.heading.3.lineHeight}",
-                    "letterSpacing": "{typography.heading.3.letterSpacing}",
-                    "figureStyle": "{typography.heading.3.figureStyle}"
+                    "fontWeight": "{typography.weight.bold}"
                 }
             },
             "4": {
@@ -210,12 +175,7 @@
             },
             "4-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.4.fontFamily}",
-                    "fontSize": "{typography.heading.4.fontSize}",
-                    "fontWeight": "{typography.weight.medium}",
-                    "lineHeight": "{typography.heading.4.lineHeight}",
-                    "letterSpacing": "{typography.heading.4.letterSpacing}",
-                    "figureStyle": "{typography.heading.4.figureStyle}"
+                    "fontWeight": "{typography.weight.medium}"
                 }
             },
             "5": {
@@ -231,13 +191,7 @@
             },
             "5-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.5.fontFamily}",
-                    "fontSize": "{typography.heading.5.fontSize}",
-                    "fontWeight": "{typography.weight.extraBold}",
-                    "lineHeight": "{dimension.size.lineHeight.350}",
-                    "letterSpacing": "{typography.heading.5.letterSpacing}",
-                    "letterCase": "{typography.heading.5.letterCase}",
-                    "figureStyle": "{typography.heading.5.figureStyle}"
+                    "fontWeight": "{typography.weight.extraBold}"
                 }
             },
             "6": {
@@ -252,12 +206,7 @@
             },
             "6-bold": {
                 "$value": {
-                    "fontFamily": "{typography.heading.6.fontFamily}",
-                    "fontSize": "{typography.heading.6.fontSize}",
-                    "fontWeight": "{typography.weight.extraBold}",
-                    "lineHeight": "{typography.heading.6.lineHeight}",
-                    "letterSpacing": "{typography.heading.6.letterSpacing}",
-                    "figureStyle": "{typography.heading.6.figureStyle}"
+                    "fontWeight": "{typography.weight.extraBold}"
                 }
             }
         }

@@ -4,39 +4,85 @@ import type {
     PlatformConfig,
 } from "../../types/platform.types"
 
+/**
+ * Configuration for a single CSS file output.
+ * Defines the file destination, format to use, and token filtering criteria.
+ */
 interface CSSFileConfig {
+    /** File destination path, may include placeholders like {tier} */
     readonly destination: string
+    /** Style Dictionary format name to use for this file */
     readonly format: string
+    /** Filter function to determine which tokens are included in this file */
     readonly filter: (token: TransformedToken) => boolean
 }
 
+/**
+ * Configuration for semantic HTML elements in typography output.
+ * Defines patterns and conditions for mapping typography tokens to HTML elements.
+ */
 interface TypographySemanticElement {
+    /** Pattern template for the element (e.g., "heading-{n}") */
     pattern: string
+    /** CSS selector template for the element (e.g., "h{n}") */
     elementTemplate: string
+    /** Function to determine if a token should use this element mapping */
     condition: (tokenName: string, tokenPath: string[]) => boolean
 }
 
+/**
+ * Configuration for custom typography element mappings.
+ * Allows for specific token-to-element mappings that don't follow standard patterns.
+ */
 interface TypographyCustomElement {
+    /** Pattern identifier for the custom element */
     pattern: string
+    /** CSS selector template for the custom element */
     elementTemplate: string
+    /** Function to determine if a token should use this custom mapping */
     condition: (tokenName: string) => boolean
 }
 
+/**
+ * Complete configuration for semantic HTML element generation.
+ * Includes standard patterns for headings, text, and custom element mappings.
+ */
 interface TypographySemanticElements {
+    /** Configuration for heading elements (h1-h6) */
     headings: TypographySemanticElement
+    /** Configuration for text/paragraph elements */
     text: TypographySemanticElement
+    /** Array of custom element mappings */
     custom: TypographyCustomElement[]
 }
 
+/**
+ * Configuration for typography utility class generation.
+ */
 interface TypographyUtilities {
+    /** Function to transform token names into CSS class names */
     nameTransform: (tokenName: string) => string
 }
 
+/**
+ * Complete typography configuration for CSS output.
+ * Controls how typography tokens are converted to CSS rules and utility classes.
+ */
 export interface CSSTypographyConfig {
+    /** Configuration for semantic HTML element styling */
     semanticElements: TypographySemanticElements
+    /** Configuration for utility class generation */
     utilities: TypographyUtilities
 }
 
+/**
+ * Typography configuration for CSS output.
+ *
+ * This configuration defines how typography tokens are converted into CSS output,
+ * including semantic HTML element styling and utility class generation. It supports
+ * automatic mapping of typography tokens to appropriate HTML elements (h1-h6, p)
+ * and generates utility classes for direct application.
+ */
 export const CSS_TYPOGRAPHY_CONFIG: CSSTypographyConfig = {
     semanticElements: {
         headings: {
@@ -86,6 +132,11 @@ export const CSS_TYPOGRAPHY_CONFIG: CSSTypographyConfig = {
     },
 }
 
+/**
+ * This configuration defines how design tokens are processed and output as CSS files.
+ * It includes transforms, formatters, file definitions, and advanced features like
+ * color mode strategies and typography configurations.
+ */
 export const CSS_PLATFORM_CONFIG: PlatformConfig & {
     options: CSSPlatformOptions & { typography?: CSSTypographyConfig }
     files: CSSFileConfig[]

@@ -1,7 +1,6 @@
 import type {
     Dictionary,
     Format,
-    LocalOptions,
     OutputReferences,
     TransformedToken,
 } from "style-dictionary/types"
@@ -11,9 +10,16 @@ import type { CSSPlatformOptions } from "../../types/platform.types"
 import type { ExtendedLocalOptions } from "../../types/shared.types"
 import { getTokenValue } from "../../utils/token.util"
 
+/**
+ * Standard file header for generated typography CSS files.
+ */
 const FILE_HEADER =
     "/**\n * Do not edit directly, this file was auto-generated.\n */\n\n"
 
+/**
+ * Typography token value structure for composite typography tokens.
+ * Contains all possible typography-related properties that can be defined in a token.
+ */
 interface TypographyValue {
     fontFamily?: string
     fontSize?: string
@@ -27,14 +33,33 @@ interface TypographyValue {
     fontPosition?: string
 }
 
+/**
+ * Extended TransformedToken interface for typography tokens.
+ * Ensures the $value property conforms to the TypographyValue structure.
+ */
 interface TypographyToken extends TransformedToken {
     $value: TypographyValue
 }
 
+/**
+ * Type guard to check if a token is a composite typography token.
+ * Typography tokens contain multiple font-related properties in a single token.
+ *
+ * @param token - Token to check
+ * @returns True if the token is a typography token
+ */
 function isTypographyToken(token: TransformedToken): token is TypographyToken {
     return token.$type === "typography"
 }
 
+/**
+ * Checks if a token is a primitive typography token.
+ * Primitive typography tokens contain a single typography property (fontFamily, fontWeight, etc.)
+ * rather than a composite object with multiple properties.
+ *
+ * @param token - Token to check
+ * @returns True if the token is a primitive typography token
+ */
 function isPrimitiveTypographyToken(token: TransformedToken): boolean {
     return (
         token.$type === "fontFamily" ||
@@ -52,11 +77,39 @@ function isPrimitiveTypographyToken(token: TransformedToken): boolean {
     )
 }
 
+/**
+ * Checks if a typography token contains composite (multiple) properties.
+ * Composite tokens have an object value with multiple typography properties.
+ *
+ * @param token - Typography token to check
+ * @returns True if the token contains multiple typography properties
+ */
 function isCompositeTypographyToken(token: TypographyToken): boolean {
     const value = token.$value
     return typeof value === "object" && value !== null
 }
 
+/**
+ * Expands a composite typography token into individual CSS property declarations.
+ * This function takes a typography token with multiple properties and converts each
+ * property to its corresponding CSS declaration with proper value resolution.
+ *
+ * @param token - The composite typography token to expand
+ * @param dictionary - Style Dictionary dictionary for reference resolution
+ * @param usesDtcg - Whether to use DTCG token format
+ * @param outputReferences - Whether to output CSS custom property references
+ * @returns String of CSS property declarations separated by semicolons and newlines
+ *
+ * @example
+ * ```typescript
+ * const token = {
+ *   $type: 'typography',
+ *   $value: { fontFamily: 'Arial', fontSize: '16px', fontWeight: 700 }
+ * };
+ * const css = expandTypographyProperties(token, dictionary, true, true);
+ * // Returns: "font-family: Arial;\n  font-size: 16px;\n  font-weight: 700"
+ * ```
+ */
 function expandTypographyProperties(
     token: TypographyToken,
     dictionary: Dictionary,
@@ -116,6 +169,23 @@ function expandTypographyProperties(
     return properties.join(";\n  ")
 }
 
+/**
+ * Generates a CSS utility class for a typography token.
+ * Creates a reusable CSS class that applies all typography properties from the token.
+ *
+ * @param token - The typography token to create a utility class for
+ * @param dictionary - Style Dictionary dictionary for reference resolution
+ * @param usesDtcg - Whether to use DTCG token format
+ * @param outputReferences - Whether to output CSS custom property references
+ * @param config - Typography configuration for class naming and customization
+ * @returns CSS utility class as a string
+ *
+ * @example
+ * ```typescript
+ * const utilityClass = generateUtilityClass(headingToken, dictionary, true, true, config);
+ * // Returns: ".heading-1 {\n  font-family: Arial;\n  font-size: 24px;\n  font-weight: 700;\n}"
+ * ```
+ */
 function generateUtilityClass(
     token: TypographyToken,
     dictionary: Dictionary,
@@ -131,6 +201,24 @@ function generateUtilityClass(
     return `.${className} {\n  ${expandTypographyProperties(token, dictionary, usesDtcg, outputReferences)};\n}\n`
 }
 
+/**
+ * Generates CSS rules for semantic HTML elements based on typography tokens.
+ * This function creates CSS that targets semantic elements (h1-h6, p, etc.) directly,
+ * allowing typography tokens to be applied automatically to HTML elements.
+ *
+ * @param token - The typography token to create semantic element styles for
+ * @param dictionary - Style Dictionary dictionary for reference resolution
+ * @param usesDtcg - Whether to use DTCG token format
+ * @param outputReferences - Whether to output CSS custom property references
+ * @param config - Typography configuration with semantic element mappings
+ * @returns CSS rule for semantic elements, or empty string if no mapping exists
+ *
+ * @example
+ * ```typescript
+ * const semanticCSS = generateSemanticElement(headingToken, dictionary, true, true, config);
+ * // Returns: "h1 {\n  font-family: Arial;\n  font-size: 32px;\n  font-weight: 700;\n}"
+ * ```
+ */
 function generateSemanticElement(
     token: TypographyToken,
     dictionary: Dictionary,
@@ -181,6 +269,12 @@ function generateSemanticElement(
     return ""
 }
 
+/**
+ * This formatter generates comprehensive CSS for typography tokens, supporting both
+ * primitive typography tokens (single properties like fontFamily) and composite
+ * typography tokens (multiple properties in one token). It can generate CSS custom
+ * properties, utility classes, and semantic HTML element styles.
+ */
 export const cssTypographyFormat: Format = {
     name: "css/typography",
     format: ({
@@ -201,7 +295,7 @@ export const cssTypographyFormat: Format = {
 
         // Use categoryFilter for initial broad filtering, then categorize
         const categoryFilter = options?.categoryFilter
-        const candidateTokens = categoryFilter 
+        const candidateTokens = categoryFilter
             ? dictionary.allTokens.filter(categoryFilter)
             : dictionary.allTokens
 

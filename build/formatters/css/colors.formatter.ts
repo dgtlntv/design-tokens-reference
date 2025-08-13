@@ -14,17 +14,45 @@ import {
     stripModeFromTokenPath,
 } from "../../utils/token.util"
 
+/**
+ * Result structure for color mode CSS generation.
+ * Contains both root-level CSS and media query CSS for different color modes.
+ */
 interface ColorModeResult {
+    /** CSS properties for the root selector (:root) */
     rootCSS: string
+    /** CSS media queries for alternate color schemes */
     mediaQueryCSS: string
 }
 
+/**
+ * Categorized color tokens grouped by light/dark modes and regular tokens.
+ */
 interface TokenGroups {
+    /** Tokens specifically for light mode */
     light: TransformedToken[]
+    /** Tokens specifically for dark mode */
     dark: TransformedToken[]
+    /** Regular color tokens without mode specificity */
     regular: TransformedToken[]
 }
 
+/**
+ * Categorizes color tokens into light, dark, and regular groups based on their mode extensions.
+ * This function examines each token's extensions to determine if it belongs to a specific color mode.
+ *
+ * @param tokens - Array of transformed tokens to categorize
+ * @returns Object containing categorized token arrays (light, dark, regular)
+ *
+ * @example
+ * ```typescript
+ * const tokens = [lightToken, darkToken, regularToken];
+ * const groups = categorizeColorTokens(tokens);
+ * // groups.light = [lightToken]
+ * // groups.dark = [darkToken]
+ * // groups.regular = [regularToken]
+ * ```
+ */
 function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
     const { modes } = COLOR_MODES
     const groups: TokenGroups = {
@@ -54,6 +82,23 @@ function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
     return groups
 }
 
+/**
+ * Generates CSS using the modern light-dark() function for automatic color mode switching.
+ * This approach uses the CSS light-dark() function to automatically switch between light and dark colors
+ * based on the user's color scheme preference, without requiring media queries.
+ *
+ * @param tokens - Array of color tokens to process
+ * @param dictionary - Style Dictionary dictionary containing all tokens
+ * @param usesDtcg - Whether to use DTCG format for token values
+ * @param outputReferences - Whether to output CSS custom property references
+ * @returns CSS string with light-dark() functions and regular color properties
+ *
+ * @example
+ * ```typescript
+ * const css = generateLightDarkFunctionCSS(colorTokens, dictionary, true, true);
+ * // Output: --color-primary: light-dark(#ffffff, #000000);
+ * ```
+ */
 function generateLightDarkFunctionCSS(
     tokens: TransformedToken[],
     dictionary: Dictionary,
@@ -125,6 +170,25 @@ function generateLightDarkFunctionCSS(
     return css
 }
 
+/**
+ * Generates CSS using media queries for color mode switching.
+ * This approach uses @media (prefers-color-scheme: dark) to provide alternate colors
+ * for users with dark mode preferences.
+ *
+ * @param tokens - Array of color tokens to process
+ * @param selector - CSS selector to use (typically ':root')
+ * @param dictionary - Style Dictionary dictionary containing all tokens
+ * @param usesDtcg - Whether to use DTCG format for token values
+ * @param outputReferences - Whether to output CSS custom property references
+ * @returns ColorModeResult containing both root CSS and media query CSS
+ *
+ * @example
+ * ```typescript
+ * const result = generateMediaQueryCSS(tokens, ':root', dictionary, true, true);
+ * // result.rootCSS: ':root { --color: #ffffff; }'
+ * // result.mediaQueryCSS: '@media (prefers-color-scheme: dark) { :root { --color: #000000; } }'
+ * ```
+ */
 function generateMediaQueryCSS(
     tokens: TransformedToken[],
     selector: string,
@@ -167,6 +231,30 @@ function generateMediaQueryCSS(
     return { rootCSS, mediaQueryCSS }
 }
 
+/**
+ * Generates color mode CSS using the specified strategy.
+ * This is the main function that routes to different color mode generation strategies.
+ *
+ * @param tokens - Array of color tokens to process
+ * @param selector - CSS selector to use (typically ':root')
+ * @param dictionary - Style Dictionary dictionary containing all tokens
+ * @param usesDtcg - Whether to use DTCG format for token values
+ * @param outputReferences - Whether to output CSS custom property references
+ * @param strategy - Color mode strategy ('light-dark-function' or 'media-query')
+ * @returns ColorModeResult containing the generated CSS
+ *
+ * @example
+ * ```typescript
+ * const result = generateColorModeCSS(
+ *   colorTokens,
+ *   ':root',
+ *   dictionary,
+ *   true,
+ *   true,
+ *   'light-dark-function'
+ * );
+ * ```
+ */
 export function generateColorModeCSS(
     tokens: TransformedToken[],
     selector: string,
@@ -197,9 +285,18 @@ export function generateColorModeCSS(
     }
 }
 
+/**
+ * Standard file header for generated CSS color files.
+ */
 const FILE_HEADER =
     "/**\n * Color tokens\n * Do not edit directly, this file was auto-generated.\n */\n\n"
 
+/**
+ * This formatter generates CSS custom properties for color tokens with support for
+ * both light-dark() function and media query-based color mode switching strategies.
+ * It automatically handles light/dark mode variants and can output either modern
+ * CSS light-dark() functions or traditional media query-based approaches.
+ */
 export const cssColorsFormat: Format = {
     name: "css/colors",
     format: ({

@@ -1,6 +1,11 @@
 import type { Transform, TransformedToken } from "style-dictionary/types"
 import type { DimensionValue } from "../../types/tokens.types"
 
+/**
+ * Type guard to check if a value is a DimensionValue object.
+ * @param value - The value to check
+ * @returns True if the value is a valid DimensionValue
+ */
 function isDimensionValue(value: unknown): value is DimensionValue {
     return (
         value !== null &&
@@ -10,6 +15,22 @@ function isDimensionValue(value: unknown): value is DimensionValue {
     )
 }
 
+/**
+ * Style Dictionary transform for converting W3C dimension token values to CSS.
+ * Combines the numeric value with its unit to create a valid CSS dimension value.
+ * 
+ * @example
+ * // Input token:
+ * {
+ *   $type: "dimension",
+ *   $value: {
+ *     value: 16,
+ *     unit: "px"
+ *   }
+ * }
+ * 
+ * // Output: "16px"
+ */
 export const dimensionW3cCssTransform: Transform = {
     name: "dimension/w3c",
     type: "value",

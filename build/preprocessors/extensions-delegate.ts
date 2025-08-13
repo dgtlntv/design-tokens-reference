@@ -25,6 +25,11 @@ import type {
     PreprocessedTokens,
 } from "style-dictionary/types"
 
+/**
+ * Type guard to check if a value is a plain object.
+ * @param obj - The value to check
+ * @returns True if the value is a plain object
+ */
 function isPlainObject(obj: any): obj is Record<string, any> {
     return (
         obj !== null && typeof obj === "object" && obj.constructor === Object
@@ -34,6 +39,12 @@ function isPlainObject(obj: any): obj is Record<string, any> {
 /**
  * Delegates group-level $extensions to individual tokens, similar to how $type works.
  * Based on Style Dictionary's typeDtcgDelegate utility.
+ * 
+ * This preprocessor ensures that tokens inherit extensions from their parent groups,
+ * allowing for cleaner token organization while maintaining extension data on individual tokens.
+ * 
+ * @param tokens - The token tree to process
+ * @returns Preprocessed tokens with delegated extensions
  */
 export function extensionsDelegate(tokens: DesignTokens): PreprocessedTokens {
     const clone = structuredClone(tokens) as PreprocessedTokens

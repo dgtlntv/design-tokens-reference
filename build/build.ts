@@ -7,22 +7,42 @@ import { registerPreprocessors } from "./preprocessors"
 import { registerTransforms } from "./transforms"
 import type { ResolvedTokenPaths } from "./types/shared.types"
 
+/**
+ * Options for building design tokens.
+ */
 interface BuildOptions {
+    /** The tier name to build (e.g., "primitive", "semantic") */
     tier: string
+    /** The target platform (defaults to "css") */
     platform?: Platform
 }
 
+/**
+ * Registers all custom Style Dictionary extensions.
+ * Must be called before building tokens.
+ */
 function registerExtensions(): void {
     registerPreprocessors()
     registerTransforms()
     registerFormatters()
 }
 
+/**
+ * Resolves a source reference to an absolute file path.
+ * @param sourceRef - Reference in format "tier.type" (e.g., "primitive.color")
+ * @returns Resolved file path or null if not found
+ */
 function resolveSourcePath(sourceRef: string): string | null {
     const [tier, type] = sourceRef.split(".")
     return TIERS_CONFIG.basePaths[tier]?.[type] || null
 }
 
+/**
+ * Resolves include and source paths for a given tier.
+ * @param tierName - Name of the tier to get paths for
+ * @returns Object containing resolved include and source paths
+ * @throws Error if tier is not found
+ */
 function getTokenPaths(tierName: string): ResolvedTokenPaths {
     const tier = TIERS_CONFIG.tiers[tierName]
     if (!tier) {
@@ -40,6 +60,11 @@ function getTokenPaths(tierName: string): ResolvedTokenPaths {
     return { include, source }
 }
 
+/**
+ * Creates a Style Dictionary configuration object.
+ * @param options - Build options containing tier and platform
+ * @returns Style Dictionary configuration
+ */
 function createConfig(options: BuildOptions): Config {
     const { tier, platform = "css" } = options
     const { include, source } = getTokenPaths(tier)
@@ -57,6 +82,11 @@ function createConfig(options: BuildOptions): Config {
     }
 }
 
+/**
+ * Builds design tokens for the specified options.
+ * @param options - Build options containing tier and platform
+ * @throws Error if platform is not configured
+ */
 async function buildTokens(options: BuildOptions): Promise<void> {
     const { platform = "css" } = options
 
@@ -72,12 +102,19 @@ async function buildTokens(options: BuildOptions): Promise<void> {
     await sd.buildAllPlatforms()
 }
 
+/**
+ * Prints usage information for the build script.
+ */
 function printUsage(): void {
     const availableTiers = Object.keys(TIERS_CONFIG.tiers)
     console.log("Usage: npm run build:<platform>:<tier>")
     console.log(`Available tiers: ${availableTiers.join(", ")}`)
 }
 
+/**
+ * Main entry point for the build script.
+ * Parses command line arguments and initiates the token build process.
+ */
 async function main(): Promise<void> {
     const tier = process.argv[2]
 

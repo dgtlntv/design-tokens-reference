@@ -7,5 +7,3 @@ export function registerPreprocessors(): void {
         preprocessor: (dictionary) => extensionsDelegate(dictionary),
     })
 }
-
-export { extensionsDelegate } from "./extensions-delegate"

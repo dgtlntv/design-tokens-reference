@@ -1,6 +1,14 @@
 import type { PlatformConfig } from "style-dictionary/types"
 import { CSS_PLATFORM_CONFIG } from "../config/platforms/css.config"
 
+/**
+ * Creates a CSS platform configuration for Style Dictionary based on a specific tier.
+ * This function customizes the base CSS platform configuration with tier-specific settings,
+ * including prefixed CSS custom property names and tier-specific file destinations.
+ *
+ * @param tier - The tier name to use for configuration (e.g., 'sites', 'docs', 'apps')
+ * @returns A complete PlatformConfig object ready for use with Style Dictionary
+ */
 export function createCSSPlatform(tier: string): PlatformConfig {
     return {
         prefix: `${CSS_PLATFORM_CONFIG.prefix}-${tier}`,
