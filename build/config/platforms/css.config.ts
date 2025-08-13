@@ -65,6 +65,20 @@ interface TypographyUtilities {
 }
 
 /**
+ * Configuration for bold variant token handling.
+ */
+interface TypographyBoldVariants {
+    /** Suffix pattern to identify bold variant tokens (e.g., '-bold') */
+    tokenSuffix: string
+    /** CSS modifier class name to use for bold utilities (e.g., 'text-bold') */
+    modifierClass: string
+    /** Function to check if a token path segment indicates a bold variant */
+    isVariantToken: (pathSegment: string, suffix: string) => boolean
+    /** Function to extract base token name from a bold variant token */
+    extractBaseName: (pathSegment: string, suffix: string) => string
+}
+
+/**
  * Complete typography configuration for CSS output.
  * Controls how typography tokens are converted to CSS rules and utility classes.
  */
@@ -73,6 +87,8 @@ export interface CSSTypographyConfig {
     semanticElements: TypographySemanticElements
     /** Configuration for utility class generation */
     utilities: TypographyUtilities
+    /** Configuration for bold variant token handling */
+    boldVariants: TypographyBoldVariants
 }
 
 /**
@@ -128,6 +144,19 @@ export const CSS_TYPOGRAPHY_CONFIG: CSSTypographyConfig = {
             // Remove brand/tiers prefix and keep the typography part
             // e.g., 'canonical-sites-typography-heading-1' -> 'heading-1'
             return tokenName.replace(/^.*?-typography-/, "")
+        },
+    },
+    boldVariants: {
+        tokenSuffix: "-bold",
+        modifierClass: "text-bold",
+        isVariantToken: (pathSegment: string, suffix: string) => {
+            return pathSegment?.endsWith(suffix) || false
+        },
+        extractBaseName: (pathSegment: string, suffix: string) => {
+            if (pathSegment?.endsWith(suffix)) {
+                return pathSegment.slice(0, -suffix.length)
+            }
+            return pathSegment || ""
         },
     },
 }

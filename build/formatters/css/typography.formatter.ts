@@ -53,6 +53,37 @@ function isTypographyToken(token: TransformedToken): token is TypographyToken {
 }
 
 /**
+ * Checks if a typography token is a bold variant based on configuration.
+ * Bold variant tokens contain only fontWeight properties and are meant
+ * to be used in combination with their base tokens.
+ *
+ * @param token - Typography token to check
+ * @param config - Typography configuration with bold variant settings
+ * @returns True if the token is a bold variant
+ */
+function isBoldVariantToken(token: TypographyToken, config?: CSSTypographyConfig): boolean {
+    if (!config?.boldVariants) return false
+    
+    const tokenPath = token.path || []
+    const lastPathSegment = tokenPath[tokenPath.length - 1]
+    return config.boldVariants.isVariantToken(lastPathSegment || "", config.boldVariants.tokenSuffix)
+}
+
+/**
+ * Extracts the base token name from a bold variant token using configuration.
+ * For example, with suffix '-bold': 'primary-bold' returns 'primary'.
+ *
+ * @param boldVariantToken - Bold variant token
+ * @param config - Typography configuration with bold variant settings
+ * @returns Base token name without the variant suffix
+ */
+function extractBaseTokenNameFromVariant(boldVariantToken: TypographyToken, config: CSSTypographyConfig): string {
+    const tokenPath = boldVariantToken.path || []
+    const lastPathSegment = tokenPath[tokenPath.length - 1]
+    return config.boldVariants.extractBaseName(lastPathSegment || "", config.boldVariants.tokenSuffix)
+}
+
+/**
  * Checks if a token is a primitive typography token.
  * Primitive typography tokens contain a single typography property (fontFamily, fontWeight, etc.)
  * rather than a composite object with multiple properties.
@@ -201,6 +232,164 @@ function generateUtilityClass(
     return `.${className} {\n  ${expandTypographyProperties(token, dictionary, usesDtcg, outputReferences)};\n}\n`
 }
 
+// generateBoldCustomProperties function removed - bold variants are now handled through semantic rules and compound classes
+
+/**
+ * Generates CSS rules for bold elements (strong, b) within semantic HTML elements.
+ * Creates rules like 'h1 strong, h1 b { font-weight: bold; }' using the appropriate
+ * bold variant token for each semantic element.
+ *
+ * @param baseTokens - Array of base typography tokens
+ * @param boldTokens - Array of bold variant tokens  
+ * @param dictionary - Style Dictionary dictionary for reference resolution
+ * @param usesDtcg - Whether to use DTCG token format
+ * @param outputReferences - Whether to output CSS custom property references
+ * @param config - Typography configuration with semantic element mappings
+ * @returns CSS rules for semantic bold elements
+ */
+function generateSemanticBoldRules(
+    baseTokens: TypographyToken[],
+    boldTokens: TypographyToken[],
+    dictionary: Dictionary,
+    usesDtcg: boolean,
+    outputReferences: OutputReferences,
+    config?: CSSTypographyConfig,
+    tokenConfig?: any
+): string {
+    if (!config?.semanticElements || boldTokens.length === 0) return ""
+
+    let css = ""
+    
+    // Create a map of base token names to their bold variants
+    const boldTokenMap = new Map<string, TypographyToken>()
+    boldTokens.forEach((boldToken) => {
+        const baseTokenName = extractBaseTokenNameFromVariant(boldToken, config)
+        boldTokenMap.set(baseTokenName, boldToken)
+    })
+
+    // Generate rules for semantic elements that have bold variants
+    baseTokens.forEach((baseToken) => {
+        const tokenPath = baseToken.path || []
+        const tokenName = baseToken.name
+        const lastPathSegment = tokenPath[tokenPath.length - 1]
+        const boldToken = boldTokenMap.get(lastPathSegment || "")
+        
+        if (!boldToken || !boldToken.$value.fontWeight) return
+
+        let selectors: string[] = []
+
+        // Check custom elements first (they have priority)
+        let matched = false
+        for (const customElement of config.semanticElements.custom) {
+            if (customElement.condition(tokenName)) {
+                const baseSelector = customElement.elementTemplate
+                selectors.push(`${baseSelector} strong`, `${baseSelector} b`)
+                matched = true
+                break // Stop after first match to avoid duplicates
+            }
+        }
+
+        // Only check other configurations if no custom element matched
+        if (!matched) {
+            // Check headings configuration
+            if (config.semanticElements.headings.condition(tokenName, tokenPath)) {
+                const headingLevel = tokenPath[tokenPath.length - 1]
+                const element = config.semanticElements.headings.elementTemplate.replace(
+                    "{n}",
+                    headingLevel
+                )
+                selectors.push(`${element} strong`, `${element} b`)
+            }
+
+            // Check text configuration
+            if (config.semanticElements.text.condition(tokenName, tokenPath)) {
+                const textVariant = tokenPath[tokenPath.length - 1]
+                const element = config.semanticElements.text.elementTemplate.replace(
+                    "{variant}",
+                    textVariant
+                )
+                selectors.push(`${element} strong`, `${element} b`)
+            }
+        }
+
+        if (selectors.length > 0) {
+            const fontWeight = boldToken.$value.fontWeight!
+            const cssValue = getTokenValue(
+                { ...boldToken, $value: fontWeight, value: fontWeight },
+                dictionary,
+                usesDtcg,
+                outputReferences,
+                tokenConfig
+            )
+            css += `${selectors.join(", ")} {\n  font-weight: ${cssValue};\n}\n`
+        }
+    })
+    
+    return css
+}
+
+/**
+ * Generates compound modifier classes for typography utility classes.
+ * Creates rules like '.text-primary.text-bold { font-weight: 600; }' that allow
+ * combining base typography classes with bold modifiers.
+ *
+ * @param baseTokens - Array of base typography tokens
+ * @param boldTokens - Array of bold variant tokens
+ * @param dictionary - Style Dictionary dictionary for reference resolution
+ * @param usesDtcg - Whether to use DTCG token format
+ * @param outputReferences - Whether to output CSS custom property references
+ * @param config - Typography configuration
+ * @returns CSS compound modifier classes
+ */
+function generateCompoundModifierClasses(
+    baseTokens: TypographyToken[],
+    boldTokens: TypographyToken[],
+    dictionary: Dictionary,
+    usesDtcg: boolean,
+    outputReferences: OutputReferences,
+    config?: CSSTypographyConfig,
+    tokenConfig?: any
+): string {
+    if (boldTokens.length === 0 || !config?.boldVariants) return ""
+    
+    let css = ""
+    
+    // Create a map of base token names to their bold variants
+    const boldTokenMap = new Map<string, TypographyToken>()
+    boldTokens.forEach((boldToken) => {
+        const baseTokenName = extractBaseTokenNameFromVariant(boldToken, config)
+        boldTokenMap.set(baseTokenName, boldToken)
+    })
+
+    // Generate compound classes for base tokens that have bold variants
+    baseTokens.forEach((baseToken) => {
+        const tokenPath = baseToken.path || []
+        const lastPathSegment = tokenPath[tokenPath.length - 1]
+        const boldToken = boldTokenMap.get(lastPathSegment || "")
+        
+        if (!boldToken || !boldToken.$value.fontWeight) return
+
+        // Generate utility class name using config's nameTransform if available
+        const className = config?.utilities.nameTransform
+            ? config.utilities.nameTransform(baseToken.name)
+            : baseToken.name.replace(/^.*?-typography-/, "")
+
+        const fontWeight = boldToken.$value.fontWeight!
+        const cssValue = getTokenValue(
+            { ...boldToken, $value: fontWeight, value: fontWeight },
+            dictionary,
+            usesDtcg,
+            outputReferences,
+            tokenConfig
+        )
+        
+        const modifierClass = config.boldVariants.modifierClass
+        css += `.${className}.${modifierClass} {\n  font-weight: ${cssValue};\n}\n`
+    })
+    
+    return css
+}
+
 /**
  * Generates CSS rules for semantic HTML elements based on typography tokens.
  * This function creates CSS that targets semantic elements (h1-h6, p, etc.) directly,
@@ -331,11 +520,17 @@ export const cssTypographyFormat: Format = {
         const compositeTokens = typographyTokens.filter((token) =>
             isCompositeTypographyToken(token)
         )
+        
+        // Separate base tokens from bold variant tokens
+        const baseTokens = compositeTokens.filter((token) => !isBoldVariantToken(token, typographyConfig))
+        const boldTokens = compositeTokens.filter((token) => isBoldVariantToken(token, typographyConfig))
+
+        // Note: Bold variant tokens are handled through semantic element rules and compound modifier classes
 
         // Generate semantic HTML elements
         if (typographyConfig?.semanticElements) {
             css += "/* Semantic HTML elements */\n"
-            compositeTokens.forEach((token) => {
+            baseTokens.forEach((token) => {
                 const semanticCSS = generateSemanticElement(
                     token,
                     dictionary,
@@ -350,9 +545,24 @@ export const cssTypographyFormat: Format = {
             css += "\n"
         }
 
-        // Generate utility classes for composite tokens
+        // Generate semantic bold element rules (strong, b tags)
+        if (typographyConfig?.semanticElements && boldTokens.length > 0) {
+            css += "/* Semantic bold elements (strong, b) */\n"
+            css += generateSemanticBoldRules(
+                baseTokens,
+                boldTokens,
+                dictionary,
+                usesDtcg,
+                outputReferences,
+                typographyConfig,
+                tokenConfig
+            )
+            css += "\n"
+        }
+
+        // Generate utility classes for base tokens only
         css += "/* Typography utility classes */\n"
-        compositeTokens.forEach((token) => {
+        baseTokens.forEach((token) => {
             css += generateUtilityClass(
                 token,
                 dictionary,
@@ -361,6 +571,20 @@ export const cssTypographyFormat: Format = {
                 typographyConfig
             )
         })
+        
+        // Generate compound modifier classes for bold variants
+        if (boldTokens.length > 0) {
+            css += "\n/* Bold modifier classes */\n"
+            css += generateCompoundModifierClasses(
+                baseTokens,
+                boldTokens,
+                dictionary,
+                usesDtcg,
+                outputReferences,
+                typographyConfig,
+                tokenConfig
+            )
+        }
 
         return css
     },
