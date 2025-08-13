@@ -52,7 +52,7 @@ function createConfig(options: BuildOptions): Config {
             verbosity: buildConfig.logLevel,
         },
         usesDtcg: buildConfig.useDtcg,
-        preprocessors: ["extensions-delegate"],
+        preprocessors: buildConfig.preprocessors,
         platforms: createPlatformConfig(platform, tier),
     }
 }
@@ -74,10 +74,8 @@ async function buildTokens(options: BuildOptions): Promise<void> {
 
 function printUsage(): void {
     const availableTiers = Object.keys(TIERS_CONFIG.tiers)
-    console.log("Usage: tsx build/build.ts <tier>")
+    console.log("Usage: npm run build:<platform>:<tier>")
     console.log(`Available tiers: ${availableTiers.join(", ")}`)
-    console.log("\nEnvironment variables:")
-    console.log("  NODE_ENV=development|production|test")
 }
 
 async function main(): Promise<void> {
@@ -95,9 +93,7 @@ async function main(): Promise<void> {
 
     registerExtensions()
 
-    const tierConfig = TIERS_CONFIG.tiers[tier]
     console.log(`Building tokens for tier: ${tier}`)
-    console.log(`  Description: ${tierConfig.description}`)
 
     const startTime = Date.now()
 

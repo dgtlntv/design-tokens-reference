@@ -1,14 +1,13 @@
+import { kebabCase } from "change-case"
 import type {
     Dictionary,
     Format,
-    LocalOptions,
     OutputReferences,
     TransformedToken,
 } from "style-dictionary/types"
-import { kebabCase } from "change-case"
-import { COLOR_MODES } from "../../config"
-import { getPlatform } from "../../config"
+import { COLOR_MODES, getPlatform } from "../../config"
 import type { ColorModeStrategy } from "../../types/platform.types"
+import type { ExtendedLocalOptions } from "../../types/shared.types"
 import {
     getModeFromTokenExtensions,
     getTokenValue,
@@ -26,7 +25,6 @@ interface TokenGroups {
     regular: TransformedToken[]
 }
 
-
 function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
     const { modes } = COLOR_MODES
     const groups: TokenGroups = {
@@ -39,12 +37,16 @@ function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
         if (token.$type === "color") {
             const mode = getModeFromTokenExtensions(token)
 
-            if (mode === modes.light) {
-                groups.light.push(token)
-            } else if (mode === modes.dark) {
-                groups.dark.push(token)
-            } else {
-                groups.regular.push(token)
+            switch (mode) {
+                case modes.light:
+                    groups.light.push(token)
+                    break
+                case modes.dark:
+                    groups.dark.push(token)
+                    break
+                default:
+                    groups.regular.push(token)
+                    break
             }
         }
     })
@@ -75,13 +77,13 @@ function generateLightDarkFunctionCSS(
 
     light.forEach((token) => {
         const pathArray = stripModeFromTokenPath(token, modes.light)
-        const strippedName = kebabCase(pathArray.join(' '))
+        const strippedName = kebabCase(pathArray.join(" "))
         lightTokenMap.set(strippedName, token)
     })
 
     dark.forEach((token) => {
         const pathArray = stripModeFromTokenPath(token, modes.dark)
-        const strippedName = kebabCase(pathArray.join(' '))
+        const strippedName = kebabCase(pathArray.join(" "))
         darkTokenMap.set(strippedName, token)
     })
 
@@ -145,7 +147,7 @@ function generateMediaQueryCSS(
     // Add light tokens to root
     light.forEach((token) => {
         const pathArray = stripModeFromTokenPath(token, modes.light)
-        const strippedName = kebabCase(pathArray.join(' '))
+        const strippedName = kebabCase(pathArray.join(" "))
         rootCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
@@ -155,7 +157,7 @@ function generateMediaQueryCSS(
         mediaQueryCSS += `  ${selector} {\n`
         dark.forEach((token) => {
             const pathArray = stripModeFromTokenPath(token, modes.dark)
-            const strippedName = kebabCase(pathArray.join(' '))
+            const strippedName = kebabCase(pathArray.join(" "))
             mediaQueryCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
         })
         mediaQueryCSS += "  }\n"
@@ -205,7 +207,7 @@ export const cssColorsFormat: Format = {
         options,
     }: {
         dictionary: Dictionary
-        options?: LocalOptions
+        options?: ExtendedLocalOptions
     }) => {
         const cssConfig = getPlatform("css")
         const defaultOptions = cssConfig?.options || {}
@@ -220,10 +222,12 @@ export const cssColorsFormat: Format = {
             defaultOptions.colorModeStrategy || "light-dark-function"
 
         // Get category filter from options
-        const categoryFilter = (options as any)?.categoryFilter
-        const colorTokens = categoryFilter ? 
-            dictionary.allTokens.filter(categoryFilter) : 
-            dictionary.allTokens.filter(token => token.$type === "color" || token.type === "color")
+        const categoryFilter = options?.categoryFilter
+        const colorTokens = categoryFilter
+            ? dictionary.allTokens.filter(categoryFilter)
+            : dictionary.allTokens.filter(
+                  (token) => token.$type === "color" || token.type === "color"
+              )
 
         if (colorTokens.length === 0) {
             return FILE_HEADER + `/* No color tokens found */\n`

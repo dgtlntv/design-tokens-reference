@@ -54,9 +54,11 @@ export const CSS_TYPOGRAPHY_CONFIG: CSSTypographyConfig = {
                 // Only match composite text tokens (primary, secondary, tertiary)
                 // Exclude single-property tokens like italic, underline, etc.
                 if (!tokenPath.includes("text")) return false
-                
+
                 const textVariant = tokenPath[tokenPath.length - 1]
-                return ["primary", "secondary", "tertiary"].includes(textVariant)
+                return ["primary", "secondary", "tertiary"].includes(
+                    textVariant
+                )
             },
         },
         custom: [
@@ -71,8 +73,7 @@ export const CSS_TYPOGRAPHY_CONFIG: CSSTypographyConfig = {
             {
                 pattern: "text-primary",
                 elementTemplate: "p",
-                condition: (tokenName) =>
-                    tokenName.endsWith("-text-primary"),
+                condition: (tokenName) => tokenName.endsWith("-text-primary"),
             },
         ],
     },

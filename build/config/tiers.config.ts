@@ -6,7 +6,6 @@ export interface BasePaths {
 
 export interface TierConfig {
     name: string
-    description: string
     include: string[]
     source: string[]
 }
@@ -36,19 +35,16 @@ export const TIERS_CONFIG: TiersConfiguration = {
     tiers: {
         sites: {
             name: "sites",
-            description: "Base design system tokens for marketing sites",
             include: [],
             source: ["sites.primitive", "sites.semantic"],
         },
         docs: {
             name: "docs",
-            description: "Documentation site tokens",
             include: ["sites.primitive", "sites.semantic"],
             source: ["docs.semantic"],
         },
         apps: {
             name: "apps",
-            description: "Application tokens",
             include: ["sites.primitive", "sites.semantic"],
             source: ["apps.semantic"],
         },

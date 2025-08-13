@@ -1,6 +1,7 @@
-import type { Dictionary, Format, LocalOptions } from "style-dictionary/types"
+import type { Dictionary, Format } from "style-dictionary/types"
 import { getPlatform } from "../../config"
 import type { CSSPlatformOptions } from "../../types/platform.types"
+import type { ExtendedLocalOptions } from "../../types/shared.types"
 import { getTokenValue } from "../../utils/token.util"
 
 const FILE_HEADER =
@@ -13,7 +14,7 @@ export const cssGenericFormat: Format = {
         options,
     }: {
         dictionary: Dictionary
-        options?: LocalOptions
+        options?: ExtendedLocalOptions
     }) => {
         const cssConfig = getPlatform("css")
         const defaultOptions: Partial<CSSPlatformOptions> =
@@ -26,7 +27,7 @@ export const cssGenericFormat: Format = {
         } = options || {}
 
         // Get category filter from options  
-        const categoryFilter = (options as any)?.categoryFilter
+        const categoryFilter = options?.categoryFilter
         const categoryTokens = categoryFilter ? 
             dictionary.allTokens.filter(categoryFilter) : 
             dictionary.allTokens

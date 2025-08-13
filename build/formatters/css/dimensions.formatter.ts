@@ -1,13 +1,13 @@
 import type {
     Dictionary,
     Format,
-    LocalOptions,
     OutputReferences,
     TransformedToken,
 } from "style-dictionary/types"
 import { kebabCase } from "change-case"
 import { DIMENSION_MODES } from "../../config/dimension-modes.config"
 import { getPlatform } from "../../config"
+import type { ExtendedLocalOptions } from "../../types/shared.types"
 import {
     getModeFromTokenExtensions,
     getTokenValue,
@@ -19,18 +19,18 @@ interface DimensionModeResult {
     mediaQueriesCSS: string
 }
 
-interface DimensionTokensBySize {
+interface DimensionTokensByMode {
     [key: string]: TransformedToken[]
 }
 
 function categorizeDimensionTokens(tokens: TransformedToken[]): {
-    bySize: DimensionTokensBySize
+    byMode: DimensionTokensByMode
     regular: TransformedToken[]
 } {
-    // Create bySize object dynamically from DIMENSION_MODES config
-    const bySize: DimensionTokensBySize = {}
+    // Create byMode object dynamically from DIMENSION_MODES config
+    const byMode: DimensionTokensByMode = {}
     Object.keys(DIMENSION_MODES.modes).forEach(mode => {
-        bySize[mode] = []
+        byMode[mode] = []
     })
     const regular: TransformedToken[] = []
 
@@ -38,15 +38,15 @@ function categorizeDimensionTokens(tokens: TransformedToken[]): {
         if (token.$type === "dimension") {
             const mode = getModeFromTokenExtensions(token)
 
-            if (mode && mode in bySize) {
-                bySize[mode as keyof typeof bySize].push(token)
+            if (mode && mode in byMode) {
+                byMode[mode as keyof typeof byMode].push(token)
             } else {
                 regular.push(token)
             }
         }
     })
 
-    return { bySize, regular }
+    return { byMode, regular }
 }
 
 
@@ -57,7 +57,7 @@ export function generateDimensionModeCSS(
     usesDtcg: boolean,
     outputReferences: OutputReferences
 ): DimensionModeResult {
-    const { bySize, regular } = categorizeDimensionTokens(tokens)
+    const { byMode, regular } = categorizeDimensionTokens(tokens)
     const dimensionModeEntries = Object.entries(DIMENSION_MODES.modes) as Array<
         [keyof typeof DIMENSION_MODES.modes, string]
     >
@@ -73,7 +73,7 @@ export function generateDimensionModeCSS(
     // Add default mode tokens as base values in :root
     const defaultMode = DIMENSION_MODES.defaultMode
     if (defaultMode) {
-        const defaultTokens = bySize[defaultMode as keyof typeof bySize]
+        const defaultTokens = byMode[defaultMode as keyof typeof byMode]
         if (defaultTokens && defaultTokens.length > 0) {
             defaultTokens.forEach((token) => {
                 const mode = getModeFromTokenExtensions(token)
@@ -90,7 +90,7 @@ export function generateDimensionModeCSS(
     const mediaQueryModes = dimensionModeEntries.filter(([sizeName]) => sizeName !== defaultMode)
     
     mediaQueryModes.forEach(([sizeName, modeValue]) => {
-        const tokensForSize = bySize[sizeName]
+        const tokensForSize = byMode[sizeName]
         if (tokensForSize && tokensForSize.length > 0) {
             mediaQueriesCSS += `@media (min-width: ${modeValue}) {\n`
             mediaQueriesCSS += `  ${selector} {\n`
@@ -119,7 +119,7 @@ export const cssDimensionsFormat: Format = {
         options,
     }: {
         dictionary: Dictionary
-        options?: LocalOptions
+        options?: ExtendedLocalOptions
     }) => {
         const cssConfig = getPlatform("css")
         const defaultOptions = cssConfig?.options || {}
@@ -131,7 +131,7 @@ export const cssDimensionsFormat: Format = {
         } = options || {}
 
         // Get category filter from options
-        const categoryFilter = (options as any)?.categoryFilter
+        const categoryFilter = options?.categoryFilter
         const dimensionTokens = categoryFilter ? 
             dictionary.allTokens.filter(categoryFilter) : 
             dictionary.allTokens.filter(token => token.$type === "dimension" || token.type === "dimension")
