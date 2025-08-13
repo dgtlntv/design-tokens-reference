@@ -1,6 +1,11 @@
 {
     "dimension": {
         "xLarge": {
+            "$extensions": {
+                "canonical.modes": {
+                    "mode": "xLarge"
+                }
+            },
             "size": {
                 "rootFontSize": {
                     "$value": "{dimension.225}"

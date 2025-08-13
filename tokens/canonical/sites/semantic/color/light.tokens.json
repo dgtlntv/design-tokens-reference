@@ -1,6 +1,11 @@
 {
     "color": {
         "light": {
+            "$extensions": {
+                "canonical.modes": {
+                    "mode": "light"
+                }
+            },
             "background": {
                 "default": {
                     "$value": "{color.gray.100}"
