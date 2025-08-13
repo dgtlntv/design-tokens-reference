@@ -32,7 +32,8 @@ export function getTokenValue(
 
         refs.forEach((ref: TransformedToken) => {
             const refValue = JSON.stringify(usesDtcg ? ref.$value : ref.value)
-            const referenceFormat = platformConfig?.referenceFormat || "var(--{name})"
+            const referenceFormat =
+                platformConfig?.referenceFormat || "var(--{name})"
             const formattedRef = referenceFormat.replace("{name}", ref.name)
             value = value.replace(refValue, formattedRef)
         })
@@ -58,10 +59,7 @@ export function stripModeFromTokenPath(
     }
 
     // Create a new path without the mode segment
-    return [
-        ...path.slice(0, modeIndex),
-        ...path.slice(modeIndex + 1),
-    ]
+    return [...path.slice(0, modeIndex), ...path.slice(modeIndex + 1)]
 }
 
 export function getModeFromTokenExtensions(
@@ -73,4 +71,3 @@ export function getModeFromTokenExtensions(
     }
     return null
 }
-

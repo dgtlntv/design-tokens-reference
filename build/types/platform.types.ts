@@ -2,7 +2,7 @@ import type {
     OutputReferences,
     PlatformConfig as StyleDictionaryPlatformConfig,
 } from "style-dictionary/types"
-import type { TypographyConfig } from "./typography.config.types"
+import type { CSSTypographyConfig } from "../config/platforms/css.config"
 
 export interface PlatformConfig extends StyleDictionaryPlatformConfig {
     defaultFormat?: string
@@ -20,5 +20,5 @@ export interface CSSPlatformOptions {
     outputReferences: OutputReferences
     colorModeStrategy: ColorModeStrategy
     tokenConfig: PlatformTokenConfig
-    typography?: TypographyConfig
+    typography?: CSSTypographyConfig
 }

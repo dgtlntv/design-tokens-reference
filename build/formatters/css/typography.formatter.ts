@@ -1,6 +1,7 @@
 import type { Dictionary, Format, LocalOptions, TransformedToken, OutputReferences } from "style-dictionary/types"
 import { getPlatform } from "../../config"
 import type { CSSPlatformOptions } from "../../types/platform.types"
+import type { CSSTypographyConfig } from "../../config/platforms/css.config"
 import { getTokenValue } from "../../utils/token.util"
 
 const FILE_HEADER =
@@ -106,12 +107,54 @@ function generateUtilityClass(
     token: TypographyToken, 
     dictionary: Dictionary, 
     usesDtcg: boolean, 
-    outputReferences: OutputReferences
+    outputReferences: OutputReferences,
+    config?: CSSTypographyConfig
 ): string {
-    // Simple class name from token name  
-    const className = token.name.replace(/^.*?-typography-/, '')
+    // Use config's nameTransform if available
+    const className = config?.utilities.nameTransform
+        ? config.utilities.nameTransform(token.name)
+        : token.name.replace(/^.*?-typography-/, '')
     
     return `.${className} {\n  ${expandTypographyProperties(token, dictionary, usesDtcg, outputReferences)};\n}\n`
+}
+
+function generateSemanticElement(
+    token: TypographyToken, 
+    dictionary: Dictionary, 
+    usesDtcg: boolean, 
+    outputReferences: OutputReferences,
+    config?: CSSTypographyConfig
+): string {
+    if (!config?.semanticElements) return ''
+    
+    const tokenPath = token.path || []
+    const tokenName = token.name
+    const properties = expandTypographyProperties(token, dictionary, usesDtcg, outputReferences)
+    
+    // Check custom elements first (they have higher priority)
+    for (const customElement of config.semanticElements.custom) {
+        if (customElement.condition(tokenName)) {
+            return `${customElement.elementTemplate} {\n  ${properties};\n}\n`
+        }
+    }
+    
+    // Check headings configuration
+    const headingsConfig = config.semanticElements.headings
+    if (headingsConfig.condition(tokenName, tokenPath)) {
+        const headingLevel = tokenPath[tokenPath.length - 1]
+        const element = headingsConfig.elementTemplate.replace('{n}', headingLevel)
+        return `${element} {\n  ${properties};\n}\n`
+    }
+    
+    // Check text configuration
+    const textConfig = config.semanticElements.text
+    if (textConfig.condition(tokenName, tokenPath)) {
+        const textVariant = tokenPath[tokenPath.length - 1]
+        const element = textConfig.elementTemplate.replace('{variant}', textVariant)
+        return `${element} {\n  ${properties};\n}\n`
+    }
+    
+    return ''
 }
 
 export const cssTypographyFormat: Format = {
@@ -145,6 +188,7 @@ export const cssTypographyFormat: Format = {
 
         let css = FILE_HEADER
         const tokenConfig = cssConfig?.options?.tokenConfig
+        const typographyConfig = cssConfig?.options?.typography
         
         // Generate CSS custom properties for primitive typography tokens
         if (primitiveTypographyTokens.length > 0) {
@@ -155,13 +199,25 @@ export const cssTypographyFormat: Format = {
             css += "}\n\n"
         }
         
+        const compositeTokens = typographyTokens.filter(token => isCompositeTypographyToken(token))
+        
+        // Generate semantic HTML elements
+        if (typographyConfig?.semanticElements) {
+            css += "/* Semantic HTML elements */\n"
+            compositeTokens.forEach(token => {
+                const semanticCSS = generateSemanticElement(token, dictionary, usesDtcg, outputReferences, typographyConfig)
+                if (semanticCSS) {
+                    css += semanticCSS
+                }
+            })
+            css += "\n"
+        }
+        
         // Generate utility classes for composite tokens
         css += "/* Typography utility classes */\n"
-        typographyTokens
-            .filter(token => isCompositeTypographyToken(token))
-            .forEach(token => {
-                css += generateUtilityClass(token, dictionary, usesDtcg, outputReferences)
-            })
+        compositeTokens.forEach(token => {
+            css += generateUtilityClass(token, dictionary, usesDtcg, outputReferences, typographyConfig)
+        })
 
         return css
     },

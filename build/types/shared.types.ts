@@ -14,4 +14,3 @@ export interface ModeConfig<Modes extends Record<string, string>> {
     modes: Modes
     defaultMode?: keyof Modes
 }
-

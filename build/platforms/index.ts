@@ -11,12 +11,6 @@ export function createPlatformConfig(
         case "css":
             return { css: createCSSPlatform(tier) }
 
-        // Future platform support
-        // case 'figma':
-        //     return { figma: createFigmaPlatform(tier) };
-        // case 'flutter':
-        //     return { flutter: createFlutterPlatform(tier) };
-
         default:
             throw new Error(`Unsupported platform: ${platform}`)
     }
