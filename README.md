@@ -59,10 +59,10 @@ Style Dictionary's build architecture is organized around several key concepts -
 
 Our build system leverages this extensibility with custom implementations tailored to Canonical's design system needs. The `build/` folder structure mirrors Style Dictionary's architectural concepts:
 
-- **`formatters/`** - Custom output formats ([Style Dictionary Formatters](https://amzn.github.io/style-dictionary/#/formats))
-- **`platforms/`** - Platform definitions ([Style Dictionary Platforms](https://amzn.github.io/style-dictionary/#/config?id=platform))
-- **`preprocessors/`** - Token preprocessing logic ([Style Dictionary Preprocessors](https://amzn.github.io/style-dictionary/#/reference/Hooks/preprocessors))
-- **`transforms/`** - Custom token transformations ([Style Dictionary Transforms](https://amzn.github.io/style-dictionary/#/transforms))
+- **`formatters/`** - Custom output formats ([Style Dictionary Formatters](https://styledictionary.com/reference/hooks/formats/))
+- **`platforms/`** - Platform definitions ([Style Dictionary Platforms](https://styledictionary.com/reference/config/#platform))
+- **`preprocessors/`** - Token preprocessing logic ([Style Dictionary Preprocessors](https://styledictionary.com/reference/hooks/preprocessors/))
+- **`transforms/`** - Custom token transformations ([Style Dictionary Transforms](https://styledictionary.com/reference/hooks/transforms/))
 - **`types/`** - TypeScript type definitions for better development experience
 - **`utils/`** - Shared utility functions
 
