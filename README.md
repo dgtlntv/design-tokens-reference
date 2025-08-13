@@ -1,6 +1,6 @@
 # Canonical Design Tokens
 
-This repository houses design tokens for Canonical and uses [Style Dictionary](https://amzn.github.io/style-dictionary/) to transform them into platform-specific formats. The tokens are organized to support multiple tiers within the Canonical ecosystem, each with slightly different token needs while maintaining consistency through shared base tokens.
+This repository houses design tokens for Canonical and uses [Style Dictionary](https://styledictionary.com/) to transform them into platform-specific formats. The tokens are organized to support multiple tiers within the Canonical ecosystem, each with slightly different token needs while maintaining consistency through shared base tokens.
 
 ## Repository Structure
 
@@ -186,8 +186,8 @@ Import the generated CSS files in your projects:
 To add new platforms or customize the build process:
 
 1. **New Platform**: Add configuration in `build/config/platforms/`
-2. **Custom Transforms**: Add to `build/transforms/` following [Style Dictionary transform patterns](https://amzn.github.io/style-dictionary/#/transforms?id=custom-transforms)
-3. **Custom Formatters**: Add to `build/formatters/` following [Style Dictionary formatter patterns](https://amzn.github.io/style-dictionary/#/formats?id=custom-formats)
+2. **Custom Transforms**: Add to `build/transforms/` following [Style Dictionary transform patterns](https://styledictionary.com/reference/hooks/transforms/)
+3. **Custom Formatters**: Add to `build/formatters/` following [Style Dictionary formatter patterns](https://styledictionary.com/reference/hooks/formats/)
 4. **New Tiers**: Update `build/config/tiers.config.ts` with new tier definitions
 
 ## Development
