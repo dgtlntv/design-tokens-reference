@@ -196,6 +196,6 @@ This project uses:
 
 - **TypeScript** for type safety and better developer experience
 - **Style Dictionary 5.x** for token transformation
-- **DTCG Format** compliance for [W3C Design Tokens Community Group](https://www.w3.org/community/design-tokens/) standards
+- **DTCG Format** compliance for [W3C Design Tokens Community Group](https://www.designtokens.org/tr/drafts/format/) standards
 
-For detailed information about Style Dictionary concepts and APIs, refer to the [official Style Dictionary documentation](https://amzn.github.io/style-dictionary/).
+For detailed information about Style Dictionary concepts and APIs, refer to the [official Style Dictionary documentation](https://styledictionary.com/getting-started/installation/).
