@@ -1,6 +1,6 @@
-# Canonical Design Tokens
+# Design tokens reference
 
-This repository houses design tokens for Canonical and uses [Style Dictionary](https://styledictionary.com/) to transform them into platform-specific formats. The tokens are organized to support multiple tiers within the Canonical ecosystem, each with slightly different token needs while maintaining consistency through shared base tokens.
+This repository houses a reference of how I think token files can be structued and how [Style Dictionary](https://styledictionary.com/) can be used to transform them into platform-specific formats. I created this reference while I was exploring design tokens at Canonical. The tokens are organized to support multiple tiers within the Canonical ecosystem, each with slightly different token needs while maintaining consistency through shared base tokens.
 
 ## Repository Structure
 
