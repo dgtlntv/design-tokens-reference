@@ -1,0 +1,16 @@
+{
+    "color": {
+        "dark": {
+            "$extensions": {
+                "canonical.modes": {
+                    "mode": "dark"
+                }
+            },
+            "background": {
+                "default": {
+                    "$value": "{color.gray.800}"
+                }
+            }
+        }
+    }
+}

@@ -42,11 +42,10 @@ export interface DimensionValue {
 
 /**
  * Extension data for canonical mode information.
- * Supports both single mode strings (legacy) and mode arrays for multi-dimensional modes.
  */
 export interface CanonicalModesExtension {
-    /** The mode identifier(s) - can be a single string (legacy) or array of strings for multi-dimensional modes */
-    mode: string | string[]
+    /** The mode identifier (e.g., "light", "dark") */
+    mode: string
 }
 
 /**

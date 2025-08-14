@@ -15,28 +15,6 @@ import {
 } from "../../utils/token.util"
 
 /**
- * Helper function to get single mode string from token extensions.
- * This ensures compatibility with dimension tokens that use single string modes.
- * 
- * @param token - The transformed token to extract mode from
- * @returns The mode string if found, null otherwise
- */
-function getSingleModeFromToken(token: TransformedToken): string | null {
-    const mode = getModeFromTokenExtensions(token)
-    
-    if (typeof mode === 'string') {
-        return mode
-    }
-    
-    // If it's an array, return the first item (for compatibility)
-    if (Array.isArray(mode) && mode.length > 0) {
-        return mode[0]
-    }
-    
-    return null
-}
-
-/**
  * Result structure for dimension mode CSS generation.
  * Contains both root-level CSS and media query CSS for different responsive breakpoints.
  */
@@ -84,7 +62,7 @@ function categorizeDimensionTokens(tokens: TransformedToken[]): {
 
     tokens.forEach((token) => {
         if (token.$type === "dimension") {
-            const mode = getSingleModeFromToken(token)
+            const mode = getModeFromTokenExtensions(token)
 
             if (mode && mode in byMode) {
                 byMode[mode as keyof typeof byMode].push(token)
@@ -142,7 +120,7 @@ export function generateDimensionModeCSS(
         const defaultTokens = byMode[defaultMode as keyof typeof byMode]
         if (defaultTokens && defaultTokens.length > 0) {
             defaultTokens.forEach((token) => {
-                const mode = getSingleModeFromToken(token)
+                const mode = getModeFromTokenExtensions(token)
                 const strippedName = mode
                     ? kebabCase(stripModeFromTokenPath(token, mode).join(" "))
                     : token.name
@@ -163,7 +141,7 @@ export function generateDimensionModeCSS(
             mediaQueriesCSS += `@media (min-width: ${modeValue}) {\n`
             mediaQueriesCSS += `  ${selector} {\n`
             tokensForSize.forEach((token) => {
-                const mode = getSingleModeFromToken(token)
+                const mode = getModeFromTokenExtensions(token)
                 const strippedName = mode
                     ? kebabCase(stripModeFromTokenPath(token, mode).join(" "))
                     : token.name

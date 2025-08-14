@@ -81,120 +81,18 @@ export function stripModeFromTokenPath(
 }
 
 /**
- * Removes multiple mode segments from a token's path array.
- * Used to normalize token names by removing all mode-specific path segments.
- * 
- * @param token - The transformed token containing the path
- * @param modes - Array of mode strings to remove from the path
- * @returns A new path array with all mode segments removed
- */
-export function stripModesFromTokenPath(
-    token: TransformedToken,
-    modes: string[]
-): string[] {
-    let path = token.path || []
-
-    // Remove each mode from the path
-    modes.forEach(mode => {
-        const modeIndex = path.indexOf(mode)
-        if (modeIndex !== -1) {
-            path = [...path.slice(0, modeIndex), ...path.slice(modeIndex + 1)]
-        }
-    })
-
-    return path
-}
-
-/**
- * Removes color scheme and contrast mode segments from a token's path.
- * Uses the token's mode extension data to determine which segments to remove.
- * 
- * @param token - The transformed token containing the path
- * @returns A new path array with mode segments removed
- */
-export function stripAllModesFromTokenPath(
-    token: TransformedToken
-): string[] {
-    const colorScheme = getSpecificModeFromToken(token, 'colorScheme')
-    const contrastMode = getSpecificModeFromToken(token, 'contrast')
-    
-    const modesToRemove: string[] = []
-    if (colorScheme) modesToRemove.push(colorScheme)
-    if (contrastMode) modesToRemove.push(contrastMode)
-    
-    return stripModesFromTokenPath(token, modesToRemove)
-}
-
-/**
  * Extracts the mode information from a token's extensions.
  * Looks for canonical.modes extension data.
  * 
  * @param token - The transformed token to extract mode from
- * @returns The mode string/array if found, null otherwise
+ * @returns The mode string if found, null otherwise
  */
 export function getModeFromTokenExtensions(
     token: TransformedToken
-): string | string[] | null {
+): string | null {
     const extensions = token.$extensions as TokenExtensions | undefined
     if (extensions && extensions["canonical.modes"]) {
         return extensions["canonical.modes"].mode || null
     }
     return null
-}
-
-/**
- * Extracts specific mode type from a token's mode array or string.
- * 
- * @param token - The transformed token to extract mode from
- * @param modeType - The type of mode to extract ('colorScheme' or 'contrast')
- * @returns The specific mode string if found, null otherwise
- */
-export function getSpecificModeFromToken(
-    token: TransformedToken,
-    modeType: 'colorScheme' | 'contrast'
-): string | null {
-    const mode = getModeFromTokenExtensions(token)
-    
-    if (!mode) return null
-    
-    // Handle legacy single string mode (assume light/dark are color schemes)
-    if (typeof mode === 'string') {
-        if (modeType === 'colorScheme') {
-            return mode === 'light' || mode === 'dark' ? mode : null
-        }
-        return null // No contrast info in legacy mode
-    }
-    
-    // Handle array mode
-    if (Array.isArray(mode)) {
-        if (modeType === 'colorScheme') {
-            return mode.find(m => m === 'light' || m === 'dark') || null
-        } else if (modeType === 'contrast') {
-            return mode.find(m => m === 'normalContrast' || m === 'highContrast') || null
-        }
-    }
-    
-    return null
-}
-
-/**
- * Checks if a token matches the specified color scheme and contrast mode.
- * 
- * @param token - The transformed token to check
- * @param colorScheme - The color scheme to match ('light' or 'dark')
- * @param contrastMode - The contrast mode to match ('normalContrast' or 'highContrast')
- * @returns True if the token matches both modes
- */
-export function tokenMatchesModes(
-    token: TransformedToken,
-    colorScheme: string,
-    contrastMode?: string
-): boolean {
-    const tokenColorScheme = getSpecificModeFromToken(token, 'colorScheme')
-    const tokenContrastMode = getSpecificModeFromToken(token, 'contrast')
-    
-    const colorSchemeMatches = tokenColorScheme === colorScheme
-    const contrastMatches = contrastMode ? tokenContrastMode === contrastMode : true
-    
-    return colorSchemeMatches && contrastMatches
 }
