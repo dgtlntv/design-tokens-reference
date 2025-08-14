@@ -1,0 +1,18 @@
+{
+    "color": {
+        "dark": {
+            "highContrast": {
+                "background": {
+                    "default": {
+                        "$value": "{color.gray.300}",
+                        "$extensions": {
+                            "canonical.modes": {
+                                "mode": ["dark", "highContrast"]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

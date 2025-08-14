@@ -12,6 +12,9 @@ import {
     getModeFromTokenExtensions,
     getTokenValue,
     stripModeFromTokenPath,
+    stripAllModesFromTokenPath,
+    getSpecificModeFromToken,
+    tokenMatchesModes,
 } from "../../utils/token.util"
 
 /**
@@ -26,55 +29,75 @@ interface ColorModeResult {
 }
 
 /**
- * Categorized color tokens grouped by light/dark modes and regular tokens.
+ * Categorized color tokens grouped by light/dark modes, contrast levels, and regular tokens.
  */
 interface TokenGroups {
-    /** Tokens specifically for light mode */
-    light: TransformedToken[]
-    /** Tokens specifically for dark mode */
-    dark: TransformedToken[]
+    /** Tokens for light mode with normal contrast */
+    lightNormal: TransformedToken[]
+    /** Tokens for light mode with high contrast */
+    lightHigh: TransformedToken[]
+    /** Tokens for dark mode with normal contrast */
+    darkNormal: TransformedToken[]
+    /** Tokens for dark mode with high contrast */
+    darkHigh: TransformedToken[]
     /** Regular color tokens without mode specificity */
     regular: TransformedToken[]
 }
 
 /**
- * Categorizes color tokens into light, dark, and regular groups based on their mode extensions.
- * This function examines each token's extensions to determine if it belongs to a specific color mode.
+ * Categorizes color tokens into light/dark and normal/high contrast groups based on their mode extensions.
+ * This function examines each token's extensions to determine if it belongs to specific color and contrast modes.
  *
  * @param tokens - Array of transformed tokens to categorize
- * @returns Object containing categorized token arrays (light, dark, regular)
+ * @returns Object containing categorized token arrays
  *
  * @example
  * ```typescript
- * const tokens = [lightToken, darkToken, regularToken];
+ * const tokens = [lightNormalToken, darkHighToken, regularToken];
  * const groups = categorizeColorTokens(tokens);
- * // groups.light = [lightToken]
- * // groups.dark = [darkToken]
+ * // groups.lightNormal = [lightNormalToken]
+ * // groups.darkHigh = [darkHighToken] 
  * // groups.regular = [regularToken]
  * ```
  */
 function categorizeColorTokens(tokens: TransformedToken[]): TokenGroups {
-    const { modes } = COLOR_MODES
+    const { modes, contrastModes } = COLOR_MODES
     const groups: TokenGroups = {
-        light: [],
-        dark: [],
+        lightNormal: [],
+        lightHigh: [],
+        darkNormal: [],
+        darkHigh: [],
         regular: [],
     }
 
     tokens.forEach((token) => {
         if (token.$type === "color") {
-            const mode = getModeFromTokenExtensions(token)
-
-            switch (mode) {
-                case modes.light:
-                    groups.light.push(token)
-                    break
-                case modes.dark:
-                    groups.dark.push(token)
-                    break
-                default:
+            const colorScheme = getSpecificModeFromToken(token, 'colorScheme')
+            const contrastMode = getSpecificModeFromToken(token, 'contrast')
+            
+            if (colorScheme && contrastMode) {
+                if (colorScheme === modes.light && contrastMode === contrastModes.normalContrast) {
+                    groups.lightNormal.push(token)
+                } else if (colorScheme === modes.light && contrastMode === contrastModes.highContrast) {
+                    groups.lightHigh.push(token)
+                } else if (colorScheme === modes.dark && contrastMode === contrastModes.normalContrast) {
+                    groups.darkNormal.push(token)
+                } else if (colorScheme === modes.dark && contrastMode === contrastModes.highContrast) {
+                    groups.darkHigh.push(token)
+                } else {
                     groups.regular.push(token)
-                    break
+                }
+            } else if (colorScheme) {
+                // Legacy support for tokens with only color scheme (no contrast)
+                if (colorScheme === modes.light) {
+                    groups.lightNormal.push(token)
+                } else if (colorScheme === modes.dark) {
+                    groups.darkNormal.push(token)
+                } else {
+                    groups.regular.push(token)
+                }
+            } else {
+                groups.regular.push(token)
             }
         }
     })
@@ -105,8 +128,7 @@ function generateLightDarkFunctionCSS(
     usesDtcg: boolean,
     outputReferences: OutputReferences
 ): string {
-    const { modes } = COLOR_MODES
-    const { light, dark, regular } = categorizeColorTokens(tokens)
+    const { lightNormal, lightHigh, darkNormal, darkHigh, regular } = categorizeColorTokens(tokens)
 
     let css = ""
 
@@ -116,54 +138,55 @@ function generateLightDarkFunctionCSS(
         css += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
-    // Create maps for easier lookup
-    const lightTokenMap = new Map<string, TransformedToken>()
-    const darkTokenMap = new Map<string, TransformedToken>()
+    // Create maps for easier lookup - group by base name
+    const tokenMap = new Map<string, {
+        lightNormal?: TransformedToken
+        lightHigh?: TransformedToken
+        darkNormal?: TransformedToken
+        darkHigh?: TransformedToken
+    }>()
 
-    light.forEach((token) => {
-        const pathArray = stripModeFromTokenPath(token, modes.light)
-        const strippedName = kebabCase(pathArray.join(" "))
-        lightTokenMap.set(strippedName, token)
-    })
-
-    dark.forEach((token) => {
-        const pathArray = stripModeFromTokenPath(token, modes.dark)
-        const strippedName = kebabCase(pathArray.join(" "))
-        darkTokenMap.set(strippedName, token)
-    })
-
-    // Create light-dark() functions
-    const processedTokens = new Set<string>()
-
-    lightTokenMap.forEach((lightToken, strippedName) => {
-        const darkToken = darkTokenMap.get(strippedName)
-
-        if (darkToken) {
-            const lightValue = getTokenValue(
-                lightToken,
-                dictionary,
-                usesDtcg,
-                outputReferences,
-                tokenConfig
-            )
-            const darkValue = getTokenValue(
-                darkToken,
-                dictionary,
-                usesDtcg,
-                outputReferences,
-                tokenConfig
-            )
-            css += `  --${strippedName}: light-dark(${lightValue}, ${darkValue});\n`
-        } else {
-            css += `  --${strippedName}: ${getTokenValue(lightToken, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+    // Helper function to add token to map
+    const addToMap = (token: TransformedToken, type: 'lightNormal' | 'lightHigh' | 'darkNormal' | 'darkHigh') => {
+        const pathArray = stripAllModesFromTokenPath(token)
+        const baseName = kebabCase(pathArray.join(" "))
+        
+        if (!tokenMap.has(baseName)) {
+            tokenMap.set(baseName, {})
         }
-        processedTokens.add(strippedName)
-    })
+        const entry = tokenMap.get(baseName)!
+        entry[type] = token
+    }
 
-    // Add dark tokens without light counterparts
-    darkTokenMap.forEach((darkToken, strippedName) => {
-        if (!processedTokens.has(strippedName)) {
-            css += `  --${strippedName}: ${getTokenValue(darkToken, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+    lightNormal.forEach(token => addToMap(token, 'lightNormal'))
+    lightHigh.forEach(token => addToMap(token, 'lightHigh'))
+    darkNormal.forEach(token => addToMap(token, 'darkNormal'))
+    darkHigh.forEach(token => addToMap(token, 'darkHigh'))
+
+    // Generate CSS for each token group
+    tokenMap.forEach((tokens, baseName) => {
+        const { lightNormal, lightHigh, darkNormal, darkHigh } = tokens
+        
+        // For normal contrast tokens, use light-dark() function
+        if (lightNormal && darkNormal) {
+            const lightValue = getTokenValue(lightNormal, dictionary, usesDtcg, outputReferences, tokenConfig)
+            const darkValue = getTokenValue(darkNormal, dictionary, usesDtcg, outputReferences, tokenConfig)
+            css += `  --${baseName}: light-dark(${lightValue}, ${darkValue});\n`
+        } else if (lightNormal) {
+            css += `  --${baseName}: ${getTokenValue(lightNormal, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        } else if (darkNormal) {
+            css += `  --${baseName}: ${getTokenValue(darkNormal, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        }
+        
+        // For high contrast tokens, use light-dark() function with high contrast suffix
+        if (lightHigh && darkHigh) {
+            const lightValue = getTokenValue(lightHigh, dictionary, usesDtcg, outputReferences, tokenConfig)
+            const darkValue = getTokenValue(darkHigh, dictionary, usesDtcg, outputReferences, tokenConfig)
+            css += `  --${baseName}-high-contrast: light-dark(${lightValue}, ${darkValue});\n`
+        } else if (lightHigh) {
+            css += `  --${baseName}-high-contrast: ${getTokenValue(lightHigh, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        } else if (darkHigh) {
+            css += `  --${baseName}-high-contrast: ${getTokenValue(darkHigh, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
         }
     })
 
@@ -171,23 +194,16 @@ function generateLightDarkFunctionCSS(
 }
 
 /**
- * Generates CSS using media queries for color mode switching.
- * This approach uses @media (prefers-color-scheme: dark) to provide alternate colors
- * for users with dark mode preferences.
+ * Generates comprehensive CSS with data attribute selectors and media queries for theme and contrast control.
+ * This creates a complete theme system like the HTML example with both manual control (data attributes)
+ * and automatic system preference detection (media queries).
  *
  * @param tokens - Array of color tokens to process
  * @param selector - CSS selector to use (typically ':root')
  * @param dictionary - Style Dictionary dictionary containing all tokens
  * @param usesDtcg - Whether to use DTCG format for token values
  * @param outputReferences - Whether to output CSS custom property references
- * @returns ColorModeResult containing both root CSS and media query CSS
- *
- * @example
- * ```typescript
- * const result = generateMediaQueryCSS(tokens, ':root', dictionary, true, true);
- * // result.rootCSS: ':root { --color: #ffffff; }'
- * // result.mediaQueryCSS: '@media (prefers-color-scheme: dark) { :root { --color: #000000; } }'
- * ```
+ * @returns ColorModeResult containing both root CSS and comprehensive theme CSS
  */
 function generateMediaQueryCSS(
     tokens: TransformedToken[],
@@ -196,33 +212,141 @@ function generateMediaQueryCSS(
     usesDtcg: boolean,
     outputReferences: OutputReferences
 ): ColorModeResult {
-    const { modes } = COLOR_MODES
-    const { light, dark, regular } = categorizeColorTokens(tokens)
+    const { lightNormal, lightHigh, darkNormal, darkHigh, regular } = categorizeColorTokens(tokens)
 
     let rootCSS = ""
     let mediaQueryCSS = ""
 
-    // Add regular color tokens
+    // Add regular color tokens to root
     const tokenConfig = getPlatform("css")?.options?.tokenConfig
     regular.forEach((token) => {
         rootCSS += `  --${token.name}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
     })
 
-    // Add light tokens to root
-    light.forEach((token) => {
-        const pathArray = stripModeFromTokenPath(token, modes.light)
-        const strippedName = kebabCase(pathArray.join(" "))
-        rootCSS += `  --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+    // Create maps for easier lookup
+    const tokenMap = new Map<string, {
+        lightNormal?: TransformedToken
+        lightHigh?: TransformedToken
+        darkNormal?: TransformedToken
+        darkHigh?: TransformedToken
+    }>()
+
+    // Helper function to add token to map
+    const addToMap = (token: TransformedToken, type: 'lightNormal' | 'lightHigh' | 'darkNormal' | 'darkHigh') => {
+        const pathArray = stripAllModesFromTokenPath(token)
+        const baseName = kebabCase(pathArray.join(" "))
+        
+        if (!tokenMap.has(baseName)) {
+            tokenMap.set(baseName, {})
+        }
+        const entry = tokenMap.get(baseName)!
+        entry[type] = token
+    }
+
+    lightNormal.forEach(token => addToMap(token, 'lightNormal'))
+    lightHigh.forEach(token => addToMap(token, 'lightHigh'))
+    darkNormal.forEach(token => addToMap(token, 'darkNormal'))
+    darkHigh.forEach(token => addToMap(token, 'darkHigh'))
+
+    // Add default (light normal contrast) tokens to root
+    tokenMap.forEach((tokens, baseName) => {
+        const { lightNormal } = tokens
+        if (lightNormal) {
+            rootCSS += `  --${baseName}: ${getTokenValue(lightNormal, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        }
     })
 
-    // Add dark tokens to media query
-    if (dark.length > 0) {
-        mediaQueryCSS += "@media (prefers-color-scheme: dark) {\n"
-        mediaQueryCSS += `  ${selector} {\n`
-        dark.forEach((token) => {
-            const pathArray = stripModeFromTokenPath(token, modes.dark)
-            const strippedName = kebabCase(pathArray.join(" "))
-            mediaQueryCSS += `    --${strippedName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+    // DATA ATTRIBUTE SELECTORS for manual theme control
+    
+    // Dark theme - normal contrast: [data-theme="dark"]
+    const darkNormalTokens = Array.from(tokenMap.entries()).filter(([_, tokens]) => tokens.darkNormal)
+    if (darkNormalTokens.length > 0) {
+        mediaQueryCSS += `[data-theme="dark"] {\n`
+        darkNormalTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.darkNormal!
+            mediaQueryCSS += `  --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "}\n\n"
+    }
+
+    // Light theme - high contrast: [data-theme="light"][data-contrast="high"]
+    const lightHighTokens = Array.from(tokenMap.entries()).filter(([_, tokens]) => tokens.lightHigh)
+    if (lightHighTokens.length > 0) {
+        mediaQueryCSS += `[data-theme="light"][data-contrast="high"] {\n`
+        lightHighTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.lightHigh!
+            mediaQueryCSS += `  --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "}\n\n"
+    }
+
+    // Dark theme - high contrast: [data-theme="dark"][data-contrast="high"]
+    const darkHighTokens = Array.from(tokenMap.entries()).filter(([_, tokens]) => tokens.darkHigh)
+    if (darkHighTokens.length > 0) {
+        mediaQueryCSS += `[data-theme="dark"][data-contrast="high"] {\n`
+        darkHighTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.darkHigh!
+            mediaQueryCSS += `  --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "}\n\n"
+    }
+
+    // MEDIA QUERIES for system preference detection
+    
+    // Respect system dark mode preference when no manual theme is set
+    if (darkNormalTokens.length > 0) {
+        mediaQueryCSS += `@media (prefers-color-scheme: dark) {\n`
+        mediaQueryCSS += `  ${selector}:not([data-theme]) {\n`
+        darkNormalTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.darkNormal!
+            mediaQueryCSS += `    --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "  }\n"
+        mediaQueryCSS += "}\n\n"
+    }
+    
+    // Respect system high contrast preference when no manual contrast is set
+    if (lightHighTokens.length > 0) {
+        mediaQueryCSS += `@media (prefers-contrast: high) {\n`
+        mediaQueryCSS += `  ${selector}:not([data-contrast]):not([data-theme]) {\n`
+        lightHighTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.lightHigh!
+            mediaQueryCSS += `    --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "  }\n"
+        mediaQueryCSS += "}\n\n"
+    }
+    
+    // Combined: system dark + high contrast when no manual preferences are set
+    if (darkHighTokens.length > 0) {
+        mediaQueryCSS += `@media (prefers-contrast: high) and (prefers-color-scheme: dark) {\n`
+        mediaQueryCSS += `  ${selector}:not([data-contrast]):not([data-theme]) {\n`
+        darkHighTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.darkHigh!
+            mediaQueryCSS += `    --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "  }\n"
+        mediaQueryCSS += "}\n\n"
+    }
+
+    // Additional selectors for high contrast preference with specific themes
+    if (lightHighTokens.length > 0) {
+        mediaQueryCSS += `@media (prefers-contrast: high) {\n`
+        mediaQueryCSS += `  [data-theme="light"]:not([data-contrast]) {\n`
+        lightHighTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.lightHigh!
+            mediaQueryCSS += `    --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
+        })
+        mediaQueryCSS += "  }\n"
+        mediaQueryCSS += "}\n\n"
+    }
+
+    if (darkHighTokens.length > 0) {
+        mediaQueryCSS += `@media (prefers-contrast: high) {\n`
+        mediaQueryCSS += `  [data-theme="dark"]:not([data-contrast]) {\n`
+        darkHighTokens.forEach(([baseName, tokens]) => {
+            const token = tokens.darkHigh!
+            mediaQueryCSS += `    --${baseName}: ${getTokenValue(token, dictionary, usesDtcg, outputReferences, tokenConfig)};\n`
         })
         mediaQueryCSS += "  }\n"
         mediaQueryCSS += "}\n\n"

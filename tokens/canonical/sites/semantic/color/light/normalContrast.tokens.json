@@ -1,0 +1,18 @@
+{
+    "color": {
+        "light": {
+            "normalContrast": {
+                "background": {
+                    "default": {
+                        "$value": "{color.gray.100}",
+                        "$extensions": {
+                            "canonical.modes": {
+                                "mode": ["light", "normalContrast"]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

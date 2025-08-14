@@ -87,9 +87,45 @@
   --color-background-default: var(--canonical-sites-color-gray-100);
 }
 
+[data-theme="dark"] {
+  --color-background-default: var(--canonical-sites-color-gray-800);
+}
+
+[data-theme="light"][data-contrast="high"] {
+  --color-background-default: var(--canonical-sites-color-gray-900);
+}
+
+[data-theme="dark"][data-contrast="high"] {
+  --color-background-default: var(--canonical-sites-color-gray-300);
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --color-background-default: var(--canonical-sites-color-gray-800);
+  }
+}
+
+@media (prefers-contrast: high) {
+  :root:not([data-contrast]):not([data-theme]) {
+    --color-background-default: var(--canonical-sites-color-gray-900);
+  }
+}
+
+@media (prefers-contrast: high) and (prefers-color-scheme: dark) {
+  :root:not([data-contrast]):not([data-theme]) {
+    --color-background-default: var(--canonical-sites-color-gray-300);
+  }
+}
+
+@media (prefers-contrast: high) {
+  [data-theme="light"]:not([data-contrast]) {
+    --color-background-default: var(--canonical-sites-color-gray-900);
+  }
+}
+
+@media (prefers-contrast: high) {
+  [data-theme="dark"]:not([data-contrast]) {
+    --color-background-default: var(--canonical-sites-color-gray-300);
   }
 }
 
