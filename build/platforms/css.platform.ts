@@ -1,8 +1,8 @@
 import type { PlatformConfig, TransformedToken } from "style-dictionary/types"
 import {
-    CSS_FILE_CONFIG_MAP,
+    getCSSFileConfig,
     CSS_BASE_CONFIG,
-} from "../config/platforms/css.config"
+} from "../config/css.config"
 
 /**
  * Creates a CSS platform configuration for Style Dictionary based on a specific tier and category.
@@ -39,7 +39,7 @@ export function createCSSPlatform(
     }
 
     // For specific categories, get the matching file configuration
-    const categoryFileConfig = CSS_FILE_CONFIG_MAP.get(category)
+    const categoryFileConfig = getCSSFileConfig(category)
 
     if (!categoryFileConfig) {
         throw new Error(

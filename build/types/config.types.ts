@@ -46,6 +46,6 @@ export interface TierConfig {
 }
 
 /** Collection of all tier configurations keyed by tier name */
-export interface TiersConfiguration {
+export interface TokenPathsConfiguration {
     [tierName: string]: TierConfig
 }

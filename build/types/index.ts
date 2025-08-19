@@ -15,7 +15,7 @@ export type {
     CategoryModeConfig,
     CategoryModesConfig,
     TierConfig,
-    TiersConfiguration,
+    TokenPathsConfiguration,
 } from "./config.types"
 
 // CSS-specific types

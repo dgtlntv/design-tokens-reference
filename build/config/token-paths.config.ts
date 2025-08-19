@@ -1,9 +1,9 @@
-import type { TiersConfiguration } from "../types"
+import type { TokenPathsConfiguration } from "../types"
 
 /**
  * Configuration for design token tiers and their relationships.
  */
-export const TIERS_CONFIG: TiersConfiguration = {
+export const TOKEN_PATHS_CONFIG: TokenPathsConfiguration = {
     sites: {
         name: "sites",
         include: [],
