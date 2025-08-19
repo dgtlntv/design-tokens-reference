@@ -1,5 +1,4 @@
 /**
- * Dimension tokens
  * Do not edit directly, this file was auto-generated.
  */
 
@@ -99,28 +98,4 @@
   --canonical-sites-dimension-space-bottom-text-baseline-nudge-1000: 0.25rem;
   --canonical-sites-dimension-letter-spacing-default: 0em;
   --canonical-sites-dimension-letter-spacing-wide: 0.05em;
-  --dimension-size-root-font-size: var(--canonical-sites-dimension-200);
-  --dimension-size-height-baseline: var(--canonical-sites-dimension-100);
 }
-
-@media (min-width: 620px) {
-  :root {
-    --dimension-size-root-font-size: var(--canonical-sites-dimension-200);
-    --dimension-size-height-baseline: var(--canonical-sites-dimension-100);
-  }
-}
-
-@media (min-width: 1036px) {
-  :root {
-    --dimension-size-root-font-size: var(--canonical-sites-dimension-200);
-    --dimension-size-height-baseline: var(--canonical-sites-dimension-100);
-  }
-}
-
-@media (min-width: 1681px) {
-  :root {
-    --dimension-size-root-font-size: var(--canonical-sites-dimension-225);
-    --dimension-size-height-baseline: var(--canonical-sites-dimension-100);
-  }
-}
-

@@ -14,5 +14,5 @@ export interface BuildConfig {
 export const BUILD_CONFIG: BuildConfig = {
     logLevel: "verbose",
     useDtcg: true,
-    preprocessors: ["extensions-delegate"],
+    preprocessors: [],
 }

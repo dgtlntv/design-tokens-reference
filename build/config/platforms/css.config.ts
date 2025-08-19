@@ -176,7 +176,6 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
     options: {
         defaultSelector: ":root",
         outputReferences: true,
-        colorModeStrategy: "media-query",
         tokenConfig: {
             referenceFormat: "var(--{name})",
         },
@@ -185,12 +184,12 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
     files: [
         {
             destination: "{tier}-colors.css",
-            format: "css/colors",
+            format: "css/variables",
             filter: (token: TransformedToken) => token.$type === "color",
         },
         {
             destination: "{tier}-dimensions.css",
-            format: "css/dimensions",
+            format: "css/variables",
             filter: (token: TransformedToken) => token.$type === "dimension",
         },
         {

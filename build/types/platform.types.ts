@@ -13,12 +13,6 @@ export interface PlatformConfig extends StyleDictionaryPlatformConfig {
     defaultFormat?: string
 }
 
-/**
- * Strategy for handling color mode variants in CSS output.
- */
-export type ColorModeStrategy = 
-    | "light-dark-function"  // Use CSS light-dark() function
-    | "media-query"          // Use @media (prefers-color-scheme) queries
 
 /**
  * Configuration for token reference formatting within a platform.
@@ -36,8 +30,6 @@ export interface CSSPlatformOptions {
     defaultSelector: string
     /** Configuration for how token references should be output */
     outputReferences: OutputReferences
-    /** Strategy for handling color mode variants */
-    colorModeStrategy: ColorModeStrategy
     /** Token-specific configuration for this platform */
     tokenConfig: PlatformTokenConfig
     /** Optional typography-specific configuration */

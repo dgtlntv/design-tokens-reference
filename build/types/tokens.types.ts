@@ -40,19 +40,3 @@ export interface DimensionValue {
     unit: string
 }
 
-/**
- * Extension data for canonical mode information.
- */
-export interface CanonicalModesExtension {
-    /** The mode identifier (e.g., "light", "dark") */
-    mode: string
-}
-
-/**
- * Token extensions that can be attached to design tokens.
- * Used to store additional metadata about tokens.
- */
-export interface TokenExtensions {
-    /** Canonical mode extension for theme-aware tokens */
-    "canonical.modes"?: CanonicalModesExtension
-}

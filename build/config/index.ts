@@ -1,5 +1,3 @@
 export * from "./build.config.ts"
-export * from "./color-modes.config.ts"
-export * from "./dimension-modes.config.ts"
 export * from "./platforms"
 export * from "./tiers.config.ts"
