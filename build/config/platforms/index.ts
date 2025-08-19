@@ -1,12 +1,12 @@
-import type { PlatformConfig } from "../../types/platform.types"
-import { CSS_PLATFORM_CONFIG } from "./css.config.ts"
+import type { PlatformConfig } from "../../types"
+import { CSS_BASE_CONFIG } from "./css.config.ts"
 
 /**
  * Registry of all available platform configurations.
  * Currently includes CSS platform with future extensibility for other platforms.
  */
 export const PLATFORMS = {
-    css: CSS_PLATFORM_CONFIG,
+    css: CSS_BASE_CONFIG,
 } as const
 
 /**
@@ -44,13 +44,8 @@ export const getAllPlatforms = (): Record<string, PlatformConfig> => {
     return PLATFORMS
 }
 
-/**
- * Type representing all available platform names.
- * Automatically derived from the PLATFORMS constant.
- */
-export type Platform = keyof typeof PLATFORMS
-
 export type {
     CSSPlatformOptions,
+    Platform,
     PlatformConfig,
-} from "../../types/platform.types"
+} from "../../types"

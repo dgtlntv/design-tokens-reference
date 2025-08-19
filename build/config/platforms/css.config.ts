@@ -1,95 +1,10 @@
 import type { TransformedToken } from "style-dictionary/types"
 import type {
-    CSSPlatformOptions,
-    PlatformConfig,
-} from "../../types/platform.types"
-
-/**
- * Configuration for a single CSS file output.
- * Defines the file destination, format to use, and token filtering criteria.
- */
-interface CSSFileConfig {
-    /** File destination path, may include placeholders like {tier} */
-    readonly destination: string
-    /** Style Dictionary format name to use for this file */
-    readonly format: string
-    /** Filter function to determine which tokens are included in this file */
-    readonly filter: (token: TransformedToken) => boolean
-}
-
-/**
- * Configuration for semantic HTML elements in typography output.
- * Defines patterns and conditions for mapping typography tokens to HTML elements.
- */
-interface TypographySemanticElement {
-    /** Pattern template for the element (e.g., "heading-{n}") */
-    pattern: string
-    /** CSS selector template for the element (e.g., "h{n}") */
-    elementTemplate: string
-    /** Function to determine if a token should use this element mapping */
-    condition: (tokenName: string, tokenPath: string[]) => boolean
-}
-
-/**
- * Configuration for custom typography element mappings.
- * Allows for specific token-to-element mappings that don't follow standard patterns.
- */
-interface TypographyCustomElement {
-    /** Pattern identifier for the custom element */
-    pattern: string
-    /** CSS selector template for the custom element */
-    elementTemplate: string
-    /** Function to determine if a token should use this custom mapping */
-    condition: (tokenName: string) => boolean
-}
-
-/**
- * Complete configuration for semantic HTML element generation.
- * Includes standard patterns for headings, text, and custom element mappings.
- */
-interface TypographySemanticElements {
-    /** Configuration for heading elements (h1-h6) */
-    headings: TypographySemanticElement
-    /** Configuration for text/paragraph elements */
-    text: TypographySemanticElement
-    /** Array of custom element mappings */
-    custom: TypographyCustomElement[]
-}
-
-/**
- * Configuration for typography utility class generation.
- */
-interface TypographyUtilities {
-    /** Function to transform token names into CSS class names */
-    nameTransform: (tokenName: string) => string
-}
-
-/**
- * Configuration for bold variant token handling.
- */
-interface TypographyBoldVariants {
-    /** Suffix pattern to identify bold variant tokens (e.g., '-bold') */
-    tokenSuffix: string
-    /** CSS modifier class name to use for bold utilities (e.g., 'text-bold') */
-    modifierClass: string
-    /** Function to check if a token path segment indicates a bold variant */
-    isVariantToken: (pathSegment: string, suffix: string) => boolean
-    /** Function to extract base token name from a bold variant token */
-    extractBaseName: (pathSegment: string, suffix: string) => string
-}
-
-/**
- * Complete typography configuration for CSS output.
- * Controls how typography tokens are converted to CSS rules and utility classes.
- */
-export interface CSSTypographyConfig {
-    /** Configuration for semantic HTML element styling */
-    semanticElements: TypographySemanticElements
-    /** Configuration for utility class generation */
-    utilities: TypographyUtilities
-    /** Configuration for bold variant token handling */
-    boldVariants: TypographyBoldVariants
-}
+    CSSFileConfig,
+    CSSFileDefinition,
+    CSSTypographyConfig,
+} from "../../types/css.types"
+import type { CSSPlatformOptions } from "../../types/platform.types"
 
 /**
  * Typography configuration for CSS output.
@@ -162,37 +77,41 @@ export const CSS_TYPOGRAPHY_CONFIG: CSSTypographyConfig = {
 }
 
 /**
- * This configuration defines how design tokens are processed and output as CSS files.
- * It includes transforms, formatters, file definitions, and advanced features like
- * color mode strategies and typography configurations.
+ * Base CSS platform options that can be extended for specific configurations.
  */
-export const CSS_PLATFORM_CONFIG: PlatformConfig & {
-    options: CSSPlatformOptions & { typography?: CSSTypographyConfig }
-    files: CSSFileConfig[]
-} = {
-    prefix: "canonical",
-    buildPath: "dist/css/",
-    transforms: ["name/kebab", "dimension/w3c", "color/w3c", "fontFamily/css"],
-    options: {
-        defaultSelector: ":root",
-        outputReferences: true,
-        tokenConfig: {
-            referenceFormat: "var(--{name})",
-        },
-        typography: CSS_TYPOGRAPHY_CONFIG,
+export const CSS_BASE_OPTIONS: CSSPlatformOptions = {
+    defaultSelector: ":root",
+    outputReferences: true,
+    tokenConfig: {
+        referenceFormat: "var(--{name})",
     },
-    files: [
-        {
+    typography: CSS_TYPOGRAPHY_CONFIG,
+}
+
+/**
+ * File configurations for different token categories.
+ * Each configuration defines how tokens of that category should be processed and output.
+ */
+export const CSS_FILE_DEFINITIONS: CSSFileDefinition[] = [
+    {
+        metadata: { category: "color" },
+        config: {
             destination: "{tier}-colors.css",
             format: "css/variables",
             filter: (token: TransformedToken) => token.$type === "color",
         },
-        {
+    },
+    {
+        metadata: { category: "dimension" },
+        config: {
             destination: "{tier}-dimensions.css",
             format: "css/variables",
             filter: (token: TransformedToken) => token.$type === "dimension",
         },
-        {
+    },
+    {
+        metadata: { category: "typography" },
+        config: {
             destination: "{tier}-typography.css",
             format: "css/typography",
             filter: (token: TransformedToken) => {
@@ -209,40 +128,75 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig & {
                     return true
                 }
                 // Typography primitive tokens by type
-                return (
+                if (
                     token.$type === "fontFamily" ||
                     token.$type === "fontWeight" ||
                     token.$type === "fontStyle"
-                )
+                ) {
+                    return true
+                }
+                // Include dimension tokens needed for typography references
+                if (
+                    token.path &&
+                    token.path.length >= 2 &&
+                    token.path[0] === "dimension" &&
+                    (token.path[1] === "letterSpacing" ||
+                        token.path[1] === "size")
+                ) {
+                    return true
+                }
+                return false
             },
         },
-        {
+    },
+    {
+        metadata: { category: "assets" },
+        config: {
             destination: "{tier}-assets.css",
-            format: "css/generic",
-            filter: (token: TransformedToken) => {
-                return token.$type === "asset"
-            },
+            format: "css/variables",
+            filter: (token: TransformedToken) => token.$type === "asset",
         },
-        {
+    },
+    {
+        metadata: { category: "grid" },
+        config: {
             destination: "{tier}-grid.css",
-            format: "css/generic",
-            filter: (token: TransformedToken) => {
-                return token.$type === "grid"
-            },
+            format: "css/variables",
+            filter: (token: TransformedToken) => token.$type === "grid",
         },
-        {
+    },
+    {
+        metadata: { category: "motion" },
+        config: {
             destination: "{tier}-motion.css",
-            format: "css/generic",
-            filter: (token: TransformedToken) => {
-                return token.$type === "duration"
-            },
+            format: "css/variables",
+            filter: (token: TransformedToken) => token.$type === "duration",
         },
-        {
+    },
+    {
+        metadata: { category: "shadows" },
+        config: {
             destination: "{tier}-shadows.css",
-            format: "css/generic",
-            filter: (token: TransformedToken) => {
-                return token.$type === "shadow"
-            },
+            format: "css/variables",
+            filter: (token: TransformedToken) => token.$type === "shadow",
         },
-    ],
+    },
+]
+
+/**
+ * Map of category names to their file configurations for easy lookup.
+ */
+export const CSS_FILE_CONFIG_MAP = new Map<string, CSSFileConfig>(
+    CSS_FILE_DEFINITIONS.map((def) => [def.metadata.category, def.config])
+)
+
+/**
+ * Base CSS platform configuration that can be used to create specific platform instances.
+ */
+export const CSS_BASE_CONFIG = {
+    prefix: "canonical",
+    buildPath: "dist/css/",
+    transforms: ["name/kebab", "dimension/w3c", "color/w3c", "fontFamily/css"],
+    options: CSS_BASE_OPTIONS,
+    files: CSS_FILE_DEFINITIONS.map((def) => def.config),
 }

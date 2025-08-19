@@ -1,5 +1,5 @@
 import type { Transform, TransformedToken } from "style-dictionary/types"
-import type { DimensionValue } from "../../types/tokens.types"
+import type { DimensionValue } from "../../types"
 
 /**
  * Type guard to check if a value is a DimensionValue object.

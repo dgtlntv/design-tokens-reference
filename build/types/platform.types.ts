@@ -2,7 +2,7 @@ import type {
     OutputReferences,
     PlatformConfig as StyleDictionaryPlatformConfig,
 } from "style-dictionary/types"
-import type { CSSTypographyConfig } from "../config/platforms/css.config"
+import type { CSSTypographyConfig } from "./css.types"
 
 /**
  * Extended platform configuration that includes additional options.
@@ -35,3 +35,9 @@ export interface CSSPlatformOptions {
     /** Optional typography-specific configuration */
     typography?: CSSTypographyConfig
 }
+
+/**
+ * Supported platforms for design token output.
+ * Currently supports CSS with plans for Figma and Flutter in the future.
+ */
+export type Platform = "css" | "figma" | "flutter"

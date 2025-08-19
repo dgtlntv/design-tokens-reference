@@ -1,11 +1,6 @@
 import type { PlatformConfig } from "style-dictionary/types"
+import type { Platform } from "../types"
 import { createCSSPlatform } from "./css.platform"
-
-/**
- * Supported platforms for design token output.
- * Currently supports CSS with plans for Figma and Flutter in the future.
- */
-export type Platform = "css" | "figma" | "flutter"
 
 /**
  * Creates a platform configuration for Style Dictionary based on the specified platform and tier.

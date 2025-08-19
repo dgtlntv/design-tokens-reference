@@ -5,9 +5,13 @@ import type {
     TransformedToken,
 } from "style-dictionary/types"
 import { getPlatform } from "../../config"
-import type { CSSTypographyConfig } from "../../config/platforms/css.config"
-import type { CSSPlatformOptions } from "../../types/platform.types"
-import type { ExtendedLocalOptions } from "../../types/shared.types"
+import type { 
+    CSSTypographyConfig, 
+    CSSPlatformOptions, 
+    ExtendedLocalOptions, 
+    TypographyValue, 
+    TypographyToken 
+} from "../../types"
 import { getTokenValue } from "../../utils/token.util"
 
 /**
@@ -15,31 +19,6 @@ import { getTokenValue } from "../../utils/token.util"
  */
 const FILE_HEADER =
     "/**\n * Do not edit directly, this file was auto-generated.\n */\n\n"
-
-/**
- * Typography token value structure for composite typography tokens.
- * Contains all possible typography-related properties that can be defined in a token.
- */
-interface TypographyValue {
-    fontFamily?: string
-    fontSize?: string
-    fontWeight?: string
-    lineHeight?: string
-    letterSpacing?: string
-    fontStyle?: string
-    textDecoration?: string
-    letterCase?: string
-    figureStyle?: string
-    fontPosition?: string
-}
-
-/**
- * Extended TransformedToken interface for typography tokens.
- * Ensures the $value property conforms to the TypographyValue structure.
- */
-interface TypographyToken extends TransformedToken {
-    $value: TypographyValue
-}
 
 /**
  * Type guard to check if a token is a composite typography token.
@@ -507,7 +486,6 @@ export const cssTypographyFormat: Format = {
         let css = FILE_HEADER
         const tokenConfig = cssConfig?.options?.tokenConfig
         const typographyConfig = cssConfig?.options?.typography
-
         // Generate CSS custom properties for primitive typography tokens
         if (primitiveTypographyTokens.length > 0) {
             css += ":root {\n"
@@ -585,7 +563,6 @@ export const cssTypographyFormat: Format = {
                 tokenConfig
             )
         }
-
         return css
     },
 }

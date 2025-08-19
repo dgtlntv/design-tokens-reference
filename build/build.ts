@@ -2,19 +2,9 @@ import StyleDictionary from "style-dictionary"
 import type { Config } from "style-dictionary/types"
 import { BUILD_CONFIG, getPlatform, TIERS_CONFIG } from "./config"
 import { registerFormatters } from "./formatters"
-import { createPlatformConfig, type Platform } from "./platforms"
+import { createPlatformConfig } from "./platforms"
 import { registerTransforms } from "./transforms"
-import type { ResolvedTokenPaths } from "./types/shared.types"
-
-/**
- * Options for building design tokens.
- */
-interface BuildOptions {
-    /** The tier name to build (e.g., "primitive", "semantic") */
-    tier: string
-    /** The target platform (defaults to "css") */
-    platform?: Platform
-}
+import type { BuildOptions, Platform, ResolvedTokenPaths } from "./types"
 
 /**
  * Registers all custom Style Dictionary extensions.
@@ -261,13 +251,8 @@ async function buildCategoryTokens(tier: string, category: string, platform: Pla
     // Get source paths filtered for this category
     const allSource = tierConfig.source
 
-    // Filter to include only:
-    // - Primitive tokens (always include)
-    // - Tokens that match the specific category
-    const categorySource = allSource.filter(path => 
-        path.includes('/primitive/') || // Always include primitives
-        path.includes(`/${category}.tokens.json`) // Include category-specific tokens
-    )
+    // Include all source paths - let the platform filter handle token filtering
+    const categorySource = allSource
 
     if (categorySource.length === 0) {
         console.warn(`⚠️ No tokens found for category ${category}`)

@@ -4,7 +4,7 @@ import type {
     TransformedToken,
 } from "style-dictionary/types"
 import { getReferences, usesReferences } from "style-dictionary/utils"
-import type { PlatformTokenConfig } from "../types/platform.types"
+import type { PlatformTokenConfig } from "../types"
 
 /**
  * Extracts the final value from a token, handling references and DTCG format.
