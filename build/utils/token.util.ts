@@ -4,16 +4,15 @@ import type {
     TransformedToken,
 } from "style-dictionary/types"
 import { getReferences, usesReferences } from "style-dictionary/utils"
-import type { PlatformTokenConfig } from "../types"
 
 /**
  * Extracts the final value from a token, handling references and DTCG format.
- * 
+ *
  * @param token - The transformed token to extract value from
  * @param dictionary - Style Dictionary instance containing all tokens
  * @param usesDtcg - Whether to use DTCG format ($value vs value)
  * @param outputReferences - Configuration for outputting token references
- * @param platformConfig - Optional platform-specific token configuration
+ * @param referenceFormat - Format string for references, e.g. "var(--{name})" for CSS
  * @returns The final string value for the token
  */
 export function getTokenValue(
@@ -21,7 +20,7 @@ export function getTokenValue(
     dictionary: Dictionary,
     usesDtcg: boolean,
     outputReferences: OutputReferences,
-    platformConfig?: PlatformTokenConfig
+    referenceFormat: string = "var(--{name})"
 ): string {
     const originalValue = usesDtcg
         ? token.original.$value
@@ -41,8 +40,6 @@ export function getTokenValue(
 
         refs.forEach((ref: TransformedToken) => {
             const refValue = JSON.stringify(usesDtcg ? ref.$value : ref.value)
-            const referenceFormat =
-                platformConfig?.referenceFormat || "var(--{name})"
             const formattedRef = referenceFormat.replace("{name}", ref.name)
             value = value.replace(refValue, formattedRef)
         })
@@ -52,4 +49,3 @@ export function getTokenValue(
 
     return String(usesDtcg ? token.$value : token.value)
 }
-

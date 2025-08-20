@@ -1,9 +1,5 @@
 import StyleDictionary from "style-dictionary"
-import {
-    CSS_PLATFORM_CONFIG,
-    FLUTTER_PLATFORM_CONFIG,
-    TOKEN_PATHS,
-} from "./config"
+import { CSS_PLATFORM_CONFIG, TOKEN_PATHS } from "./config"
 import {
     generateStyleDictionaryConfigs,
     type BaseConfig,
@@ -37,8 +33,6 @@ const baseConfig: BaseConfig = {
     preprocessors: ["tokens-studio"],
     platforms: {
         css: CSS_PLATFORM_CONFIG,
-        flutter: FLUTTER_PLATFORM_CONFIG,
-        // Add more platform configs here as needed
     },
 }
 
