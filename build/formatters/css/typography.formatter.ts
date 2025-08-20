@@ -1,61 +1,12 @@
-import type {
-    Dictionary,
-    Format,
-    OutputReferences,
-    TransformedToken,
-} from "style-dictionary/types"
+import type { Dictionary, Format, OutputReferences, TransformedToken } from "style-dictionary/types"
 import { getTokenValue } from "../../utils/token.util"
+import type {
+    FormatterOptions,
+    TypographyConfig,
+    TypographyToken,
+    TypographyValue,
+} from "../../types/typography.types"
 
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-interface TypographyValue {
-    fontFamily?: string
-    fontSize?: string | number
-    fontWeight?: string | number
-    lineHeight?: string | number
-    letterSpacing?: string | number
-    fontStyle?: string
-    textDecoration?: string
-    letterCase?: string
-    figureStyle?: string
-    fontPosition?: string
-}
-
-interface TypographyToken extends TransformedToken {
-    $type: "typography"
-    $value: TypographyValue
-    value: TypographyValue
-}
-
-interface SemanticRule {
-    selector: string
-    condition: (token: TypographyToken) => boolean
-}
-
-interface TypographyConfig {
-    semanticRules?: SemanticRule[]
-    utilityPrefix?: string
-    boldSuffix?: string
-    boldModifierClass?: string
-}
-
-interface FormatterOptions {
-    // Filter for tokens
-    categoryFilter?: (token: TransformedToken) => boolean
-
-    // CSS output options
-    outputReferences?: OutputReferences
-    usesDtcg?: boolean
-
-    // Typography specific configuration
-    typography?: TypographyConfig
-}
-
-// ============================================================================
-// DEFAULT CONFIGURATION
-// ============================================================================
 
 const DEFAULT_TYPOGRAPHY_CONFIG: TypographyConfig = {
     semanticRules: [
