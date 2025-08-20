@@ -8,6 +8,7 @@ import type {
 export interface TokenPath {
   source?: string | string[];
   include?: string | string[];
+  reference?: string | string[];
 }
 
 export interface TokenPaths {
@@ -19,9 +20,7 @@ export interface PlatformOverride {
   filter?: (token: TransformedToken) => boolean;
 }
 
-export interface PlatformConfig {
-  transformGroup?: string;
-  transforms?: string[];
+export interface ExtendedPlatformConfig extends StyleDictionaryPlatformConfig {
   formatters?: unknown[];
   fileExtension: string;
   defaultFormat: string;
@@ -30,10 +29,9 @@ export interface PlatformConfig {
   };
 }
 
-export interface BaseConfig {
-  preprocessors?: string[];
+export interface ExtendedConfig extends StyleDictionaryConfig {
   platforms: {
-    [platform: string]: PlatformConfig;
+    [platform: string]: ExtendedPlatformConfig;
   };
 }
 

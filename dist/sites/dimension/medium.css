@@ -3,6 +3,6 @@
  */
 
 :root {
-  --baseline: {dimension.100};
-  --rootFontSize: {dimension.200};
+  --canonical-dimension-size-height-baseline: var(--canonical-dimension-100);
+  --canonical-dimension-size-root-font-size: var(--canonical-dimension-200);
 }

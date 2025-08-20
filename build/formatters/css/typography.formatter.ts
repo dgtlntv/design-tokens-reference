@@ -27,7 +27,6 @@ interface TypographyToken extends TransformedToken {
     $type: "typography"
     $value: TypographyValue
     value: TypographyValue
-    path?: string[]
 }
 
 interface SemanticRule {
@@ -138,28 +137,9 @@ class TokenClassifier {
     }
 
     static isPrimitive(token: TransformedToken): boolean {
-        // Check if it's a typography token first
-        if (!this.isTypography(token)) {
-            return false
-        }
-
-        // Check if the value contains references to other tokens
-        const value = token.$value || token.value
-
-        // If value is a string, check if it contains token references (e.g., {some.token.reference})
-        if (typeof value === "string") {
-            return !/{[^}]+}/.test(value)
-        }
-
-        // If value is an object, check if any of its properties contain references
-        if (typeof value === "object" && value !== null) {
-            return !Object.values(value).some(
-                (val) => typeof val === "string" && /{[^}]+}/.test(val)
-            )
-        }
-
-        // For other types (number, boolean, etc.), consider them primitive
-        return true
+        // Check if the token comes from a primitive file path
+        // but exclude dimension tokens (they're included for references only)
+        return token.filePath.includes('/primitive/') && token.$type !== 'dimension'
     }
 
     static isComposite(token: TypographyToken): boolean {
@@ -312,7 +292,7 @@ class CSSGenerator {
             const baseName = TokenClassifier.getBaseName(baseToken, config)
             const boldToken = boldMap.get(baseName)
 
-            if (!boldToken?.value.fontWeight) continue
+            if (!boldToken?.$value.fontWeight) continue
 
             // Find matching semantic rule
             const rule = config.semanticRules.find((r) =>
@@ -363,7 +343,7 @@ class CSSGenerator {
             const baseName = TokenClassifier.getBaseName(baseToken, config)
             const boldToken = boldMap.get(baseName)
 
-            if (!boldToken?.value.fontWeight) continue
+            if (!boldToken?.$value.fontWeight) continue
 
             const className = baseToken.name.replace(
                 new RegExp(`^.*?-${prefix}-`),

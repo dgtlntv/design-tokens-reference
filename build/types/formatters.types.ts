@@ -11,13 +11,6 @@ export interface TypographyValue {
   fontStyle?: "normal" | "italic" | "oblique";
 }
 
-export interface TypographyToken {
-  name: string;
-  path: string[];
-  value: TypographyValue;
-  original: Record<string, unknown>;
-  attributes?: Record<string, unknown>;
-}
 
 export interface SemanticRule {
   selector: string;

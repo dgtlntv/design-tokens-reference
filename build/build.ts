@@ -1,12 +1,11 @@
 import StyleDictionary from "style-dictionary"
-import { Config } from "style-dictionary/types"
-import { CSS_PLATFORM_CONFIG, TOKEN_PATHS } from "./config"
+import type { Config } from "style-dictionary/types"
+import { CSS_PLATFORM_CONFIG, getTokenPathsForTier } from "./config"
 import { registerFormatters } from "./formatters"
 import { registerTransforms } from "./transforms"
-import {
-    generateStyleDictionaryConfigs,
-    type TokenPaths,
-} from "./utils/config-builder.util"
+import type { ExtendedConfig } from "./types"
+import { generateStyleDictionaryConfigs } from "./utils/config-builder.util"
+
 /**
  * Registers all custom Style Dictionary extensions.
  * Must be called before building tokens.
@@ -26,26 +25,11 @@ if (!tier || !validTiers.includes(tier)) {
     process.exit(1)
 }
 
-// Filter token paths based on tier
-function getTokenPathsForTier(tier: string): TokenPaths {
-    if (tier === "all") {
-        return TOKEN_PATHS
-    }
-
-    // Return only the specified tier
-    return {
-        [tier]: TOKEN_PATHS[tier],
-    }
-}
-
 // Assemble the base configuration from platform configs
-const baseConfig: Config = {
+const baseConfig: ExtendedConfig = {
     usesDtcg: true,
     log: {
-        verbosity: "verbose",
-        errors: {
-            brokenReferences: "console",
-        },
+        verbosity: "silent",
     },
     platforms: {
         css: CSS_PLATFORM_CONFIG,
@@ -66,12 +50,20 @@ async function buildTokens() {
 
     console.log(`Generated ${configs.length} configurations\n`)
 
+    // Clean function for a single configuration
+    async function cleanConfig(config: Config) {
+        const sd = new StyleDictionary(config)
+        await sd.cleanAllPlatforms()
+    }
+
     // Build function for a single configuration
-    async function buildConfig(config: any) {
+    async function buildConfig(config: Config) {
         // Get destinations for logging
-        const platforms = Object.keys(config.platforms)
-        const destinations = platforms.flatMap((p) =>
-            config.platforms[p].files.map((f) => f.destination)
+        const platforms = Object.keys(config.platforms || {})
+        const destinations = platforms.flatMap(
+            (p) =>
+                config.platforms![p].files?.map((f) => f.destination || "") ||
+                []
         )
 
         console.log(`Building: ${destinations.join(", ")}`)
@@ -79,7 +71,6 @@ async function buildTokens() {
         try {
             // Create StyleDictionary instance and build
             const sd = new StyleDictionary(config)
-            await sd.cleanAllPlatforms()
             await sd.buildAllPlatforms()
 
             console.log(`✓ Built successfully: ${destinations.join(", ")}`)
@@ -93,7 +84,10 @@ async function buildTokens() {
         }
     }
 
-    // Build all configurations in parallel
+    // Clean all configurations first
+    await Promise.all(configs.map(cleanConfig))
+
+    // Then build all configurations in parallel
     const results = await Promise.all(configs.map(buildConfig))
 
     // Check if any builds failed

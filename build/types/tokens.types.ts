@@ -12,8 +12,7 @@ export type ColorSpace =
   | "xyz-d50" 
   | "xyz-d65"
   | "hsl"
-  | "hwb"
-  | "rgb";
+  | "hwb";
 
 export interface ColorValue {
   colorSpace: ColorSpace;

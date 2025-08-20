@@ -3,5 +3,5 @@
  */
 
 :root {
-  --default: {color.gray.800};
+  --canonical-color-background-default: var(--canonical-color-gray-800);
 }
