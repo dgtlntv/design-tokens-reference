@@ -1,4 +1,4 @@
-import { TransformedToken } from "style-dictionary"
+import { TransformedToken } from "style-dictionary/types"
 
 export interface TokenPath {
     source?: string | string[]
@@ -27,6 +27,7 @@ export interface PlatformConfig {
 
 export interface BaseConfig {
     preprocessors?: string[]
+    usesDtcg?: boolean
     platforms: {
         [platform: string]: PlatformConfig
     }
@@ -91,37 +92,22 @@ function createConfig(
     tokenPath: TokenPath,
     baseConfig: BaseConfig
 ): StyleDictionaryConfig | null {
-    // Extract tier, category, and any additional path segments
-    const [tier, category, ...subPaths] = path
-
-    // Skip if no sources or includes
     if (!tokenPath.source && !tokenPath.include) return null
 
-    // Build platform configurations
+    const { platforms: basePlatforms, ...restOfBaseConfig } = baseConfig
     const platforms: StyleDictionaryConfig["platforms"] = {}
 
     for (const [platformName, platformConfig] of Object.entries(
-        baseConfig.platforms
+        basePlatforms
     )) {
-        // Generate destination path from the full path array
-        const destination = `${path.join("/")}.${platformConfig.fileExtension}`
-
-        // Check for category-specific overrides
+        const category = path[1]
         const categoryOverride = platformConfig.categoryOverrides?.[category]
 
         platforms[platformName] = {
-            ...(platformConfig.transformGroup && {
-                transformGroup: platformConfig.transformGroup,
-            }),
-            ...(platformConfig.transforms && {
-                transforms: platformConfig.transforms,
-            }),
-            ...(platformConfig.formatters && {
-                formatters: platformConfig.formatters,
-            }),
+            ...platformConfig,
             files: [
                 {
-                    destination,
+                    destination: `${path.join("/")}.${platformConfig.fileExtension}`,
                     format:
                         categoryOverride?.format ||
                         platformConfig.defaultFormat,
@@ -133,25 +119,21 @@ function createConfig(
         }
     }
 
-    // Prepare source and include arrays
-    const sources = tokenPath.source
-        ? Array.isArray(tokenPath.source)
-            ? tokenPath.source
-            : [tokenPath.source]
-        : undefined
-
-    const includes = tokenPath.include
-        ? Array.isArray(tokenPath.include)
-            ? tokenPath.include
-            : [tokenPath.include]
-        : undefined
+    const sources = Array.isArray(tokenPath.source)
+        ? tokenPath.source
+        : tokenPath.source
+          ? [tokenPath.source]
+          : undefined
+    const includes = Array.isArray(tokenPath.include)
+        ? tokenPath.include
+        : tokenPath.include
+          ? [tokenPath.include]
+          : undefined
 
     return {
+        ...restOfBaseConfig,
         ...(sources && { source: sources }),
         ...(includes && { include: includes }),
-        ...(baseConfig.preprocessors && {
-            preprocessors: baseConfig.preprocessors,
-        }),
         platforms,
     }
 }

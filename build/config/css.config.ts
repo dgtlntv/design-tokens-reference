@@ -4,6 +4,11 @@ export const CSS_PLATFORM_CONFIG: PlatformConfig = {
     transforms: ["name/kebab", "dimension/w3c", "color/w3c", "fontFamily/css"],
     fileExtension: "css",
     defaultFormat: "css/variables",
+    options: {
+        outputReferences: true,
+    },
+    prefix: "canonical",
+    buildPath: "dist/",
     categoryOverrides: {
         typography: {
             format: "css/typography",

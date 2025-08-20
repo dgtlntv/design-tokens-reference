@@ -1,10 +1,20 @@
 import StyleDictionary from "style-dictionary"
+import { Config } from "style-dictionary/types"
 import { CSS_PLATFORM_CONFIG, TOKEN_PATHS } from "./config"
+import { registerFormatters } from "./formatters"
+import { registerTransforms } from "./transforms"
 import {
     generateStyleDictionaryConfigs,
-    type BaseConfig,
     type TokenPaths,
 } from "./utils/config-builder.util"
+/**
+ * Registers all custom Style Dictionary extensions.
+ * Must be called before building tokens.
+ */
+function registerExtensions(): void {
+    registerTransforms()
+    registerFormatters()
+}
 
 // Get tier argument from command line
 const tier = process.argv[2]
@@ -29,8 +39,14 @@ function getTokenPathsForTier(tier: string): TokenPaths {
 }
 
 // Assemble the base configuration from platform configs
-const baseConfig: BaseConfig = {
-    preprocessors: ["tokens-studio"],
+const baseConfig: Config = {
+    usesDtcg: true,
+    log: {
+        verbosity: "verbose",
+        errors: {
+            brokenReferences: "console",
+        },
+    },
     platforms: {
         css: CSS_PLATFORM_CONFIG,
     },
@@ -39,6 +55,8 @@ const baseConfig: BaseConfig = {
 async function buildTokens() {
     const buildTier = tier === "all" ? "all tiers" : `${tier} tier`
     console.log(`Starting token build process for ${buildTier}...\n`)
+
+    registerExtensions()
 
     // Get token paths for the specified tier
     const tokenPaths = getTokenPathsForTier(tier)
