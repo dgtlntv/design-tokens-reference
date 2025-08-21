@@ -1,19 +1,12 @@
 {
     "dimension": {
-        "small": {
-            "$extensions": {
-                "canonical.modes": {
-                    "mode": "small"
-                }
+        "size": {
+            "rootFontSize": {
+                "$value": "{dimension.200}"
             },
-            "size": {
-                "rootFontSize": {
-                    "$value": "{dimension.200}"
-                },
-                "height": {
-                    "baseline": {
-                        "$value": "{dimension.100}"
-                    }
+            "height": {
+                "baseline": {
+                    "$value": "{dimension.100}"
                 }
             }
         }

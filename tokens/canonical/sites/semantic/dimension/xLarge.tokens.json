@@ -1,19 +1,12 @@
 {
     "dimension": {
-        "xLarge": {
-            "$extensions": {
-                "canonical.modes": {
-                    "mode": "xLarge"
-                }
+        "size": {
+            "rootFontSize": {
+                "$value": "{dimension.225}"
             },
-            "size": {
-                "rootFontSize": {
-                    "$value": "{dimension.225}"
-                },
-                "height": {
-                    "baseline": {
-                        "$value": "{dimension.100}"
-                    }
+            "height": {
+                "baseline": {
+                    "$value": "{dimension.100}"
                 }
             }
         }

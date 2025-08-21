@@ -1,152 +1,131 @@
 import StyleDictionary from "style-dictionary"
 import type { Config } from "style-dictionary/types"
-import { BUILD_CONFIG, getPlatform, TIERS_CONFIG } from "./config"
+import { CSS_PLATFORM_CONFIG, getTokenPathsForTier } from "./config"
+import { FIGMA_PLATFORM_CONFIG } from "./config/figma.config"
 import { registerFormatters } from "./formatters"
-import { createPlatformConfig, type Platform } from "./platforms"
-import { registerPreprocessors } from "./preprocessors"
 import { registerTransforms } from "./transforms"
-import type { ResolvedTokenPaths } from "./types/shared.types"
-
-/**
- * Options for building design tokens.
- */
-interface BuildOptions {
-    /** The tier name to build (e.g., "primitive", "semantic") */
-    tier: string
-    /** The target platform (defaults to "css") */
-    platform?: Platform
-}
+import type { ExtendedConfig } from "./types"
+import { generateStyleDictionaryConfigs } from "./utils/config-builder.util"
 
 /**
  * Registers all custom Style Dictionary extensions.
  * Must be called before building tokens.
  */
 function registerExtensions(): void {
-    registerPreprocessors()
     registerTransforms()
     registerFormatters()
 }
 
-/**
- * Resolves a source reference to an absolute file path.
- * @param sourceRef - Reference in format "tier.type" (e.g., "primitive.color")
- * @returns Resolved file path or null if not found
- */
-function resolveSourcePath(sourceRef: string): string | null {
-    const [tier, type] = sourceRef.split(".")
-    return TIERS_CONFIG.basePaths[tier]?.[type] || null
+// Get platform and tier arguments from command line
+const platform = process.argv[2]
+const tier = process.argv[3]
+const validPlatforms = ["css", "figma", "all"]
+const validTiers = ["sites", "docs", "apps", "all"]
+
+if (!platform || !validPlatforms.includes(platform)) {
+    console.error(`Please specify a valid platform: ${validPlatforms.join(", ")}`)
+    console.error(`Example: npm run build:css:sites`)
+    process.exit(1)
 }
 
-/**
- * Resolves include and source paths for a given tier.
- * @param tierName - Name of the tier to get paths for
- * @returns Object containing resolved include and source paths
- * @throws Error if tier is not found
- */
-function getTokenPaths(tierName: string): ResolvedTokenPaths {
-    const tier = TIERS_CONFIG.tiers[tierName]
-    if (!tier) {
-        throw new Error(`Tier "${tierName}" not found`)
-    }
-
-    const include = tier.include
-        .map((ref) => resolveSourcePath(ref))
-        .filter((path): path is string => path !== null)
-
-    const source = tier.source
-        .map((ref) => resolveSourcePath(ref))
-        .filter((path): path is string => path !== null)
-
-    return { include, source }
+if (!tier || !validTiers.includes(tier)) {
+    console.error(`Please specify a valid tier: ${validTiers.join(", ")}`)
+    console.error(`Example: npm run build:css:sites`)
+    process.exit(1)
 }
 
-/**
- * Creates a Style Dictionary configuration object.
- * @param options - Build options containing tier and platform
- * @returns Style Dictionary configuration
- */
-function createConfig(options: BuildOptions): Config {
-    const { tier, platform = "css" } = options
-    const { include, source } = getTokenPaths(tier)
-    const buildConfig = BUILD_CONFIG
-
-    return {
-        include,
-        source,
-        log: {
-            verbosity: buildConfig.logLevel,
-        },
-        usesDtcg: buildConfig.useDtcg,
-        preprocessors: buildConfig.preprocessors,
-        platforms: createPlatformConfig(platform, tier),
+// Assemble the base configuration from platform configs
+const getPlatformsConfig = (platform: string) => {
+    switch (platform) {
+        case "css":
+            return { css: CSS_PLATFORM_CONFIG }
+        case "figma":
+            return { figma: FIGMA_PLATFORM_CONFIG }
+        case "all":
+        default:
+            return {
+                css: CSS_PLATFORM_CONFIG,
+                figma: FIGMA_PLATFORM_CONFIG,
+            }
     }
 }
 
-/**
- * Builds design tokens for the specified options.
- * @param options - Build options containing tier and platform
- * @throws Error if platform is not configured
- */
-async function buildTokens(options: BuildOptions): Promise<void> {
-    const { platform = "css" } = options
-
-    // Validate platform exists
-    const platformConfig = getPlatform(platform)
-    if (!platformConfig) {
-        throw new Error(`Platform "${platform}" is not configured`)
-    }
-
-    const config = createConfig(options)
-    const sd = new StyleDictionary(config)
-
-    await sd.buildAllPlatforms()
+const baseConfig: ExtendedConfig = {
+    usesDtcg: true,
+    log: {
+        verbosity: "silent",
+    },
+    platforms: getPlatformsConfig(platform),
 }
 
-/**
- * Prints usage information for the build script.
- */
-function printUsage(): void {
-    const availableTiers = Object.keys(TIERS_CONFIG.tiers)
-    console.log("Usage: npm run build:<platform>:<tier>")
-    console.log(`Available tiers: ${availableTiers.join(", ")}`)
-}
-
-/**
- * Main entry point for the build script.
- * Parses command line arguments and initiates the token build process.
- */
-async function main(): Promise<void> {
-    const tier = process.argv[2]
-
-    if (!tier) {
-        printUsage()
-        process.exit(1)
-    }
-
-    if (!(tier in TIERS_CONFIG.tiers)) {
-        printUsage()
-        process.exit(1)
-    }
+async function buildTokens() {
+    const buildTier = tier === "all" ? "all tiers" : `${tier} tier`
+    const buildPlatform = platform === "all" ? "all platforms" : `${platform} platform`
+    console.log(`Starting token build process for ${buildTier} on ${buildPlatform}...\n`)
 
     registerExtensions()
 
-    console.log(`Building tokens for tier: ${tier}`)
+    // Get token paths for the specified tier
+    const tokenPaths = getTokenPathsForTier(tier)
 
-    const startTime = Date.now()
+    // Generate all configurations
+    const configs = generateStyleDictionaryConfigs(tokenPaths, baseConfig)
 
-    try {
-        await buildTokens({ tier })
-        const duration = Date.now() - startTime
-        console.log(`✅ Built ${tier}.css (${duration}ms)`)
-    } catch (error) {
-        const err = error as Error
-        console.error(`❌ Failed to build ${tier}.css:`, err.message)
+    console.log(`Generated ${configs.length} configurations\n`)
+
+    // Clean function for a single configuration
+    async function cleanConfig(config: Config) {
+        const sd = new StyleDictionary(config)
+        await sd.cleanAllPlatforms()
+    }
+
+    // Build function for a single configuration
+    async function buildConfig(config: Config) {
+        // Get destinations for logging
+        const platforms = Object.keys(config.platforms || {})
+        const destinations = platforms.flatMap(
+            (p) =>
+                config.platforms![p].files?.map((f) => f.destination || "") ||
+                []
+        )
+
+        console.log(`Building: ${destinations.join(", ")}`)
+
+        try {
+            // Create StyleDictionary instance and build
+            const sd = new StyleDictionary(config)
+            await sd.buildAllPlatforms()
+
+            console.log(`✓ Built successfully: ${destinations.join(", ")}`)
+            return { success: true, destinations }
+        } catch (error) {
+            console.error(
+                `✗ Build failed for ${destinations.join(", ")}:`,
+                error
+            )
+            return { success: false, destinations, error }
+        }
+    }
+
+    // Clean all configurations first
+    await Promise.all(configs.map(cleanConfig))
+
+    // Then build all configurations in parallel
+    const results = await Promise.all(configs.map(buildConfig))
+
+    // Check if any builds failed
+    const failures = results.filter((r) => !r.success)
+
+    if (failures.length > 0) {
+        console.error(`\n${failures.length} build(s) failed`)
         process.exit(1)
     }
+
+    console.log("\nToken build completed successfully!")
 }
 
-// Main execution
-main().catch((error: Error) => {
-    console.error("❌ Build failed:", error)
+// Run the build
+buildTokens().catch((error) => {
+    console.error("Build process failed:", error)
     process.exit(1)
 })

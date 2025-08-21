@@ -1,0 +1,9 @@
+{
+    "color": {
+        "background": {
+            "default": {
+                "$value": "{color.gray.100}"
+            }
+        }
+    }
+}
