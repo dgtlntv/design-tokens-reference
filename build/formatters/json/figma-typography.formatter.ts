@@ -29,23 +29,38 @@ function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg:
             if (originalValue !== undefined && !usesReferences(originalValue)) {
                 // If it's a fontFamily token with an array value (not a reference)
                 if (Array.isArray(originalValue)) {
-                    // Take only the first value from the array and change type to string
-                    tokenResult[usesDtcg ? '$type' : 'type'] = 'string'
+                    // Take only the first value from the array and change type to fontFamilies
+                    // For some odd reason Tokens Studio expects fontFamily tokens to have type "fontFamilies"
+                    tokenResult[usesDtcg ? '$type' : 'type'] = 'fontFamilies'
                     tokenResult[usesDtcg ? '$value' : 'value'] = originalValue[0]
                 } else {
-                    // If it's not an array, change type to string
-                    tokenResult[usesDtcg ? '$type' : 'type'] = 'string'
+                    // If it's not an array, change type to fontFamilies
+                    // For some odd reason Tokens Studio expects fontFamily tokens to have type "fontFamilies"
+                    tokenResult[usesDtcg ? '$type' : 'type'] = 'fontFamilies'
                     tokenResult[usesDtcg ? '$value' : 'value'] = originalValue
                 }
             } else {
-                // For fontFamily tokens with references, change type to string but keep reference
-                tokenResult[usesDtcg ? '$type' : 'type'] = 'string'
+                // For fontFamily tokens with references, change type to fontFamilies but keep reference
+                // For some odd reason Tokens Studio expects fontFamily tokens to have type "fontFamilies"
+                tokenResult[usesDtcg ? '$type' : 'type'] = 'fontFamilies'
                 const valueKey = usesDtcg ? '$value' : 'value'
                 if (originalValue !== undefined && usesReferences(originalValue)) {
                     tokenResult[valueKey] = originalValue
                 } else {
                     tokenResult[valueKey] = usesDtcg ? token.$value : token.value
                 }
+            }
+        } else if (token.$type === "fontWeight") {
+            // Handle fontWeight tokens - change type to fontWeights
+            // For some odd reason Tokens Studio expects fontWeight tokens to have type "fontWeights"
+            tokenResult[usesDtcg ? '$type' : 'type'] = 'fontWeights'
+            
+            // Add the value (original reference if it uses references, otherwise resolved)
+            const valueKey = usesDtcg ? '$value' : 'value'
+            if (originalValue !== undefined && usesReferences(originalValue)) {
+                tokenResult[valueKey] = originalValue
+            } else {
+                tokenResult[valueKey] = usesDtcg ? token.$value : token.value
             }
         } else {
             // For all other tokens or fontFamily tokens with references, use existing logic

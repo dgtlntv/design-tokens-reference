@@ -2,53 +2,53 @@
   "typography": {
     "fontFamily": {
       "sansSerif": {
-        "$type": "string",
+        "$type": "fontFamilies",
         "$value": "Ubuntu Sans"
       },
       "monospace": {
-        "$type": "string",
+        "$type": "fontFamilies",
         "$value": "Ubuntu Sans Mono"
       },
       "default": {
-        "$type": "string",
+        "$type": "fontFamilies",
         "$value": "{typography.fontFamily.sansSerif}"
       },
       "code": {
-        "$type": "string",
+        "$type": "fontFamilies",
         "$value": "{typography.fontFamily.monospace}"
       }
     },
     "weight": {
       "thin": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 100
       },
       "extraLight": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 200
       },
       "light": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 300
       },
       "regular": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 400
       },
       "medium": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 500
       },
       "semiBold": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 600
       },
       "bold": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 700
       },
       "extraBold": {
-        "$type": "fontWeight",
+        "$type": "fontWeights",
         "$value": 800
       }
     },
