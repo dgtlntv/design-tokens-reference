@@ -3,10 +3,15 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "build:css:sites": "tsx build/build.ts sites",
-        "build:css:docs": "tsx build/build.ts docs",
-        "build:css:apps": "tsx build/build.ts apps",
-        "build:css": "tsx build/build.ts all"
+        "build:css:sites": "tsx build/build.ts css sites",
+        "build:css:docs": "tsx build/build.ts css docs",
+        "build:css:apps": "tsx build/build.ts css apps",
+        "build:css": "tsx build/build.ts css all",
+        "build:figma:sites": "tsx build/build.ts figma sites",
+        "build:figma:docs": "tsx build/build.ts figma docs",
+        "build:figma:apps": "tsx build/build.ts figma apps",
+        "build:figma": "tsx build/build.ts figma all",
+        "build": "tsx build/build.ts all all"
     },
     "license": "ISC",
     "type": "module",
@@ -16,6 +21,7 @@
         "typescript": "^5.9.2"
     },
     "dependencies": {
-        "change-case": "^5.4.4"
+        "change-case": "^5.4.4",
+        "colorjs.io": "^0.5.2"
     }
 }

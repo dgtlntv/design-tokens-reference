@@ -122,7 +122,7 @@ const colorSpaceFormatters: Record<ColorSpace, (value: ColorValue) => string> =
 /**
  * Style Dictionary transform for converting W3C color token values to CSS.
  * Supports all major color spaces including sRGB, P3, Lab, Oklch, etc.
- * 
+ *
  * @example
  * // Input token:
  * {
@@ -133,11 +133,11 @@ const colorSpaceFormatters: Record<ColorSpace, (value: ColorValue) => string> =
  *     alpha: 0.9
  *   }
  * }
- * 
+ *
  * // Output: "oklch(0.7 0.15 180 / 0.9)"
  */
 export const colorW3cCssTransform: Transform = {
-    name: "color/w3c",
+    name: "color/css/w3c",
     type: "value",
     filter: (token: TransformedToken) => {
         return (

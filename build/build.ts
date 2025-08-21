@@ -1,6 +1,7 @@
 import StyleDictionary from "style-dictionary"
 import type { Config } from "style-dictionary/types"
 import { CSS_PLATFORM_CONFIG, getTokenPathsForTier } from "./config"
+import { FIGMA_PLATFORM_CONFIG } from "./config/figma.config"
 import { registerFormatters } from "./formatters"
 import { registerTransforms } from "./transforms"
 import type { ExtendedConfig } from "./types"
@@ -15,9 +16,17 @@ function registerExtensions(): void {
     registerFormatters()
 }
 
-// Get tier argument from command line
-const tier = process.argv[2]
+// Get platform and tier arguments from command line
+const platform = process.argv[2]
+const tier = process.argv[3]
+const validPlatforms = ["css", "figma", "all"]
 const validTiers = ["sites", "docs", "apps", "all"]
+
+if (!platform || !validPlatforms.includes(platform)) {
+    console.error(`Please specify a valid platform: ${validPlatforms.join(", ")}`)
+    console.error(`Example: npm run build:css:sites`)
+    process.exit(1)
+}
 
 if (!tier || !validTiers.includes(tier)) {
     console.error(`Please specify a valid tier: ${validTiers.join(", ")}`)
@@ -26,19 +35,33 @@ if (!tier || !validTiers.includes(tier)) {
 }
 
 // Assemble the base configuration from platform configs
+const getPlatformsConfig = (platform: string) => {
+    switch (platform) {
+        case "css":
+            return { css: CSS_PLATFORM_CONFIG }
+        case "figma":
+            return { figma: FIGMA_PLATFORM_CONFIG }
+        case "all":
+        default:
+            return {
+                css: CSS_PLATFORM_CONFIG,
+                figma: FIGMA_PLATFORM_CONFIG,
+            }
+    }
+}
+
 const baseConfig: ExtendedConfig = {
     usesDtcg: true,
     log: {
         verbosity: "silent",
     },
-    platforms: {
-        css: CSS_PLATFORM_CONFIG,
-    },
+    platforms: getPlatformsConfig(platform),
 }
 
 async function buildTokens() {
     const buildTier = tier === "all" ? "all tiers" : `${tier} tier`
-    console.log(`Starting token build process for ${buildTier}...\n`)
+    const buildPlatform = platform === "all" ? "all platforms" : `${platform} platform`
+    console.log(`Starting token build process for ${buildTier} on ${buildPlatform}...\n`)
 
     registerExtensions()
 
