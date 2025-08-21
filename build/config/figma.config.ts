@@ -9,5 +9,9 @@ export const FIGMA_PLATFORM_CONFIG: ExtendedPlatformConfig = {
     },
     prefix: "canonical",
     buildPath: "dist/figma/",
-    categoryOverrides: {},
+    categoryOverrides: {
+        typography: {
+            format: "json/figma-typography",
+        },
+    },
 }
