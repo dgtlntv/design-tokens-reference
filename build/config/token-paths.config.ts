@@ -5,14 +5,28 @@ export const TOKEN_PATHS = {
                 source: "./tokens/canonical/sites/primitive/color.tokens.json",
             },
             light: {
-                reference:
-                    "./tokens/canonical/sites/primitive/color.tokens.json",
-                source: "./tokens/canonical/sites/semantic/color/light.tokens.json",
+                highContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/light/highContrast.tokens.json",
+                },
+                normalContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/light/normalContrast.tokens.json",
+                },
             },
             dark: {
-                reference:
-                    "./tokens/canonical/sites/primitive/color.tokens.json",
-                source: "./tokens/canonical/sites/semantic/color/dark.tokens.json",
+                highContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/dark/highContrast.tokens.json",
+                },
+                normalContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/dark/normalContrast.tokens.json",
+                },
             },
         },
         dimension: {
@@ -55,10 +69,28 @@ export const TOKEN_PATHS = {
                 source: "./tokens/canonical/sites/primitive/color.tokens.json",
             },
             light: {
-                source: "./tokens/canonical/sites/semantic/color/light.tokens.json",
+                highContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/light/highContrast.tokens.json",
+                },
+                normalContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/light/normalContrast.tokens.json",
+                },
             },
             dark: {
-                source: "./tokens/canonical/sites/semantic/color/dark.tokens.json",
+                highContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/dark/highContrast.tokens.json",
+                },
+                normalContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/dark/normalContrast.tokens.json",
+                },
             },
         },
         dimension: {
@@ -66,15 +98,23 @@ export const TOKEN_PATHS = {
                 source: "./tokens/canonical/sites/primitive/dimension.tokens.json",
             },
             small: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/small.tokens.json",
             },
             medium: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/medium.tokens.json",
             },
             large: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/large.tokens.json",
             },
             xLarge: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/xLarge.tokens.json",
             },
         },
@@ -93,10 +133,28 @@ export const TOKEN_PATHS = {
                 source: "./tokens/canonical/sites/primitive/color.tokens.json",
             },
             light: {
-                source: "./tokens/canonical/sites/semantic/color/light.tokens.json",
+                highContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/light/highContrast.tokens.json",
+                },
+                normalContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/light/normalContrast.tokens.json",
+                },
             },
             dark: {
-                source: "./tokens/canonical/sites/semantic/color/dark.tokens.json",
+                highContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/dark/highContrast.tokens.json",
+                },
+                normalContrast: {
+                    reference:
+                        "./tokens/canonical/sites/primitive/color.tokens.json",
+                    source: "./tokens/canonical/sites/semantic/color/dark/normalContrast.tokens.json",
+                },
             },
         },
         dimension: {
@@ -104,15 +162,23 @@ export const TOKEN_PATHS = {
                 source: "./tokens/canonical/sites/primitive/dimension.tokens.json",
             },
             small: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/small.tokens.json",
             },
             medium: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/medium.tokens.json",
             },
             large: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/large.tokens.json",
             },
             xLarge: {
+                reference:
+                    "./tokens/canonical/sites/primitive/dimension.tokens.json",
                 source: "./tokens/canonical/sites/semantic/dimension/xLarge.tokens.json",
             },
         },

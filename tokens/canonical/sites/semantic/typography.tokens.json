@@ -1,7 +1,6 @@
 {
     "typography": {
         "fontFamily": {
-            "$type": "fontFamily",
             "default": {
                 "$value": "{typography.fontFamily.sansSerif}"
             },
