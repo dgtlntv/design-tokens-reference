@@ -16,13 +16,21 @@ function minifyDictionaryOriginal(obj: Record<string, unknown>, usesDtcg: boolea
             ? token.original?.$value 
             : token.original?.value
         
-        // Only return the original reference if it actually contains references
+        // Create token object with type and value
+        const tokenResult: Record<string, unknown> = {}
+        
+        // Add the type
+        tokenResult[usesDtcg ? '$type' : 'type'] = token.$type
+        
+        // Add the value (original reference if it uses references, otherwise resolved)
+        const valueKey = usesDtcg ? '$value' : 'value'
         if (originalValue !== undefined && usesReferences(originalValue)) {
-            return originalValue
+            tokenResult[valueKey] = originalValue
+        } else {
+            tokenResult[valueKey] = usesDtcg ? token.$value : token.value
         }
         
-        // Otherwise return the resolved/transformed value
-        return usesDtcg ? token.$value : token.value
+        return tokenResult
     } else {
         // This is a group, recurse through its children
         for (const name in obj) {

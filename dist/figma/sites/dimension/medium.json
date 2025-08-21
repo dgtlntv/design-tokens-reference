@@ -2,9 +2,15 @@
   "dimension": {
     "size": {
       "height": {
-        "baseline": "{dimension.100}"
+        "baseline": {
+          "$type": "dimension",
+          "$value": "{dimension.100}"
+        }
       },
-      "rootFontSize": "{dimension.200}"
+      "rootFontSize": {
+        "$type": "dimension",
+        "$value": "{dimension.200}"
+      }
     }
   }
 }
