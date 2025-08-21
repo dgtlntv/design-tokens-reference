@@ -55,3 +55,7 @@ export interface CSSOutput {
   comments?: string[];
   imports?: string[];
 }
+
+export interface JsonNestedReferencesOptions {
+  usesDtcg?: boolean;
+}

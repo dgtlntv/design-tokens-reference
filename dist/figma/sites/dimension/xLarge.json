@@ -2,9 +2,9 @@
   "dimension": {
     "size": {
       "height": {
-        "baseline": "0.5rem"
+        "baseline": "{dimension.100}"
       },
-      "rootFontSize": "1.125rem"
+      "rootFontSize": "{dimension.225}"
     }
   }
 }

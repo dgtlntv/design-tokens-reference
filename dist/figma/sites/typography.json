@@ -158,38 +158,8 @@
         "Roboto Mono",
         "monospace"
       ],
-      "default": [
-        "Ubuntu Sans",
-        "Ubuntu",
-        "Cantarell",
-        "Adwaita Sans",
-        "Noto Sans",
-        "Oxygen",
-        "-apple-system",
-        "BlinkMacSystemFont",
-        "Segoe UI",
-        "Roboto",
-        "Noto Color Emoji",
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "sans-serif"
-      ],
-      "code": [
-        "Ubuntu Sans Mono",
-        "Ubuntu Mono",
-        "Noto Color Emoji",
-        "Adwaita Mono",
-        "Source Code Pro",
-        "Hack",
-        "ui-monospace",
-        "SF Mono",
-        "Apple Color Emoji",
-        "Cascadia Code",
-        "Consolas",
-        "Segoe UI Emoji",
-        "Roboto Mono",
-        "monospace"
-      ]
+      "default": "{typography.fontFamily.sansSerif}",
+      "code": "{typography.fontFamily.monospace}"
     },
     "weight": {
       "thin": 100,
@@ -221,293 +191,143 @@
     },
     "text": {
       "italic": {
-        "fontStyle": "italic"
+        "fontStyle": "{typography.fontStyle.italic}"
       },
       "oldStyleFigure": {
-        "figureStyle": "oldstyle-nums"
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "liningFigures": {
-        "figureStyle": "lining-nums"
+        "figureStyle": "{typography.figureStyle.liningFigures}"
       },
       "superscript": {
-        "fontPosition": "super"
+        "fontPosition": "{typography.fontPosition.superscript}"
       },
       "subscript": {
-        "fontPosition": "sub"
+        "fontPosition": "{typography.fontPosition.subscript}"
       },
       "underline": {
-        "textDecoration": "underline solid"
+        "textDecoration": "{typography.textDecoration.underline}"
       },
       "strikethrough": {
-        "textDecoration": "line-through"
+        "textDecoration": "{typography.textDecoration.strikethrough}"
       },
       "smallcaps": {
-        "letterCase": "small-caps",
-        "letterSpacing": "0.05em",
-        "figureStyle": "oldstyle-nums"
+        "letterCase": "{typography.letterCase.smallcaps}",
+        "letterSpacing": "{dimension.letterSpacing.wide}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "primary": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "1rem",
-        "fontWeight": 400,
-        "lineHeight": "1.5rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.350}",
+        "fontWeight": "{typography.weight.regular}",
+        "lineHeight": "{dimension.size.lineHeight.350}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "primary-bold": {
-        "fontWeight": 600
+        "fontWeight": "{typography.weight.semiBold}"
       },
       "secondary": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "0.875rem",
-        "fontWeight": 400,
-        "lineHeight": "1.25rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.300}",
+        "fontWeight": "{typography.weight.regular}",
+        "lineHeight": "{dimension.size.lineHeight.300}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "secondary-bold": {
-        "fontWeight": 600
+        "fontWeight": "{typography.weight.semiBold}"
       },
       "tertiary": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "0.75rem",
-        "fontWeight": 400,
-        "lineHeight": "1rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.250}",
+        "fontWeight": "{typography.weight.regular}",
+        "lineHeight": "{dimension.size.lineHeight.250}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "tertiary-bold": {
-        "fontWeight": 600
+        "fontWeight": "{typography.weight.semiBold}"
       }
     },
     "heading": {
       "1": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "2.625rem",
-        "fontWeight": 500,
-        "lineHeight": "3rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.700}",
+        "fontWeight": "{typography.weight.medium}",
+        "lineHeight": "{dimension.size.lineHeight.700}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "2": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "2.625rem",
-        "fontWeight": 300,
-        "lineHeight": "3rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.700}",
+        "fontWeight": "{typography.weight.light}",
+        "lineHeight": "{dimension.size.lineHeight.700}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "3": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "1.5rem",
-        "fontWeight": 500,
-        "lineHeight": "2rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.500}",
+        "fontWeight": "{typography.weight.medium}",
+        "lineHeight": "{dimension.size.lineHeight.500}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "4": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "1.5rem",
-        "fontWeight": 300,
-        "lineHeight": "2rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.500}",
+        "fontWeight": "{typography.weight.light}",
+        "lineHeight": "{dimension.size.lineHeight.500}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "5": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "1rem",
-        "fontWeight": 600,
-        "lineHeight": "1.5rem",
-        "letterSpacing": "0.05em",
-        "letterCase": "small-caps",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.350}",
+        "fontWeight": "{typography.weight.semiBold}",
+        "lineHeight": "{dimension.size.lineHeight.350}",
+        "letterSpacing": "{dimension.letterSpacing.wide}",
+        "letterCase": "{typography.letterCase.smallcaps}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "6": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "1rem",
-        "fontWeight": 600,
-        "lineHeight": "1.5rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.350}",
+        "fontWeight": "{typography.weight.semiBold}",
+        "lineHeight": "{dimension.size.lineHeight.350}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "display": {
-        "fontFamily": [
-          "Ubuntu Sans",
-          "Ubuntu",
-          "Cantarell",
-          "Adwaita Sans",
-          "Noto Sans",
-          "Oxygen",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Noto Color Emoji",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "sans-serif"
-        ],
-        "fontSize": "5.25rem",
-        "fontWeight": 200,
-        "lineHeight": "5.75rem",
-        "letterSpacing": "0em",
-        "figureStyle": "oldstyle-nums"
+        "fontFamily": "{typography.fontFamily.default}",
+        "fontSize": "{dimension.size.fontSize.950}",
+        "fontWeight": "{typography.weight.extraLight}",
+        "lineHeight": "{dimension.size.lineHeight.950}",
+        "letterSpacing": "{dimension.letterSpacing.default}",
+        "figureStyle": "{typography.figureStyle.oldStyleFigure}"
       },
       "display-bold": {
-        "fontWeight": 400
+        "fontWeight": "{typography.weight.regular}"
       },
       "1-bold": {
-        "fontWeight": 700
+        "fontWeight": "{typography.weight.bold}"
       },
       "2-bold": {
-        "fontWeight": 500
+        "fontWeight": "{typography.weight.medium}"
       },
       "3-bold": {
-        "fontWeight": 700
+        "fontWeight": "{typography.weight.bold}"
       },
       "4-bold": {
-        "fontWeight": 500
+        "fontWeight": "{typography.weight.medium}"
       },
       "5-bold": {
-        "fontWeight": 800
+        "fontWeight": "{typography.weight.extraBold}"
       },
       "6-bold": {
-        "fontWeight": 800
+        "fontWeight": "{typography.weight.extraBold}"
       }
     }
   }

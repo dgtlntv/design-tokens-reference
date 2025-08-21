@@ -1,12 +1,16 @@
-import type { Dictionary, Format, OutputReferences, TransformedToken } from "style-dictionary/types"
-import { getTokenValue } from "../../utils/token.util"
+import type {
+    Dictionary,
+    Format,
+    OutputReferences,
+    TransformedToken,
+} from "style-dictionary/types"
 import type {
     FormatterOptions,
     TypographyConfig,
     TypographyToken,
     TypographyValue,
 } from "../../types/typography.types"
-
+import { getTokenValue } from "../../utils/token.util"
 
 const DEFAULT_TYPOGRAPHY_CONFIG: TypographyConfig = {
     semanticRules: [
@@ -90,7 +94,10 @@ class TokenClassifier {
     static isPrimitive(token: TransformedToken): boolean {
         // Check if the token comes from a primitive file path
         // but exclude dimension tokens (they're included for references only)
-        return token.filePath.includes('/primitive/') && token.$type !== 'dimension'
+        return (
+            token.filePath.includes("/primitive/") &&
+            token.$type !== "dimension"
+        )
     }
 
     static isComposite(token: TypographyToken): boolean {
