@@ -17,49 +17,118 @@ const DEFAULT_TYPOGRAPHY_CONFIG: TypographyConfig = {
         // Headings h1-h6
         {
             selector: "h1",
-            condition: (t) => t.name.endsWith("heading-1") ?? false,
+            condition: (t) => hasTypographyVariant(t, ["heading", "1"]),
         },
         {
             selector: "h2",
-            condition: (t) => t.name.endsWith("heading-2") ?? false,
+            condition: (t) => hasTypographyVariant(t, ["heading", "2"]),
         },
         {
             selector: "h3",
-            condition: (t) => t.name.endsWith("heading-3") ?? false,
+            condition: (t) => hasTypographyVariant(t, ["heading", "3"]),
         },
         {
             selector: "h4",
-            condition: (t) => t.name.endsWith("heading-4") ?? false,
+            condition: (t) => hasTypographyVariant(t, ["heading", "4"]),
         },
         {
             selector: "h5",
-            condition: (t) => t.name.endsWith("heading-5") ?? false,
+            condition: (t) => hasTypographyVariant(t, ["heading", "5"]),
         },
         {
             selector: "h6",
-            condition: (t) => t.name.endsWith("heading-6") ?? false,
+            condition: (t) => hasTypographyVariant(t, ["heading", "6"]),
         },
 
         // Display heading
         {
             selector: "h1.display",
-            condition: (t) => t.name.endsWith("-heading-display"),
+            condition: (t) => hasTypographyVariant(t, ["heading", "display"]),
         },
 
         // Text variants
-        { selector: "p", condition: (t) => t.name.endsWith("-text-primary") },
+        { selector: "p", condition: (t) => hasTypographyVariant(t, ["text", "primary"]) },
         {
             selector: "p.text-secondary",
-            condition: (t) => t.name.endsWith("-text-secondary"),
+            condition: (t) => hasTypographyVariant(t, ["text", "secondary"]),
         },
         {
             selector: "p.text-tertiary",
-            condition: (t) => t.name.endsWith("-text-tertiary"),
+            condition: (t) => hasTypographyVariant(t, ["text", "tertiary"]),
         },
     ],
     utilityPrefix: "typography",
-    boldSuffix: "-bold",
-    boldModifierClass: "text-bold",
+}
+
+// Helper function to check if token has a typography variant in its path
+function hasTypographyVariant(token: TransformedToken, variantParts: string[]): boolean {
+    const path = token.path || []
+    
+    // Find if the variant parts exist consecutively in the path
+    for (let i = 0; i <= path.length - variantParts.length; i++) {
+        const matches = variantParts.every((part, idx) => path[i + idx] === part)
+        if (matches) {
+            const variantEndIndex = i + variantParts.length - 1
+            
+            // Case 1: variant is at the end (e.g., text.primary) - single token, no variants
+            if (variantEndIndex === path.length - 1) {
+                return true
+            }
+            
+            // Case 2: variant is followed by "default" (e.g., text.primary.default) - base of variant group
+            if (variantEndIndex === path.length - 2 && path[path.length - 1] === "default") {
+                return true
+            }
+        }
+    }
+    
+    return false
+}
+
+// Function to separate default tokens and variant tokens
+function separateTokensByType(tokens: TypographyToken[]): {
+    baseTokens: TypographyToken[]
+    variantTokens: TypographyToken[]
+} {
+    const baseTokens: TypographyToken[] = []
+    const variantTokens: TypographyToken[] = []
+    
+    for (const token of tokens) {
+        const path = token.path || []
+        if (path.length === 0) continue
+        
+        const lastSegment = path[path.length - 1]
+        
+        if (lastSegment === "default") {
+            // This is a default token - create base token without "default" suffix
+            const baseToken: TypographyToken = {
+                ...token,
+                name: token.name.replace('-default', ''),
+                path: path.slice(0, -1)
+            }
+            baseTokens.push(baseToken)
+        } else if (path.length > 1) {
+            // Check if this is a variant of a nested group (has a corresponding default)
+            const defaultPath = [...path.slice(0, -1), "default"]
+            const hasDefault = tokens.some(t => 
+                t.path?.length === defaultPath.length &&
+                t.path.every((segment, i) => segment === defaultPath[i])
+            )
+            
+            if (hasDefault) {
+                // This is a variant token
+                variantTokens.push(token)
+            } else {
+                // Single token (no variants)
+                baseTokens.push(token)
+            }
+        } else {
+            // Single token (no variants)
+            baseTokens.push(token)
+        }
+    }
+    
+    return { baseTokens, variantTokens }
 }
 
 // ============================================================================
@@ -104,25 +173,6 @@ class TokenClassifier {
         return typeof token.$value === "object" && token.$value !== null
     }
 
-    static isBoldVariant(
-        token: TypographyToken,
-        config: TypographyConfig
-    ): boolean {
-        const suffix = config.boldSuffix || "-bold"
-        const lastSegment = token.path?.[token.path.length - 1] || ""
-        return lastSegment.endsWith(suffix)
-    }
-
-    static getBaseName(
-        token: TypographyToken,
-        config: TypographyConfig
-    ): string {
-        const suffix = config.boldSuffix || "-bold"
-        const lastSegment = token.path?.[token.path.length - 1] || ""
-        return lastSegment.endsWith(suffix)
-            ? lastSegment.slice(0, -suffix.length)
-            : lastSegment
-    }
 }
 
 // ============================================================================
@@ -229,99 +279,88 @@ class CSSGenerator {
         return styles.join("\n") + (styles.length > 0 ? "\n" : "")
     }
 
-    // Generate bold element styles for semantic HTML
-    generateBoldSemanticStyles(
+
+    // Generate modifier classes for variant tokens
+    generateVariantModifierClasses(
         baseTokens: TypographyToken[],
-        boldTokens: TypographyToken[],
+        variantTokens: TypographyToken[],
         config: TypographyConfig
     ): string {
-        if (!config.semanticRules || boldTokens.length === 0) return ""
-
-        // Create mapping of base names to bold tokens
-        const boldMap = new Map<string, TypographyToken>()
-        for (const boldToken of boldTokens) {
-            const baseName = TokenClassifier.getBaseName(boldToken, config)
-            boldMap.set(baseName, boldToken)
-        }
-
-        const styles: string[] = []
-
-        for (const baseToken of baseTokens) {
-            const baseName = TokenClassifier.getBaseName(baseToken, config)
-            const boldToken = boldMap.get(baseName)
-
-            if (!boldToken?.$value.fontWeight) continue
-
-            // Find matching semantic rule
-            const rule = config.semanticRules.find((r) =>
-                r.condition(baseToken)
-            )
-            if (!rule) continue
-
-            const fontWeight = getTokenValue(
-                {
-                    ...boldToken,
-                    $value: boldToken.$value.fontWeight!,
-                    value: boldToken.$value.fontWeight!,
-                },
-                this.dictionary,
-                this.usesDtcg,
-                this.outputReferences,
-                this.CSS_REFERENCE_FORMAT
-            )
-
-            styles.push(
-                `${rule.selector} strong, ${rule.selector} b {\n  font-weight: ${fontWeight};\n}`
-            )
-        }
-
-        return styles.join("\n") + (styles.length > 0 ? "\n" : "")
-    }
-
-    // Generate compound modifier classes for bold variants
-    generateBoldModifierClasses(
-        baseTokens: TypographyToken[],
-        boldTokens: TypographyToken[],
-        config: TypographyConfig
-    ): string {
-        if (boldTokens.length === 0) return ""
-
-        // Create mapping of base names to bold tokens
-        const boldMap = new Map<string, TypographyToken>()
-        for (const boldToken of boldTokens) {
-            const baseName = TokenClassifier.getBaseName(boldToken, config)
-            boldMap.set(baseName, boldToken)
-        }
+        if (variantTokens.length === 0) return ""
 
         const styles: string[] = []
         const prefix = config.utilityPrefix || "typography"
-        const modifierClass = config.boldModifierClass || "text-bold"
 
-        for (const baseToken of baseTokens) {
-            const baseName = TokenClassifier.getBaseName(baseToken, config)
-            const boldToken = boldMap.get(baseName)
+        for (const variantToken of variantTokens) {
+            const path = variantToken.path || []
+            if (path.length === 0) continue
 
-            if (!boldToken?.$value.fontWeight) continue
-
-            const className = baseToken.name.replace(
-                new RegExp(`^.*?-${prefix}-`),
-                ""
-            )
-            const fontWeight = getTokenValue(
-                {
-                    ...boldToken,
-                    $value: boldToken.$value.fontWeight!,
-                    value: boldToken.$value.fontWeight!,
-                },
-                this.dictionary,
-                this.usesDtcg,
-                this.outputReferences,
-                this.CSS_REFERENCE_FORMAT
+            const variantName = path[path.length - 1]
+            const basePath = path.slice(0, -1)
+            
+            // Find the corresponding base token
+            const baseToken = baseTokens.find(base => 
+                base.path?.length === basePath.length &&
+                base.path.every((segment, i) => segment === basePath[i])
             )
 
-            styles.push(
-                `.${className}.${modifierClass} {\n  font-weight: ${fontWeight};\n}`
-            )
+            if (!baseToken) continue
+
+            // Generate base class name from the base token for utility classes
+            const baseClassName = baseToken.name.replace(new RegExp(`^.*?-${prefix}-`), "")
+            
+            // Generate only the properties that are different from default
+            const properties: string[] = []
+            const value = variantToken.$value
+
+            for (const [tokenProp, cssProp] of Object.entries(CSS_PROPERTY_MAP)) {
+                const propValue = value[tokenProp as keyof TypographyValue]
+                if (!propValue) continue
+
+                const originalValue = this.usesDtcg
+                    ? variantToken.original.$value?.[tokenProp as keyof TypographyValue]
+                    : variantToken.original.value?.[tokenProp as keyof TypographyValue]
+
+                const tempToken: TransformedToken = {
+                    ...variantToken,
+                    $value: propValue,
+                    value: propValue,
+                    original: {
+                        ...variantToken.original,
+                        $value: originalValue || propValue,
+                        value: originalValue || propValue,
+                    },
+                }
+
+                const cssValue = getTokenValue(
+                    tempToken,
+                    this.dictionary,
+                    this.usesDtcg,
+                    this.outputReferences,
+                    this.CSS_REFERENCE_FORMAT
+                )
+
+                properties.push(`${cssProp}: ${cssValue}`)
+            }
+
+            if (properties.length > 0) {
+                // Generate utility class modifier
+                styles.push(
+                    `.${baseClassName}.${variantName} {\n  ${properties.join(";\n  ")};\n}`
+                )
+
+                // Also generate semantic element modifiers if this base token matches a semantic rule
+                if (config.semanticRules) {
+                    for (const rule of config.semanticRules) {
+                        if (rule.condition(baseToken)) {
+                            styles.push(
+                                `${rule.selector}.${variantName} {\n  ${properties.join(";\n  ")};\n}`
+                            )
+                            break // Only apply first matching rule
+                        }
+                    }
+                }
+            }
         }
 
         return styles.join("\n") + (styles.length > 0 ? "\n" : "")
@@ -362,13 +401,8 @@ export const cssTypographyFormat: Format = {
             TokenClassifier.isComposite
         )
 
-        // Separate base and bold tokens
-        const baseTokens = compositeTokens.filter(
-            (t) => !TokenClassifier.isBoldVariant(t, typography)
-        )
-        const boldTokens = compositeTokens.filter((t) =>
-            TokenClassifier.isBoldVariant(t, typography)
-        )
+        // Separate base tokens and variant tokens
+        const { baseTokens, variantTokens } = separateTokensByType(compositeTokens)
 
         // Check if we have any tokens to process
         if (primitiveTokens.length === 0 && compositeTokens.length === 0) {
@@ -398,20 +432,7 @@ export const cssTypographyFormat: Format = {
             sections.push("/* Semantic HTML elements */\n" + semanticStyles)
         }
 
-        // 3. Bold semantic elements
-        const boldSemanticStyles = generator.generateBoldSemanticStyles(
-            baseTokens,
-            boldTokens,
-            typography
-        )
-        if (boldSemanticStyles) {
-            sections.push(
-                "/* Semantic bold elements (strong, b) */\n" +
-                    boldSemanticStyles
-            )
-        }
-
-        // 4. Utility classes
+        // 3. Utility classes
         if (baseTokens.length > 0) {
             sections.push(
                 "/* Typography utility classes */\n" +
@@ -423,14 +444,14 @@ export const cssTypographyFormat: Format = {
             )
         }
 
-        // 5. Bold modifier classes
-        const boldModifiers = generator.generateBoldModifierClasses(
+        // 4. Variant modifier classes
+        const variantModifiers = generator.generateVariantModifierClasses(
             baseTokens,
-            boldTokens,
+            variantTokens,
             typography
         )
-        if (boldModifiers) {
-            sections.push("/* Bold modifier classes */\n" + boldModifiers)
+        if (variantModifiers) {
+            sections.push("/* Variant modifier classes */\n" + variantModifiers)
         }
 
         return sections.join("\n")

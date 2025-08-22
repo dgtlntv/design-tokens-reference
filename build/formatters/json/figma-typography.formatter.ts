@@ -2,7 +2,7 @@ import type { Dictionary, Format, TransformedToken } from "style-dictionary/type
 import { usesReferences } from "style-dictionary/utils"
 import type { JsonNestedReferencesOptions } from "../../types/formatters.types"
 
-function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg: boolean): Record<string, unknown> | unknown {
+function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg: boolean, allTokens?: Record<string, unknown>): Record<string, unknown> | unknown {
     if (typeof obj !== "object" || Array.isArray(obj) || obj === null) {
         return obj
     }
@@ -62,6 +62,65 @@ function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg:
             } else {
                 tokenResult[valueKey] = usesDtcg ? token.$value : token.value
             }
+        } else if (token.$type === "typography") {
+            // Handle typography tokens with special inheritance logic
+            tokenResult[usesDtcg ? '$type' : 'type'] = token.$type
+            
+            const valueKey = usesDtcg ? '$value' : 'value'
+            let tokenValue = originalValue !== undefined && usesReferences(originalValue) 
+                ? originalValue 
+                : (usesDtcg ? token.$value : token.value)
+
+            // Check if this is a variant token that should inherit from default
+            if (allTokens && token.path) {
+                const path = token.path
+                const lastSegment = path[path.length - 1]
+                
+                // If this is not a "default" token and there's a corresponding "default" token
+                if (lastSegment !== "default" && path.length > 1) {
+                    const defaultPath = [...path.slice(0, -1), "default"]
+                    
+                    // Navigate to the default token in allTokens
+                    let defaultTokenObj = allTokens
+                    let found = true
+                    
+                    for (const segment of defaultPath) {
+                        if (defaultTokenObj && typeof defaultTokenObj === 'object' && segment in defaultTokenObj) {
+                            defaultTokenObj = (defaultTokenObj as Record<string, unknown>)[segment] as Record<string, unknown>
+                        } else {
+                            found = false
+                            break
+                        }
+                    }
+                    
+                    // If we found the default token and it has a value
+                    if (found && defaultTokenObj && typeof defaultTokenObj === 'object' && 
+                        defaultTokenObj.hasOwnProperty(usesDtcg ? '$value' : 'value')) {
+                        
+                        const defaultToken = defaultTokenObj as TransformedToken
+                        const defaultOriginalValue = usesDtcg 
+                            ? defaultToken.original?.$value 
+                            : defaultToken.original?.value
+                        
+                        const defaultValue = defaultOriginalValue !== undefined && usesReferences(defaultOriginalValue)
+                            ? defaultOriginalValue
+                            : (usesDtcg ? defaultToken.$value : defaultToken.value)
+                        
+                        // If both are objects, merge them (inherit from default, override with variant)
+                        if (typeof defaultValue === 'object' && typeof tokenValue === 'object' && 
+                            defaultValue !== null && tokenValue !== null) {
+                            
+                            // Merge default properties (with references) with variant overrides
+                            tokenValue = {
+                                ...defaultValue,
+                                ...tokenValue
+                            }
+                        }
+                    }
+                }
+            }
+            
+            tokenResult[valueKey] = tokenValue
         } else {
             // For all other tokens or fontFamily tokens with references, use existing logic
             tokenResult[usesDtcg ? '$type' : 'type'] = token.$type
@@ -80,7 +139,7 @@ function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg:
         // This is a group, recurse through its children
         for (const name in obj) {
             if (obj.hasOwnProperty(name)) {
-                const processed = minifyDictionaryFigmaTypography(obj[name] as Record<string, unknown>, usesDtcg)
+                const processed = minifyDictionaryFigmaTypography(obj[name] as Record<string, unknown>, usesDtcg, allTokens)
                 // Only include non-null results (excludes filtered dimension tokens)
                 if (processed !== null) {
                     result[name] = processed
@@ -108,7 +167,7 @@ export const jsonFigmaTypographyFormat: Format = {
         const { usesDtcg = false } = options || {}
         
         return JSON.stringify(
-            minifyDictionaryFigmaTypography(dictionary.tokens, usesDtcg), 
+            minifyDictionaryFigmaTypography(dictionary.tokens, usesDtcg, dictionary.tokens), 
             null, 
             2
         ) + '\n'

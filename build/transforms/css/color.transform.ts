@@ -137,7 +137,7 @@ const colorSpaceFormatters: Record<ColorSpace, (value: ColorValue) => string> =
  * // Output: "oklch(0.7 0.15 180 / 0.9)"
  */
 export const colorW3cCssTransform: Transform = {
-    name: "color/w3c",
+    name: "color/css/w3c",
     type: "value",
     filter: (token: TransformedToken) => {
         return (
