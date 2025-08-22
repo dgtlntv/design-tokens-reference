@@ -4,6 +4,7 @@ import { CSS_PLATFORM_CONFIG, getTokenPathsForTier } from "./config"
 import { FIGMA_PLATFORM_CONFIG } from "./config/figma.config"
 import { registerFormatters } from "./formatters"
 import { registerTransforms } from "./transforms"
+import { registerActions } from "./actions"
 import type { ExtendedConfig, ExtendedPlatformConfig } from "./types"
 import { generateStyleDictionaryConfigs } from "./utils/config-builder.util"
 
@@ -14,6 +15,7 @@ import { generateStyleDictionaryConfigs } from "./utils/config-builder.util"
 function registerExtensions(): void {
     registerTransforms()
     registerFormatters()
+    registerActions()
 }
 
 // Get platform and tier arguments from command line

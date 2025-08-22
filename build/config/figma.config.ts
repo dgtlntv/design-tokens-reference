@@ -14,4 +14,5 @@ export const FIGMA_PLATFORM_CONFIG: ExtendedPlatformConfig = {
             format: "json/figma-typography",
         },
     },
+    actions: ["figma-metadata", "figma-themes"],
 }

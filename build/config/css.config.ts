@@ -19,4 +19,5 @@ export const CSS_PLATFORM_CONFIG: ExtendedPlatformConfig = {
             format: "css/typography",
         },
     },
+    actions: ["css-index"],
 }

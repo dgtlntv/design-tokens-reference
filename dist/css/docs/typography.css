@@ -108,38 +108,6 @@ h1.display {
   font-variant-numeric: var(--canonical-typography-figure-style-old-style-figure);
 }
 
-/* Semantic bold elements (strong, b) */
-p strong, p b {
-  font-weight: var(--canonical-typography-weight-semi-bold);
-}
-p.text-secondary strong, p.text-secondary b {
-  font-weight: var(--canonical-typography-weight-semi-bold);
-}
-p.text-tertiary strong, p.text-tertiary b {
-  font-weight: var(--canonical-typography-weight-semi-bold);
-}
-h1 strong, h1 b {
-  font-weight: var(--canonical-typography-weight-bold);
-}
-h2 strong, h2 b {
-  font-weight: var(--canonical-typography-weight-medium);
-}
-h3 strong, h3 b {
-  font-weight: var(--canonical-typography-weight-bold);
-}
-h4 strong, h4 b {
-  font-weight: var(--canonical-typography-weight-medium);
-}
-h5 strong, h5 b {
-  font-weight: var(--canonical-typography-weight-bold);
-}
-h6 strong, h6 b {
-  font-weight: var(--canonical-typography-weight-medium);
-}
-h1.display strong, h1.display b {
-  font-weight: var(--canonical-typography-weight-regular);
-}
-
 /* Typography utility classes */
 .text-italic {
   font-style: var(--canonical-typography-font-style-italic);
@@ -249,34 +217,64 @@ h1.display strong, h1.display b {
   font-variant-numeric: var(--canonical-typography-figure-style-old-style-figure);
 }
 
-/* Bold modifier classes */
-.text-primary.text-bold {
+/* Variant modifier classes */
+.text-primary.bold {
   font-weight: var(--canonical-typography-weight-semi-bold);
 }
-.text-secondary.text-bold {
+p.bold {
   font-weight: var(--canonical-typography-weight-semi-bold);
 }
-.text-tertiary.text-bold {
+.text-secondary.bold {
   font-weight: var(--canonical-typography-weight-semi-bold);
 }
-.heading-1.text-bold {
+p.text-secondary.bold {
+  font-weight: var(--canonical-typography-weight-semi-bold);
+}
+.text-tertiary.bold {
+  font-weight: var(--canonical-typography-weight-semi-bold);
+}
+p.text-tertiary.bold {
+  font-weight: var(--canonical-typography-weight-semi-bold);
+}
+.heading-1.bold {
   font-weight: var(--canonical-typography-weight-bold);
 }
-.heading-2.text-bold {
-  font-weight: var(--canonical-typography-weight-medium);
-}
-.heading-3.text-bold {
+h1.bold {
   font-weight: var(--canonical-typography-weight-bold);
 }
-.heading-4.text-bold {
+.heading-2.bold {
   font-weight: var(--canonical-typography-weight-medium);
 }
-.heading-5.text-bold {
+h2.bold {
+  font-weight: var(--canonical-typography-weight-medium);
+}
+.heading-3.bold {
   font-weight: var(--canonical-typography-weight-bold);
 }
-.heading-6.text-bold {
+h3.bold {
+  font-weight: var(--canonical-typography-weight-bold);
+}
+.heading-4.bold {
   font-weight: var(--canonical-typography-weight-medium);
 }
-.heading-display.text-bold {
+h4.bold {
+  font-weight: var(--canonical-typography-weight-medium);
+}
+.heading-5.bold {
+  font-weight: var(--canonical-typography-weight-bold);
+}
+h5.bold {
+  font-weight: var(--canonical-typography-weight-bold);
+}
+.heading-6.bold {
+  font-weight: var(--canonical-typography-weight-medium);
+}
+h6.bold {
+  font-weight: var(--canonical-typography-weight-medium);
+}
+.heading-display.bold {
+  font-weight: var(--canonical-typography-weight-regular);
+}
+h1.display.bold {
   font-weight: var(--canonical-typography-weight-regular);
 }

@@ -1,0 +1,90 @@
+/* Auto-generated index file for apps tier CSS tokens */
+
+@import './color/primitive.css';
+@import './dimension/primitive.css';
+
+@import './typography.css';
+
+/* Color tokens with media queries and data attribute overrides */
+@import './color/light/normalContrast.css';
+
+@media (prefers-color-scheme: dark) {
+  @import './color/dark/normalContrast.css';
+}
+
+@media (prefers-contrast: more) {
+  @import './color/light/highContrast.css';
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+  @import './color/dark/highContrast.css';
+}
+
+/* Data attribute overrides */
+[data-theme="light"][data-contrast="normal"] {
+  @import './color/light/normalContrast.css';
+}
+
+[data-theme="light"][data-contrast="high"] {
+  @import './color/light/highContrast.css';
+}
+
+[data-theme="dark"][data-contrast="normal"] {
+  @import './color/dark/normalContrast.css';
+}
+
+[data-theme="dark"][data-contrast="high"] {
+  @import './color/dark/highContrast.css';
+}
+
+[data-theme="light"]:not([data-contrast]) {
+  @import './color/light/normalContrast.css';
+}
+[data-theme="light"]:not([data-contrast]) {
+  @media (prefers-contrast: more) {
+    @import './color/light/highContrast.css';
+  }
+}
+
+[data-theme="dark"]:not([data-contrast]) {
+  @import './color/dark/normalContrast.css';
+}
+[data-theme="dark"]:not([data-contrast]) {
+  @media (prefers-contrast: more) {
+    @import './color/dark/highContrast.css';
+  }
+}
+
+[data-contrast="normal"]:not([data-theme]) {
+  @import './color/light/normalContrast.css';
+}
+[data-contrast="normal"]:not([data-theme]) {
+  @media (prefers-color-scheme: dark) {
+    @import './color/dark/normalContrast.css';
+  }
+}
+
+[data-contrast="high"]:not([data-theme]) {
+  @import './color/light/highContrast.css';
+}
+[data-contrast="high"]:not([data-theme]) {
+  @media (prefers-color-scheme: dark) {
+    @import './color/dark/highContrast.css';
+  }
+}
+
+/* Dimension tokens with breakpoint media queries */
+@import './dimension/small.css';
+
+@media (min-width: 620px) {
+  @import './dimension/medium.css';
+}
+
+@media (min-width: 1036px) {
+  @import './dimension/large.css';
+}
+
+@media (min-width: 1681px) {
+  @import './dimension/xLarge.css';
+}
+
