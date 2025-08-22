@@ -90,9 +90,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
+            "fontSize": "{dimension.size.fontSize.300}",
             "fontWeight": "{typography.weight.regular}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -100,9 +100,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
+            "fontSize": "{dimension.size.fontSize.300}",
             "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -110,9 +110,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
+            "fontSize": "{dimension.size.fontSize.300}",
             "fontWeight": "{typography.weight.regularItalic}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -120,9 +120,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
+            "fontSize": "{dimension.size.fontSize.300}",
             "fontWeight": "{typography.weight.regular}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "underline"
           }
@@ -131,9 +131,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
+            "fontSize": "{dimension.size.fontSize.300}",
             "fontWeight": "{typography.weight.regular}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "strike-through"
           }
@@ -142,9 +142,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
+            "fontSize": "{dimension.size.fontSize.300}",
             "fontWeight": "{typography.weight.regular}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -221,7 +221,7 @@
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
             "fontSize": "{dimension.size.fontSize.250}",
-            "fontWeight": "{typography.weight.regular}",
+            "fontWeight": "{typography.weight.semiBold}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
@@ -241,7 +241,7 @@
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
             "fontSize": "{dimension.size.fontSize.250}",
-            "fontWeight": "{typography.weight.regularItalic}",
+            "fontWeight": "{typography.weight.semiBoldItalic}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
@@ -251,7 +251,7 @@
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
             "fontSize": "{dimension.size.fontSize.250}",
-            "fontWeight": "{typography.weight.regular}",
+            "fontWeight": "{typography.weight.semiBold}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "underline"
@@ -262,7 +262,7 @@
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
             "fontSize": "{dimension.size.fontSize.250}",
-            "fontWeight": "{typography.weight.regular}",
+            "fontWeight": "{typography.weight.semiBold}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "strike-through"
@@ -273,7 +273,7 @@
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
             "fontSize": "{dimension.size.fontSize.250}",
-            "fontWeight": "{typography.weight.regular}",
+            "fontWeight": "{typography.weight.semiBold}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
@@ -287,9 +287,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.medium}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -297,9 +297,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.bold}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -307,9 +307,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.mediumItalic}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -317,9 +317,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.medium}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "underline"
           }
@@ -328,9 +328,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.medium}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "strike-through"
           }
@@ -339,9 +339,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.medium}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -352,9 +352,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.light}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -362,9 +362,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.medium}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -372,9 +372,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.lightItalic}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -382,9 +382,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.light}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "underline"
           }
@@ -393,9 +393,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.light}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "strike-through"
           }
@@ -404,9 +404,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.700}",
+            "fontSize": "{dimension.size.fontSize.600}",
             "fontWeight": "{typography.weight.light}",
-            "lineHeight": "{dimension.size.lineHeight.700}",
+            "lineHeight": "{dimension.size.lineHeight.600}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -547,9 +547,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.medium}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -558,9 +558,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.extraBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.bold}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -569,9 +569,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBoldItalic}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.mediumItalic}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -580,9 +580,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.medium}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textDecoration": "underline",
             "textCase": "small-caps"
@@ -592,9 +592,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.medium}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textDecoration": "strike-through",
             "textCase": "small-caps"
@@ -604,9 +604,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.medium}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }
@@ -617,9 +617,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.light}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -627,9 +627,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.extraBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.medium}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -637,9 +637,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBoldItalic}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.lightItalic}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.default}"
           }
         },
@@ -647,9 +647,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.light}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "underline"
           }
@@ -658,9 +658,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.light}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.default}",
             "textDecoration": "strike-through"
           }
@@ -669,9 +669,9 @@
           "$type": "typography",
           "$value": {
             "fontFamily": "{typography.fontFamily.default}",
-            "fontSize": "{dimension.size.fontSize.350}",
-            "fontWeight": "{typography.weight.semiBold}",
-            "lineHeight": "{dimension.size.lineHeight.350}",
+            "fontSize": "{dimension.size.fontSize.400}",
+            "fontWeight": "{typography.weight.light}",
+            "lineHeight": "{dimension.size.lineHeight.400}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
             "textCase": "small-caps"
           }

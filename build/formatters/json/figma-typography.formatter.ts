@@ -371,93 +371,119 @@ function generateFigmaCombinations(tokens: Record<string, unknown>, usesDtcg: bo
     if (!typography || typeof typography !== 'object') return result
     
     const text = typography.text as Record<string, unknown>
-    if (!text || typeof text !== 'object') return result
+    const heading = typography.heading as Record<string, unknown>
     
-    // Identify base styles and modifiers
-    const baseStyles: Array<{ name: string, tokens: Record<string, any> }> = []
-    const modifiers: Array<{ name: string, token: any }> = []
+    // Process both text and heading sections
+    const sections = [
+        { key: 'text', tokens: text },
+        { key: 'heading', tokens: heading }
+    ]
     
-    for (const [name, token] of Object.entries(text)) {
-        if (typeof token === 'object' && token !== null) {
-            // Check if this is a direct modifier token
-            if (isModifier(token)) {
-                modifiers.push({ name, token })
-            } else if (typeof token === 'object' && 'default' in token) {
-                // This is a base style group (like primary, secondary) with default/bold variants
-                baseStyles.push({ name, tokens: token as Record<string, any> })
-            }
-        }
-    }
+    const updatedSections: Record<string, unknown> = {}
     
-    // Generate combinations for each base style
-    const newText: Record<string, unknown> = {}
-    
-    // Add base styles with their combinations
-    for (const { name: baseName, tokens: baseTokens } of baseStyles) {
-        const baseGroup: Record<string, unknown> = {}
-        
-        // Copy existing variants (default, bold, etc.)
-        for (const [variantName, variantToken] of Object.entries(baseTokens)) {
-            baseGroup[variantName] = variantToken
+    for (const { key: sectionKey, tokens: sectionTokens } of sections) {
+        if (!sectionTokens || typeof sectionTokens !== 'object') {
+            if (sectionTokens) updatedSections[sectionKey] = sectionTokens
+            continue
         }
         
-        // Add combinations with each supported modifier for the default version
-        const defaultToken = baseTokens.default
-        if (defaultToken && typeof defaultToken === 'object') {
-            for (const { name: modifierName, token: modifierToken } of modifiers) {
-                // Use the original modifier value to preserve references
-                const modifierValue = modifierToken.original?.$value || modifierToken.original?.value || modifierToken.$value || modifierToken.value
-                
-                // Skip modifiers with only unsupported properties
-                const filteredModifier = { ...modifierValue }
-                delete filteredModifier.figureStyle
-                delete filteredModifier.fontPosition
-                
-                if (Object.keys(filteredModifier).length > 0) {
-                    // Use the original value to preserve references for base style too
-                    const baseValue = defaultToken.original?.$value || defaultToken.original?.value || defaultToken.$value || defaultToken.value
-                    
-                    let combinedValue: Record<string, unknown>
-                    
-                    // Special handling for italic modifier - use combined font weight instead of separate fontStyle
-                    if (modifierName === 'italic' && 'fontStyle' in filteredModifier) {
-                        combinedValue = { ...baseValue }
-                        
-                        // Replace fontWeight reference with italic variant
-                        if ('fontWeight' in combinedValue) {
-                            const fontWeightRef = combinedValue.fontWeight as string
-                            if (typeof fontWeightRef === 'string' && fontWeightRef.startsWith('{typography.weight.')) {
-                                // Convert {typography.weight.regular} to {typography.weight.regularItalic}
-                                const weightName = fontWeightRef.replace('{typography.weight.', '').replace('}', '')
-                                combinedValue.fontWeight = `{typography.weight.${weightName}Italic}`
-                            }
-                        }
-                        
-                        // Don't add fontStyle property for Figma/Tokens Studio
-                        // Still process through conversion in case there are other properties to convert
-                        combinedValue = convertToFigmaCompatibleFormat(combinedValue, allTokens)
-                    } else {
-                        // For non-italic modifiers, use regular merging
-                        combinedValue = mergeStyleWithModifier(baseValue, filteredModifier, allTokens)
-                    }
-                    
-                    baseGroup[modifierName] = {
-                        [usesDtcg ? '$type' : 'type']: 'typography',
-                        [usesDtcg ? '$value' : 'value']: combinedValue,
-                        // Preserve original for reference handling
-                        original: {
-                            [usesDtcg ? '$value' : 'value']: combinedValue
-                        }
-                    }
+        // Identify base styles and modifiers for this section
+        const baseStyles: Array<{ name: string, tokens: Record<string, any> }> = []
+        const modifiers: Array<{ name: string, token: any }> = []
+        
+        for (const [name, token] of Object.entries(sectionTokens)) {
+            if (typeof token === 'object' && token !== null) {
+                // Check if this is a direct modifier token
+                if (isModifier(token)) {
+                    modifiers.push({ name, token })
+                } else if (typeof token === 'object' && 'default' in token) {
+                    // This is a base style group (like primary, secondary for text or 1, 2, display for heading) with default/bold variants
+                    baseStyles.push({ name, tokens: token as Record<string, any> })
                 }
             }
         }
         
-        newText[baseName] = baseGroup
+        // For headings, we need to get modifiers from the text section since they don't have their own
+        if (sectionKey === 'heading' && text && typeof text === 'object') {
+            for (const [name, token] of Object.entries(text)) {
+                if (typeof token === 'object' && token !== null && isModifier(token)) {
+                    modifiers.push({ name, token })
+                }
+            }
+        }
+        
+        // Generate combinations for each base style in this section
+        const newSection: Record<string, unknown> = {}
+        
+        // Add base styles with their combinations
+        for (const { name: baseName, tokens: baseTokens } of baseStyles) {
+            const baseGroup: Record<string, unknown> = {}
+            
+            // Copy existing variants (default, bold, etc.)
+            for (const [variantName, variantToken] of Object.entries(baseTokens)) {
+                baseGroup[variantName] = variantToken
+            }
+            
+            // Add combinations with each supported modifier for the default version
+            const defaultToken = baseTokens.default
+            if (defaultToken && typeof defaultToken === 'object') {
+                for (const { name: modifierName, token: modifierToken } of modifiers) {
+                    // Use the original modifier value to preserve references
+                    const modifierValue = modifierToken.original?.$value || modifierToken.original?.value || modifierToken.$value || modifierToken.value
+                    
+                    // Skip modifiers with only unsupported properties
+                    const filteredModifier = { ...modifierValue }
+                    delete filteredModifier.figureStyle
+                    delete filteredModifier.fontPosition
+                    
+                    if (Object.keys(filteredModifier).length > 0) {
+                        // Use the original value to preserve references for base style too
+                        const baseValue = defaultToken.original?.$value || defaultToken.original?.value || defaultToken.$value || defaultToken.value
+                        
+                        let combinedValue: Record<string, unknown>
+                        
+                        // Special handling for italic modifier - use combined font weight instead of separate fontStyle
+                        if (modifierName === 'italic' && 'fontStyle' in filteredModifier) {
+                            combinedValue = { ...baseValue }
+                            
+                            // Replace fontWeight reference with italic variant
+                            if ('fontWeight' in combinedValue) {
+                                const fontWeightRef = combinedValue.fontWeight as string
+                                if (typeof fontWeightRef === 'string' && fontWeightRef.startsWith('{typography.weight.')) {
+                                    // Convert {typography.weight.regular} to {typography.weight.regularItalic}
+                                    const weightName = fontWeightRef.replace('{typography.weight.', '').replace('}', '')
+                                    combinedValue.fontWeight = `{typography.weight.${weightName}Italic}`
+                                }
+                            }
+                            
+                            // Don't add fontStyle property for Figma/Tokens Studio
+                            // Still process through conversion in case there are other properties to convert
+                            combinedValue = convertToFigmaCompatibleFormat(combinedValue, allTokens)
+                        } else {
+                            // For non-italic modifiers, use regular merging
+                            combinedValue = mergeStyleWithModifier(baseValue, filteredModifier, allTokens)
+                        }
+                        
+                        baseGroup[modifierName] = {
+                            [usesDtcg ? '$type' : 'type']: 'typography',
+                            [usesDtcg ? '$value' : 'value']: combinedValue,
+                            // Preserve original for reference handling
+                            original: {
+                                [usesDtcg ? '$value' : 'value']: combinedValue
+                            }
+                        }
+                    }
+                }
+            }
+            
+            newSection[baseName] = baseGroup
+        }
+        
+        updatedSections[sectionKey] = newSection
     }
     
-    // Update the text section
-    const newTypography = { ...typography, text: newText }
+    // Update both text and heading sections
+    const newTypography = { ...typography, ...updatedSections }
     return { ...result, typography: newTypography }
 }
 

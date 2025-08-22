@@ -1,0 +1,16 @@
+{
+  "dimension": {
+    "size": {
+      "height": {
+        "baseline": {
+          "$type": "dimension",
+          "$value": "{dimension.100}"
+        }
+      },
+      "rootFontSize": {
+        "$type": "dimension",
+        "$value": "{dimension.200}"
+      }
+    }
+  }
+}
