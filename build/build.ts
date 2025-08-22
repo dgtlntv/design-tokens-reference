@@ -4,7 +4,7 @@ import { CSS_PLATFORM_CONFIG, getTokenPathsForTier } from "./config"
 import { FIGMA_PLATFORM_CONFIG } from "./config/figma.config"
 import { registerFormatters } from "./formatters"
 import { registerTransforms } from "./transforms"
-import type { ExtendedConfig } from "./types"
+import type { ExtendedConfig, ExtendedPlatformConfig } from "./types"
 import { generateStyleDictionaryConfigs } from "./utils/config-builder.util"
 
 /**
@@ -35,7 +35,7 @@ if (!tier || !validTiers.includes(tier)) {
 }
 
 // Assemble the base configuration from platform configs
-const getPlatformsConfig = (platform: string) => {
+const getPlatformsConfig = (platform: string): Record<string, ExtendedPlatformConfig> => {
     switch (platform) {
         case "css":
             return { css: CSS_PLATFORM_CONFIG }

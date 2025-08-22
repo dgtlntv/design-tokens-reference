@@ -98,10 +98,10 @@ function resolveTokenReference(reference: string, allTokens?: Record<string, unk
     }
     
     const path = reference.slice(1, -1).split('.')
-    let current = allTokens
+    let current: unknown = allTokens
     
     for (const segment of path) {
-        if (current && typeof current === 'object' && segment in current) {
+        if (current && typeof current === 'object' && current !== null && segment in current) {
             current = (current as Record<string, unknown>)[segment]
         } else {
             return null
