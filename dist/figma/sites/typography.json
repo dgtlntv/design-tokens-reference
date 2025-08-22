@@ -84,24 +84,6 @@
         "$value": "Extra Bold Italic"
       }
     },
-    "fontStyle": {
-      "italic": {
-        "$value": "italic"
-      }
-    },
-    "textDecoration": {
-      "underline": {
-        "$value": "underline"
-      },
-      "strikethrough": {
-        "$value": "strike-through"
-      }
-    },
-    "letterCase": {
-      "smallcaps": {
-        "$value": "small-caps"
-      }
-    },
     "text": {
       "primary": {
         "default": {
@@ -142,7 +124,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.350}",
             "letterSpacing": "{dimension.letterSpacing.default}",
-            "textDecoration": "{typography.textDecoration.underline}"
+            "textDecoration": "underline"
           }
         },
         "strikethrough": {
@@ -153,7 +135,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.350}",
             "letterSpacing": "{dimension.letterSpacing.default}",
-            "textDecoration": "{typography.textDecoration.strikethrough}"
+            "textDecoration": "strike-through"
           }
         },
         "smallcaps": {
@@ -164,7 +146,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.350}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
-            "textCase": "{typography.letterCase.smallcaps}"
+            "textCase": "small-caps"
           }
         }
       },
@@ -207,7 +189,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}",
-            "textDecoration": "{typography.textDecoration.underline}"
+            "textDecoration": "underline"
           }
         },
         "strikethrough": {
@@ -218,7 +200,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.default}",
-            "textDecoration": "{typography.textDecoration.strikethrough}"
+            "textDecoration": "strike-through"
           }
         },
         "smallcaps": {
@@ -229,7 +211,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.300}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
-            "textCase": "{typography.letterCase.smallcaps}"
+            "textCase": "small-caps"
           }
         }
       },
@@ -272,7 +254,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.default}",
-            "textDecoration": "{typography.textDecoration.underline}"
+            "textDecoration": "underline"
           }
         },
         "strikethrough": {
@@ -283,7 +265,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.default}",
-            "textDecoration": "{typography.textDecoration.strikethrough}"
+            "textDecoration": "strike-through"
           }
         },
         "smallcaps": {
@@ -294,7 +276,7 @@
             "fontWeight": "{typography.weight.regular}",
             "lineHeight": "{dimension.size.lineHeight.250}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
-            "textCase": "{typography.letterCase.smallcaps}"
+            "textCase": "small-caps"
           }
         }
       }
@@ -397,7 +379,7 @@
             "fontWeight": "{typography.weight.semiBold}",
             "lineHeight": "{dimension.size.lineHeight.350}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
-            "textCase": "{typography.letterCase.smallcaps}"
+            "textCase": "small-caps"
           }
         },
         "bold": {
@@ -408,7 +390,7 @@
             "fontWeight": "{typography.weight.extraBold}",
             "lineHeight": "{dimension.size.lineHeight.350}",
             "letterSpacing": "{dimension.letterSpacing.wide}",
-            "textCase": "{typography.letterCase.smallcaps}"
+            "textCase": "small-caps"
           }
         }
       },

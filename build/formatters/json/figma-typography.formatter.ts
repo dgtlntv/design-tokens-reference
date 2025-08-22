@@ -51,38 +51,72 @@ function isModifier(token: any): boolean {
     return props.length <= 3 && !isBaseStyle(token)
 }
 
-// Helper function to convert properties to Tokens Studio compatible format
-function convertToTokensStudioFormat(value: Record<string, unknown>): Record<string, unknown> {
+// Helper function to resolve references and convert to Figma-compatible values
+function convertToFigmaCompatibleFormat(value: Record<string, unknown>, allTokens?: Record<string, unknown>): Record<string, unknown> {
     const converted = { ...value }
     
-    // Convert letterCase to textCase for Tokens Studio
+    // Convert letterCase to textCase and resolve references
     if ('letterCase' in converted) {
-        converted.textCase = converted.letterCase
+        const letterCaseValue = converted.letterCase as string
+        if (typeof letterCaseValue === 'string' && letterCaseValue.includes('letterCase')) {
+            // This is a reference to letterCase category - resolve it
+            const resolvedValue = resolveTokenReference(letterCaseValue, allTokens)
+            converted.textCase = resolvedValue || letterCaseValue
+        } else {
+            converted.textCase = letterCaseValue
+        }
         delete converted.letterCase
     }
     
-    // Fix textDecoration values for Tokens Studio
+    // Convert textDecoration references and fix values for Figma
     if ('textDecoration' in converted && typeof converted.textDecoration === 'string') {
         const textDec = converted.textDecoration as string
-        // Handle both reference and resolved values
-        if (textDec.includes('underline solid')) {
-            converted.textDecoration = textDec.replace('underline solid', 'underline')
+        if (textDec.includes('textDecoration')) {
+            // This is a reference to textDecoration category - resolve it
+            let resolvedValue = resolveTokenReference(textDec, allTokens) || textDec
+            // Fix resolved values for Figma compatibility
+            if (resolvedValue === 'underline solid') {
+                resolvedValue = 'underline'
+            } else if (resolvedValue === 'line-through') {
+                resolvedValue = 'strike-through'
+            }
+            converted.textDecoration = resolvedValue
+        } else if (textDec === 'underline solid') {
+            converted.textDecoration = 'underline'
         } else if (textDec === 'line-through') {
             converted.textDecoration = 'strike-through'
-        } else if (textDec === '{typography.textDecoration.underline}') {
-            // Keep reference but it should point to a value that resolves to just "underline"
-            converted.textDecoration = textDec
-        } else if (textDec === '{typography.textDecoration.strikethrough}') {
-            // Keep reference but it should point to a value that resolves to "strike-through"
-            converted.textDecoration = textDec
         }
     }
     
     return converted
 }
 
+// Helper function to resolve token references
+function resolveTokenReference(reference: string, allTokens?: Record<string, unknown>): string | null {
+    if (!allTokens || !reference.startsWith('{') || !reference.endsWith('}')) {
+        return null
+    }
+    
+    const path = reference.slice(1, -1).split('.')
+    let current = allTokens
+    
+    for (const segment of path) {
+        if (current && typeof current === 'object' && segment in current) {
+            current = (current as Record<string, unknown>)[segment]
+        } else {
+            return null
+        }
+    }
+    
+    if (current && typeof current === 'object' && ('$value' in current || 'value' in current)) {
+        return (current as any).$value || (current as any).value
+    }
+    
+    return null
+}
+
 // Helper function to merge base style with modifier
-function mergeStyleWithModifier(baseValue: Record<string, unknown>, modifierValue: Record<string, unknown>): Record<string, unknown> {
+function mergeStyleWithModifier(baseValue: Record<string, unknown>, modifierValue: Record<string, unknown>, allTokens?: Record<string, unknown>): Record<string, unknown> {
     const filteredModifier = { ...modifierValue }
     // Filter out unsupported properties
     delete filteredModifier.figureStyle
@@ -93,8 +127,8 @@ function mergeStyleWithModifier(baseValue: Record<string, unknown>, modifierValu
         ...filteredModifier
     }
     
-    // Convert to Tokens Studio compatible format
-    return convertToTokensStudioFormat(merged)
+    // Convert to Figma compatible format with resolved references
+    return convertToFigmaCompatibleFormat(merged, allTokens)
 }
 
 function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg: boolean, allTokens?: Record<string, unknown>): Record<string, unknown> | unknown {
@@ -118,6 +152,15 @@ function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg:
         
         // Filter out figureStyle and fontPosition tokens - not supported by Tokens Studio
         if (token.path && (token.path.includes('figureStyle') || token.path.includes('fontPosition'))) {
+            return null // Signal that this token should be excluded
+        }
+        
+        // Filter out fontStyle, textDecoration, and letterCase primitive tokens - not used as variables in Figma
+        if (token.path && (
+            token.path.includes('fontStyle') || 
+            token.path.includes('textDecoration') || 
+            token.path.includes('letterCase')
+        )) {
             return null // Signal that this token should be excluded
         }
         
@@ -226,8 +269,8 @@ function minifyDictionaryFigmaTypography(obj: Record<string, unknown>, usesDtcg:
                 delete filteredValue.figureStyle
                 delete filteredValue.fontPosition
                 
-                // Convert to Tokens Studio compatible format
-                tokenValue = convertToTokensStudioFormat(filteredValue)
+                // Convert to Figma compatible format with resolved references
+                tokenValue = convertToFigmaCompatibleFormat(filteredValue, allTokens)
                 
                 // If the token value is now empty after filtering, exclude this token entirely
                 if (Object.keys(tokenValue as Record<string, unknown>).length === 0) {
@@ -320,7 +363,7 @@ function generateCombinedFontWeights(typography: Record<string, unknown>, usesDt
 }
 
 // Function to generate combinations of base styles with modifiers for Figma
-function generateFigmaCombinations(tokens: Record<string, unknown>, usesDtcg: boolean): Record<string, unknown> {
+function generateFigmaCombinations(tokens: Record<string, unknown>, usesDtcg: boolean, allTokens?: Record<string, unknown>): Record<string, unknown> {
     const result = { ...tokens }
     
     // Find all typography tokens
@@ -391,9 +434,11 @@ function generateFigmaCombinations(tokens: Record<string, unknown>, usesDtcg: bo
                         }
                         
                         // Don't add fontStyle property for Figma/Tokens Studio
+                        // Still process through conversion in case there are other properties to convert
+                        combinedValue = convertToFigmaCompatibleFormat(combinedValue, allTokens)
                     } else {
                         // For non-italic modifiers, use regular merging
-                        combinedValue = mergeStyleWithModifier(baseValue, filteredModifier)
+                        combinedValue = mergeStyleWithModifier(baseValue, filteredModifier, allTokens)
                     }
                     
                     baseGroup[modifierName] = {
@@ -436,12 +481,12 @@ export const jsonFigmaTypographyFormat: Format = {
                 typography: generateCombinedFontWeights(
                     processedTokens.typography as Record<string, unknown>, 
                     usesDtcg
-                )
+                ) as any
             }
         }
         
         // Then generate combinations with the new font weights
-        const tokensWithCombinations = generateFigmaCombinations(processedTokens, usesDtcg)
+        const tokensWithCombinations = generateFigmaCombinations(processedTokens, usesDtcg, processedTokens)
         
         return JSON.stringify(
             minifyDictionaryFigmaTypography(tokensWithCombinations, usesDtcg, tokensWithCombinations), 
