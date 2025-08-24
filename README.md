@@ -1,76 +1,104 @@
-# Design tokens reference
+# Design Token System
 
-This repository houses a reference of how I think token files can be structued and how [Style Dictionary](https://styledictionary.com/) can be used to transform them into platform-specific formats. I created this reference while I was exploring design tokens at Canonical. The tokens are organized to support multiple tiers within the Canonical ecosystem, each with slightly different token needs while maintaining consistency through shared base tokens.
+A comprehensive design token system built with
+[Style Dictionary 5.x](https://styledictionary.com/) that transforms design
+tokens into platform-specific formats. Created while exploring design tokens at
+Canonical, this system supports multiple tiers within the Canonical ecosystem,
+each with slightly different token needs while maintaining consistency through
+shared base tokens.
 
 ## Repository Structure
 
 ```
 ├── build/                   # Style Dictionary configuration and custom extensions
+│   ├── actions/             # Post-build actions (CSS index generation, Figma metadata)
 │   ├── config/              # Central configuration for build process
 │   ├── formatters/          # Custom output formatters
-│   ├── platforms/           # Platform-specific configurations
-│   ├── preprocessors/       # Token preprocessing logic
 │   ├── transforms/          # Custom token transformations
 │   ├── types/               # TypeScript type definitions
-│   └── utils/               # Utility functions
+│   ├── utils/               # Utility functions
+│   └── build.ts             # Main build script
 ├── tokens/                  # Design token definitions
 │   └── canonical/           # Canonical brand tokens
 │       ├── apps/            # App-specific semantic tokens
 │       ├── docs/            # Documentation-specific semantic tokens
 │       └── sites/           # Base tier tokens (primitive + semantic)
 ├── dist/                    # Generated platform-specific output
-│   └── css/                 # CSS custom properties
+│   ├── css/                 # CSS custom properties with responsive/theme handling
+│   └── figma/               # Figma token format with metadata
 └── package.json             # Project configuration and scripts
 ```
 
 ## Design Token Tiers
 
-At Canonical, we organize our design system into different **tiers** that represent different product categories with varying token requirements:
+At Canonical, we organize our design system into different **tiers** that
+represent different product categories with varying token requirements:
 
 - **`sites`** - The base tier for marketing websites and landing pages
 - **`docs`** - Documentation and technical content platforms
 - **`apps`** - Application interfaces and dashboards
 
-Each tier has its own semantic token overrides while inheriting from the shared base tokens in the `sites` tier.
+Each tier has its own semantic token overrides while inheriting from the shared
+base tokens in the `sites` tier.
 
 ### Tier Configuration
 
-Tiers are configured in `build/config/tiers.config.ts`:
+Tiers are configured in `build/config/token-paths.config.ts` with their
+categories having three key properties:
 
-- `sites` contains both primitive and semantic tokens and serves as the foundation
+- **`source`** - Main tokens that will be built into the final output
+- **`include`** - Additional tokens that become final tokens unless overridden
+  by source tokens (tokens files under include will not throw a token collision
+  error if overridden)
+- **`reference`** - Tokens needed as references for source/include tokens but
+  excluded from final build output
+
+The tier hierarchy:
+
+- `sites` contains both primitive and semantic tokens and serves as the
+  foundation
 - `docs` and `apps` inherit `sites` tokens and add their own semantic overrides
-- Each tier can include tokens from other tiers and define its own source tokens
 
 ## Build System
 
-The build system is **configuration-driven** and built on Style Dictionary. The `build/config/` folder is the central place to configure all aspects of the token transformation process.
+The build system is **configuration-driven** and built on Style Dictionary 5.x.
+It uses a modular architecture with custom actions, transforms, and formatters.
 
-### Configuration Files
+### Key Components
 
-- **`build.config.ts`** - Global build settings (log level, DTCG compliance, preprocessors)
-- **`tiers.config.ts`** - Defines tier structure and token source paths
-- **`color-modes.config.ts`** - Color mode configurations (light/dark themes)
-- **`dimension-modes.config.ts`** - Responsive dimension configurations
-- **`platforms/`** - Platform-specific output configurations
+- **`build/build.ts`** - Main build script that orchestrates the entire process
+- **`build/config/`** - Configuration files for platforms and token paths
+- **`build/actions/`** - Post-build actions (CSS index file generation, Figma
+  metadata)
+- **`build/transforms/`** - Custom token transformations for CSS and Figma
+- **`build/formatters/`** - Custom output formatters
 
-### Style Dictionary Extensions
+### Architecture
 
-Style Dictionary's build architecture is organized around several key concepts - each serving a specific role in the token transformation pipeline. While Style Dictionary provides default implementations for common use cases, it allows for custom extensions to adapt to specific requirements. 
+The system uses a command-line interface that takes platform and tier arguments:
 
-Our build system leverages this extensibility with custom implementations tailored to Canonical's design system needs. The `build/` folder structure mirrors Style Dictionary's architectural concepts:
+```bash
+tsx build/build.ts <platform> <tier>
+```
 
-- **`formatters/`** - Custom output formats ([Style Dictionary Formatters](https://styledictionary.com/reference/hooks/formats/))
-- **`platforms/`** - Platform definitions ([Style Dictionary Platforms](https://styledictionary.com/reference/config/#platform))
-- **`preprocessors/`** - Token preprocessing logic ([Style Dictionary Preprocessors](https://styledictionary.com/reference/hooks/preprocessors/))
-- **`transforms/`** - Custom token transformations ([Style Dictionary Transforms](https://styledictionary.com/reference/hooks/transforms/))
-- **`types/`** - TypeScript type definitions for better development experience
-- **`utils/`** - Shared utility functions
+Where:
+
+- **Platform**: `css`, `figma`, or `all`
+- **Tier**: `sites`, `docs`, `apps`, or `all`
+
+The build process:
+
+1. Registers custom transforms, formatters, and actions
+2. Generates configurations based on token paths for the specified tier
+3. Processes tokens through Style Dictionary
+4. Executes post-build actions (index file generation, metadata creation)
 
 ## Token Structure
 
 ### Primitive Tokens
 
-Located in `tokens/canonical/sites/primitive/`, these are the foundational values:
+Located in `tokens/canonical/{tier}/primitive/`, these are the foundational
+values:
 
 - `color.tokens.json` - Base color palette
 - `dimension.tokens.json` - Spacing, sizing, and layout values
@@ -82,22 +110,22 @@ Located in `tokens/canonical/sites/primitive/`, these are the foundational value
 
 ### Semantic Tokens
 
-Located in `tokens/canonical/{tier}/semantic/`, these are contextual tokens that reference primitive values:
+Located in `tokens/canonical/{tier}/semantic/`, these are contextual tokens that
+reference primitive values:
 
 - Organized by the same categories as primitive tokens
-- Support theming through mode-specific files (e.g., `color/light.tokens.json`, `color/dark.tokens.json`)
-- Define responsive variations through size-specific files (e.g., `dimension/small.tokens.json`)
+- Support theming through mode-specific files (e.g., `color/light.tokens.json`,
+  `color/dark.tokens.json`)
+- Define responsive variations through size-specific files (e.g.,
+  `dimension/small.tokens.json`)
 
 ## Platform Support
 
 Currently building for:
 
-- ✅ **CSS** - CSS custom properties for web platforms
-
-Planned platform support:
-
-- 🔄 **Figma** - Design tool integration
-- 🔄 **Flutter** - Mobile application development
+- ✅ **CSS** - CSS custom properties with responsive breakpoints, color modes,
+  and contrast preferences
+- ✅ **Figma** - Figma Variables format with metadata and theme configuration
 
 ## Usage
 
@@ -107,88 +135,120 @@ Planned platform support:
 # Install dependencies
 npm ci
 
+# Build all platforms and tiers
+npm run build
+
 # Build all tiers for CSS
 npm run build:css
 
-# Build specific tiers
+# Build all tiers for Figma
+npm run build:figma
+
+# Build specific tiers for CSS
 npm run build:css:sites
 npm run build:css:docs
 npm run build:css:apps
+
+# Build specific tiers for Figma
+npm run build:figma:sites
+npm run build:figma:docs
+npm run build:figma:apps
 ```
 
 ### Using Generated Tokens
 
-The generated CSS files are output to `dist/css/` with tier-specific naming:
+#### CSS Output Structure
+
+The generated CSS files are organized by tier and category in
+`dist/css/{tier}/`:
+
+```
+dist/css/
+├── sites/
+│   ├── index.css                    # Main index file with imports and media queries
+│   ├── color/
+│   │   ├── primitive.css            # Base color tokens
+│   │   ├── light/
+│   │   │   ├── normalContrast.css   # Light theme tokens
+│   │   │   └── highContrast.css     # High contrast light theme
+│   │   └── dark/
+│   │       ├── normalContrast.css   # Dark theme tokens
+│   │       └── highContrast.css     # High contrast dark theme
+│   ├── dimension/
+│   │   ├── primitive.css            # Base dimension tokens
+│   │   ├── small.css                # Small breakpoint overrides
+│   │   ├── medium.css               # Medium breakpoint overrides
+│   │   ├── large.css                # Large breakpoint overrides
+│   │   └── xLarge.css               # Extra large breakpoint overrides
+│   └── typography.css               # Typography tokens
+```
+
+#### Example Generated Content
 
 ```css
-/* Example: dist/css/sites-colors.css */
+/* dist/css/sites/color/primitive.css */
 :root {
-    --canonical-sites-color-orange-500: oklch(0 0 0);
-    --canonical-sites-color-teal-600: oklch(0 0 0);
-    --canonical-sites-color-blue-500: oklch(0 0 0);
-    --color-background-default: var(--canonical-sites-color-gray-100);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-background-default: var(--canonical-sites-color-gray-800);
-    }
+    --canonical-color-orange-500: oklch(0 0 0);
+    --canonical-color-teal-500: oklch(0 0 0);
+    --canonical-color-blue-500: oklch(0 0 0);
 }
 ```
 
 ```css
-/* Example: dist/css/sites-dimensions.css */
+/* dist/css/sites/dimension/primitive.css */
 :root {
-    --canonical-sites-dimension-100: 0.5rem;
-    --canonical-sites-dimension-200: 1rem;
-    --canonical-sites-dimension-300: 1.5rem;
-    --canonical-sites-dimension-size-font-size-350: 1rem;
-    --canonical-sites-dimension-size-font-size-500: 1.5rem;
-    --dimension-size-root-font-size: var(--canonical-sites-dimension-200);
-}
-
-@media (min-width: 1681px) {
-    :root {
-        --dimension-size-root-font-size: var(--canonical-sites-dimension-225);
-    }
+    --canonical-dimension-100: 0.5rem;
+    --canonical-dimension-200: 1rem;
+    --canonical-dimension-300: 1.5rem;
 }
 ```
 
 ```css
-/* Example: dist/css/sites-typography.css */
+/* dist/css/sites/typography.css */
 :root {
-    --canonical-sites-typography-font-family-sans-serif:
+    --canonical-typography-font-family-sans-serif:
         "Ubuntu Sans", Ubuntu, Cantarell, sans-serif;
-    --canonical-sites-typography-font-family-monospace:
-        "Ubuntu Sans Mono", "Ubuntu Mono", monospace;
-    --canonical-sites-typography-weight-regular: 400;
-    --canonical-sites-typography-weight-medium: 500;
-    --canonical-sites-typography-weight-bold: 700;
-}
-
-h1 {
-    font-family: var(--canonical-sites-typography-font-family-default);
-    font-size: var(--canonical-sites-dimension-size-font-size-700);
-    font-weight: var(--canonical-sites-typography-weight-medium);
+    --canonical-typography-weight-regular: 400;
+    --canonical-typography-weight-medium: 500;
 }
 ```
 
-Import the generated CSS files in your projects:
+#### Using the Tokens
+
+**Option 1: Use the index file (recommended)**
 
 ```css
-@import "./dist/css/sites-colors.css";
-@import "./dist/css/sites-dimensions.css";
-@import "./dist/css/sites-typography.css";
+@import "./dist/css/sites/index.css";
+```
+
+The index file automatically handles:
+
+- Color mode switching (light/dark)
+- Contrast preferences (normal/high)
+- Responsive dimension tokens
+- Data attribute overrides
+
+**Option 2: Import individual files**
+
+```css
+@import "./dist/css/sites/color/primitive.css";
+@import "./dist/css/sites/dimension/primitive.css";
+@import "./dist/css/sites/typography.css";
 ```
 
 ### Extending the System
 
 To add new platforms or customize the build process:
 
-1. **New Platform**: Add configuration in `build/config/platforms/`
-2. **Custom Transforms**: Add to `build/transforms/` following [Style Dictionary transform patterns](https://styledictionary.com/reference/hooks/transforms/)
-3. **Custom Formatters**: Add to `build/formatters/` following [Style Dictionary formatter patterns](https://styledictionary.com/reference/hooks/formats/)
-4. **New Tiers**: Update `build/config/tiers.config.ts` with new tier definitions
+1. **New Platform**: Add configuration in `build/config/` (e.g.,
+   `android.config.ts`)
+2. **Custom Transforms**: Add to `build/transforms/` following
+   [Style Dictionary transform patterns](https://styledictionary.com/reference/hooks/transforms/)
+3. **Custom Formatters**: Add to `build/formatters/` following
+   [Style Dictionary formatter patterns](https://styledictionary.com/reference/hooks/formats/)
+4. **Post-build Actions**: Add to `build/actions/`
+5. **New Tiers**: Update `build/config/token-paths.config.ts` with new tier
+   token paths
 
 ## Development
 
@@ -196,6 +256,9 @@ This project uses:
 
 - **TypeScript** for type safety and better developer experience
 - **Style Dictionary 5.x** for token transformation
-- **DTCG Format** compliance for [W3C Design Tokens Community Group](https://www.designtokens.org/tr/drafts/format/) standards
+- **DTCG Format** compliance for
+  [W3C Design Tokens Community Group](https://www.designtokens.org/tr/drafts/format/)
+  standards
 
-For detailed information about Style Dictionary concepts and APIs, refer to the [official Style Dictionary documentation](https://styledictionary.com/getting-started/installation/).
+For detailed information about Style Dictionary concepts and APIs, refer to the
+[official Style Dictionary documentation](https://styledictionary.com/getting-started/installation/).
